@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ABRAHAM G4 — MARVEL HUB</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <span>ABRAHAM G4</span>
+            <h1>MARVEL HUB</h1>
+        </div>
+
+        <nav>
+            <button onclick="mostrarSeccion('inicio')">Inicio</button>
+            <button onclick="mostrarSeccion('marvel')">Marvel</button>
+            <button onclick="mostrarSeccion('editor')">Editor</button>
+            <button onclick="mostrarSeccion('widgets')">Widgets</button>
+            <button onclick="mostrarSeccion('ajustes')">Ajustes</button>
+        </nav>
+    </header>
+
+
+    <main>
+
+        <!-- INICIO -->
+        <section id="inicio" class="seccion activa">
+
+            <div class="hero">
+                <h2>🔥 Recomendación Marvel</h2>
+
+                <div class="recomendacion">
+                    <h3 id="recomendacion">Cargando...</h3>
+                    <p id="descripcion">
+                        Espera un momento...
+                    </p>
+
+                    <button onclick="nuevaRecomendacion()">
+                        🎲 Otra recomendación
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- MARVEL -->
+        <section id="marvel" class="seccion">
+
+            <h2>🦸 Catálogo Marvel</h2>
+
+            <input
+                type="text"
+                id="buscador"
+                placeholder="🔎 Buscar película o serie..."
+            >
+
+            <div id="catalogo" class="catalogo"></div>
+
+        </section>
+
+
+        <!-- EDITOR -->
+        <section id="editor" class="seccion">
+
+            <h2>🎬 Editor de video</h2>
+
+            <input
+                type="file"
+                id="videoInput"
+                accept="video/*"
+            >
+
+            <div class="video-container">
+                <video id="videoPreview" controls></video>
+            </div>
+
+            <div class="editor-controles">
+
+                <label>
+                    Inicio:
+                    <input
+                        type="range"
+                        id="inicio"
+                        min="0"
+                        max="100"
+                        value="0"
+                    >
+                </label>
+
+                <label>
+                    Final:
+                    <input
+                        type="range"
+                        id="final"
+                        min="0"
+                        max="100"
+                        value="100"
+                    >
+                </label>
+
+                <label>
+                    🔊 Volumen:
+                    <input
+                        type="range"
+                        id="volumen"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value="1"
+                    >
+                </label>
+
+            </div>
+
+            <h3>Formato</h3>
+
+            <div class="formatos">
+
+                <button onclick="cambiarFormato('9:16')">
+                    📱 9:16
+                </button>
+
+                <button onclick="cambiarFormato('1:1')">
+                    ⬜ 1:1
+                </button>
+
+                <button onclick="cambiarFormato('16:9')">
+                    🖥️ 16:9
+                </button>
+
+            </div>
+
+            <p>
+                Formato actual:
+                <strong id="formatoActual">16:9</strong>
+            </p>
+
+        </section>
+
+
+        <!-- WIDGETS -->
+        <section id="widgets" class="seccion">
+
+            <h2>🧩 Widgets</h2>
+
+            <div class="widget">
+
+                <label>
+                    <input type="checkbox" checked>
+                    ⭐ Recomendación del día
+                </label>
+
+                <label>
+                    <input type="checkbox" checked>
+                    🎬 Próximo estreno
+                </label>
+
+                <label>
+                    <input type="checkbox">
+                    📰 Noticias Marvel
+                </label>
+
+                <label>
+                    <input type="checkbox">
+                    🎵 Música
+                </label>
+
+            </div>
+
+        </section>
+
+
+        <!-- AJUSTES -->
+        <section id="ajustes" class="seccion">
+
+            <h2>⚙️ Ajustes</h2>
+
+            <label>
+                Tu nombre:
+                <input
+                    type="text"
+                    id="nombre"
+                    placeholder="Escribe tu nombre"
+                >
+            </label>
+
+            <button onclick="guardarNombre()">
+                💾 Guardar
+            </button>
+
+            <button onclick="cambiarTema()">
+                🌗 Cambiar tema
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        <p>ABRAHAM G4 © 2026 — MARVEL HUB</p>
+    </footer>
+
+
+    <script src="app.js"></script>
+
+</body>
+</html>
