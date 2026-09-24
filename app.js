@@ -1462,6 +1462,14 @@ async function verDetallesTMDB(id, tipo) {
             "</div>" +
             "<p class='detalle-generos'>🏷️ " + generos + "</p>" +
             "</div>" +
+            "<div class='detalle-acciones'>" +
+            "<button id='detalleFavorito' type='button' class='" +
+            (esFavoritoMarvel(datos.id, tipo) ? "boton-quitar-favorito" : "boton-favorito") +
+            "'><i data-lucide='heart'></i><span>" +
+            (esFavoritoMarvel(datos.id, tipo) ? "Quitar de favoritos" : "Añadir a favoritos") +
+            "</span></button>" +
+            "<button id='detalleCompartir' type='button' class='boton-secundario'><i data-lucide='share-2'></i><span>Compartir</span></button>" +
+            "</div>" +
             "</div>" +
             "</div>" +
             "<div class='detalle-cuerpo'>" +
@@ -1472,6 +1480,50 @@ async function verDetallesTMDB(id, tipo) {
             crearRepartoDetalles(datos) +
             trailer +
             "</div>";
+        
+        const botonFavoritoDetalle = document.getElementById("detalleFavorito");
+        if (botonFavoritoDetalle) {
+            botonFavoritoDetalle.addEventListener("click", function() {
+                alternarFavorito(datos.id, tipo, datos);
+                const activo = esFavoritoMarvel(datos.id, tipo);
+                botonFavoritoDetalle.className = activo
+                    ? "boton-quitar-favorito"
+                    : "boton-favorito";
+                botonFavoritoDetalle.innerHTML =
+                    "<i data-lucide='heart'></i><span>" +
+                    (activo ? "Quitar de favoritos" : "Añadir a favoritos") +
+                    "</span>";
+                actualizarIconosLucide();
+            });
+        }
+
+        const botonCompartirDetalle = document.getElementById("detalleCompartir");
+        if (botonCompartirDetalle) {
+            botonCompartirDetalle.addEventListener("click", async function() {
+                const textoCompartir = "Mira " +
+                    (datos.title || datos.name || "este título") +
+                    " en ABRAHAM G4 — MARVEL HUB";
+                try {
+                    if (navigator.share) {
+                        await navigator.share({
+                            title: datos.title || datos.name || "Marvel Hub",
+                            text: textoCompartir
+                        });
+                    } else if (navigator.clipboard) {
+                        await navigator.clipboard.writeText(textoCompartir);
+                        botonCompartirDetalle.querySelector("span").textContent = "Copiado";
+                        setTimeout(function() {
+                            const span = botonCompartirDetalle.querySelector("span");
+                            if (span) span.textContent = "Compartir";
+                        }, 1400);
+                    }
+                } catch (error) {
+                    console.warn("Compartir cancelado o no disponible:", error);
+                }
+            });
+        }
+
+        actualizarIconosLucide();
     } catch (error) {
         console.error("Error detalles:", error);
         contenido.innerHTML =
