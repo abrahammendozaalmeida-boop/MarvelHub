@@ -1945,68 +1945,6 @@ function configurarWidgets() {
         if (panel) panel.hidden = !musica.checked;
     }
 }
-    const recomendacion =
-        document.getElementById("widgetRecomendacion");
-
-    const estrenos =
-        document.getElementById("widgetEstrenos");
-
-    const noticias =
-        document.getElementById("widgetNoticias");
-
-    const musica =
-        document.getElementById("widgetMusica");
-
-    actualizarWidgetReloj();
-    actualizarWidgetResumen();
-    actualizarWidgetDato();
-
-    setInterval(actualizarWidgetReloj, 1000);
-
-    if (recomendacion) {
-        recomendacion.addEventListener("change", function() {
-            const hero = document.querySelector(".hero");
-            if (hero) {
-                hero.style.display =
-                    this.checked ? "" : "none";
-            }
-        });
-    }
-
-    if (estrenos) {
-        estrenos.addEventListener("change", function() {
-            const bloque =
-                document.querySelector(".proximos-estrenos");
-
-            if (bloque) {
-                bloque.style.display =
-                    this.checked ? "" : "none";
-            }
-        });
-    }
-
-    if (noticias) {
-        noticias.addEventListener("change", function() {
-            const panel =
-                document.getElementById("widgetNoticiasPanel");
-
-            if (panel) {
-                panel.hidden = !this.checked;
-            }
-        });
-    }
-
-    if (musica) {
-        musica.addEventListener("change", function() {
-            const panel =
-                document.getElementById("widgetMusicaPanel");
-
-            if (panel) {
-                panel.hidden = !this.checked;
-            }
-        });
-    }
-}
 
 window.mostrarSeccion = mostrarSeccion;
 window.nuevaRecomendacion = nuevaRecomendacion;
