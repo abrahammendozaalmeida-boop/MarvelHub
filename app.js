@@ -404,6 +404,55 @@ function configurarFavoritos() {
     });
 }
 
+let paginaPeliculasTMDB = 1;
+let paginaSeriesTMDB = 1;
+let totalPaginasPeliculasTMDB = 1;
+let totalPaginasSeriesTMDB = 1;
+let cargandoMasMarvel = false;
+
+async function cargarPaginaMarvel(tipo, pagina) {
+    const endpoint = tipo === "movie"
+        ? "/discover/movie?sort_by=popularity.desc&include_adult=false&with_companies=420&page=" + pagina
+        : "/discover/tv?sort_by=popularity.desc&include_adult=false&with_companies=420&page=" + pagina;
+
+    const datos = await obtenerTMDB(endpoint);
+
+    return {
+        resultados: (datos.results || []).map(function(item) {
+            item.tipo = tipo;
+            return item;
+        }),
+        totalPaginas: Number(datos.total_pages || 1)
+    };
+}
+
+function actualizarBotonCargarMas() {
+    const boton = document.getElementById("cargarMasMarvel");
+
+    if (!boton) return;
+
+    const paginaActual = tipoActual === "peliculas"
+        ? paginaPeliculasTMDB
+        : paginaSeriesTMDB;
+
+    const totalPaginas = tipoActual === "peliculas"
+        ? totalPaginasPeliculasTMDB
+        : totalPaginasSeriesTMDB;
+
+    const hayMas = paginaActual < totalPaginas;
+
+    boton.hidden = !hayMas;
+    boton.disabled = cargandoMasMarvel;
+
+    if (cargandoMasMarvel) {
+        boton.textContent = "⏳ Cargando...";
+    } else {
+        boton.textContent = hayMas
+            ? "➕ Cargar más"
+            : "✓ Todo cargado";
+    }
+}
+
 async function cargarMarvelTMDB() {
     const catalogo = document.getElementById("catalogo");
 
@@ -411,49 +460,80 @@ async function cargarMarvelTMDB() {
 
     catalogo.innerHTML = "<p>Cargando Marvel desde TMDB...</p>";
 
+    paginaPeliculasTMDB = 1;
+    paginaSeriesTMDB = 1;
+    totalPaginasPeliculasTMDB = 1;
+    totalPaginasSeriesTMDB = 1;
+
     try {
         const respuestas = await Promise.all([
-            obtenerTMDB(
-                "/discover/movie?sort_by=popularity.desc&include_adult=false&with_companies=420&page=1"
-            ),
-            obtenerTMDB(
-                "/discover/movie?sort_by=popularity.desc&include_adult=false&with_companies=420&page=2"
-            ),
-            obtenerTMDB(
-                "/discover/tv?sort_by=popularity.desc&include_adult=false&with_companies=420&page=1"
-            ),
-            obtenerTMDB(
-                "/discover/tv?sort_by=popularity.desc&include_adult=false&with_companies=420&page=2"
-            )
+            cargarPaginaMarvel("movie", 1),
+            cargarPaginaMarvel("tv", 1)
         ]);
 
-        const peliculas = (respuestas[0].results || []).concat(
-            respuestas[1].results || []
-        );
+        peliculasTMDB = respuestas[0].resultados;
+        seriesTMDB = respuestas[1].resultados;
 
-        const series = (respuestas[2].results || []).concat(
-            respuestas[3].results || []
-        );
-
-        peliculasTMDB = peliculas.map(function(item) {
-            item.tipo = "movie";
-            return item;
-        });
-
-        seriesTMDB = series.map(function(item) {
-            item.tipo = "tv";
-            return item;
-        });
+        totalPaginasPeliculasTMDB = respuestas[0].totalPaginas;
+        totalPaginasSeriesTMDB = respuestas[1].totalPaginas;
 
         mostrarTipoMarvel("peliculas");
         renderizarFilasInicio();
         renderizarPersonalizadoInicio();
         actualizarInicioPersonalizado();
         actualizarWidgetResumen();
+        actualizarBotonCargarMas();
     } catch (error) {
         console.error("Error cargando Marvel:", error);
         catalogo.innerHTML =
             "<p>No se pudo cargar TMDB. Revisa tu clave de API.</p>";
+    }
+}
+
+async function cargarMasMarvel() {
+    if (cargandoMasMarvel) return;
+
+    const tipo = tipoActual === "peliculas" ? "movie" : "tv";
+    const paginaActual = tipo === "movie"
+        ? paginaPeliculasTMDB
+        : paginaSeriesTMDB;
+    const totalPaginas = tipo === "movie"
+        ? totalPaginasPeliculasTMDB
+        : totalPaginasSeriesTMDB;
+
+    if (paginaActual >= totalPaginas) {
+        actualizarBotonCargarMas();
+        return;
+    }
+
+    cargandoMasMarvel = true;
+    actualizarBotonCargarMas();
+
+    try {
+        const siguientePagina = paginaActual + 1;
+        const respuesta = await cargarPaginaMarvel(tipo, siguientePagina);
+
+        if (tipo === "movie") {
+            paginaPeliculasTMDB = siguientePagina;
+            totalPaginasPeliculasTMDB = respuesta.totalPaginas;
+            peliculasTMDB = peliculasTMDB.concat(respuesta.resultados);
+        } else {
+            paginaSeriesTMDB = siguientePagina;
+            totalPaginasSeriesTMDB = respuesta.totalPaginas;
+            seriesTMDB = seriesTMDB.concat(respuesta.resultados);
+        }
+
+        renderizarCatalogo(
+            tipo === "movie" ? peliculasTMDB : seriesTMDB
+        );
+        renderizarFilasInicio();
+        renderizarPersonalizadoInicio();
+        actualizarWidgetResumen();
+    } catch (error) {
+        console.error("Error cargando más Marvel:", error);
+    } finally {
+        cargandoMasMarvel = false;
+        actualizarBotonCargarMas();
     }
 }
 
