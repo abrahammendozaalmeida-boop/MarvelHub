@@ -2255,7 +2255,7 @@ async function cerrarSesionCuenta() {
     mostrarMensajeCuenta("Sesión cerrada.");
 }
 
-async async function configurarCuenta() {
+async function configurarCuenta() {
     const conectado = configurarClienteSupabase();
     const formLogin = document.getElementById("formLogin");
     const formRegistro = document.getElementById("formRegistro");
