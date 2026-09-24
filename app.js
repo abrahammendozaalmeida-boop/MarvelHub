@@ -333,19 +333,48 @@ function renderizarCatalogo(lista) {
     });
 }
 
-function renderizarFavoritos() {
+function renderizarFavoritos(filtro) {
     const catalogo = document.getElementById("catalogoFavoritos");
+    const contador = document.getElementById("contadorFavoritos");
+    const texto = document.getElementById("textoFavoritos");
 
     if (!catalogo) return;
 
+    const filtroActual = filtro || "todos";
+
+    const lista = favoritosMarvel.filter(function(item) {
+        return filtroActual === "todos" || item.tipo === filtroActual;
+    });
+
     catalogo.innerHTML = "";
 
-    if (favoritosMarvel.length === 0) {
-        catalogo.innerHTML = "<p>No tienes favoritos todavía.</p>";
+    if (contador) {
+        contador.textContent =
+            favoritosMarvel.length +
+            (favoritosMarvel.length === 1 ? " favorito" : " favoritos");
+    }
+
+    if (texto) {
+        if (favoritosMarvel.length === 0) {
+            texto.textContent = "Todavía no has guardado contenido.";
+        } else if (filtroActual === "movie") {
+            texto.textContent = "Mostrando tus películas guardadas.";
+        } else if (filtroActual === "tv") {
+            texto.textContent = "Mostrando tus series guardadas.";
+        } else {
+            texto.textContent = "Tu biblioteca personal de Marvel.";
+        }
+    }
+
+    if (lista.length === 0) {
+        catalogo.innerHTML =
+            filtroActual === "todos"
+                ? "<p>No tienes favoritos todavía.</p>"
+                : "<p>No tienes favoritos de este tipo.</p>";
         return;
     }
 
-    favoritosMarvel.forEach(function(item) {
+    lista.forEach(function(item) {
         const tarjeta = document.createElement("article");
         tarjeta.className = "tarjeta-pelicula";
 
@@ -380,15 +409,6 @@ function renderizarFavoritos() {
             "<p class='tipo-contenido'>📅 " +
             fecha +
             "</p>" +
-            "<p>⭐ " +
-            puntuacion +
-            "/10</p>" +
-            "<p>📅 " +
-            fecha +
-            "</p>" +
-            "<p class='puntuacion'>⭐ " +
-            puntuacion +
-            "/10</p>" +
             "<p class='descripcion-pelicula'>" +
             descripcion +
             "</p>" +
@@ -417,7 +437,24 @@ function renderizarFavoritos() {
 }
 
 function mostrarFavoritos() {
-    renderizarFavoritos();
+    renderizarFavoritos(window.filtroFavoritosActual || "todos");
+}
+
+function configurarFavoritos() {
+    const botones = document.querySelectorAll("[data-filtro-favoritos]");
+
+    botones.forEach(function(boton) {
+        boton.addEventListener("click", function() {
+            window.filtroFavoritosActual = this.dataset.filtroFavoritos;
+
+            botones.forEach(function(elemento) {
+                elemento.classList.remove("activo-filtro");
+            });
+
+            this.classList.add("activo-filtro");
+            renderizarFavoritos(window.filtroFavoritosActual);
+        });
+    });
 }
 
 async function cargarMarvelTMDB() {
@@ -1080,6 +1117,8 @@ function restablecerPreferencias() {
 
     const nombre = document.getElementById("nombre");
     if (nombre) nombre.value = "";
+
+    configurarFavoritos();
 
     cargarTema();
     cargarNombre();
