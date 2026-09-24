@@ -189,6 +189,49 @@ function alternarFavorito(id, tipo) {
     }
 }
 
+function obtenerListaOrdenada(lista) {
+    const orden = document.getElementById("ordenCatalogo");
+    const valor = orden ? orden.value : "popularidad";
+    const copia = (lista || []).slice();
+
+    copia.sort(function(a, b) {
+        if (valor === "puntuacion") {
+            return Number(b.vote_average || 0) - Number(a.vote_average || 0);
+        }
+
+        if (valor === "reciente") {
+            const fechaA = a.release_date || a.first_air_date || "";
+            const fechaB = b.release_date || b.first_air_date || "";
+            return fechaB.localeCompare(fechaA);
+        }
+
+        if (valor === "alfabetico") {
+            const tituloA = (a.title || a.name || "").toLowerCase();
+            const tituloB = (b.title || b.name || "").toLowerCase();
+            return tituloA.localeCompare(tituloB);
+        }
+
+        return Number(b.popularity || 0) - Number(a.popularity || 0);
+    });
+
+    return copia;
+}
+
+function actualizarInfoCatalogo(cantidad, mostrarLimpiar) {
+    const contador = document.getElementById("contadorCatalogo");
+    const limpiar = document.getElementById("limpiarBusqueda");
+
+    if (contador) {
+        contador.textContent =
+            cantidad +
+            (cantidad === 1 ? " resultado" : " resultados");
+    }
+
+    if (limpiar) {
+        limpiar.hidden = !mostrarLimpiar;
+    }
+}
+
 function renderizarCatalogo(lista) {
     const catalogo = document.getElementById("catalogo");
 
@@ -196,12 +239,15 @@ function renderizarCatalogo(lista) {
 
     catalogo.innerHTML = "";
 
-    if (!lista || lista.length === 0) {
+    const listaOrdenada = obtenerListaOrdenada(lista);
+    actualizarInfoCatalogo(listaOrdenada.length, false);
+
+    if (!listaOrdenada || listaOrdenada.length === 0) {
         catalogo.innerHTML = "<p>No se encontraron resultados.</p>";
         return;
     }
 
-    lista.forEach(function(item) {
+    listaOrdenada.forEach(function(item) {
         const tipoTexto = item.tipo === "tv" ? "📺 Serie" : "🎬 Película";
         const titulo = item.title || item.name || "Sin título";
         const fecha = item.release_date || item.first_air_date || "Sin fecha";
@@ -1911,7 +1957,45 @@ window.cambiarFormato = cambiarFormato;
 window.exportarVideoEditor = exportarVideoEditor;
 window.restablecerPreferencias = restablecerPreferencias;
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {    const buscadorCatalogo = document.getElementById("buscador");
+    const ordenCatalogo = document.getElementById("ordenCatalogo");
+    const limpiarBusqueda = document.getElementById("limpiarBusqueda");
+
+    function aplicarFiltrosCatalogo() {
+        const texto = buscadorCatalogo
+            ? buscadorCatalogo.value.trim().toLowerCase()
+            : "";
+
+        const base = tipoActual === "peliculas"
+            ? peliculasTMDB
+            : seriesTMDB;
+
+        const filtrada = base.filter(function(item) {
+            const titulo = (item.title || item.name || "").toLowerCase();
+            return titulo.includes(texto);
+        });
+
+        renderizarCatalogo(filtrada);
+
+        actualizarInfoCatalogo(filtrada.length, texto.length > 0);
+    }
+
+    if (buscadorCatalogo) {
+        buscadorCatalogo.addEventListener("input", aplicarFiltrosCatalogo);
+    }
+
+    if (ordenCatalogo) {
+        ordenCatalogo.addEventListener("change", aplicarFiltrosCatalogo);
+    }
+
+    if (limpiarBusqueda) {
+        limpiarBusqueda.addEventListener("click", function() {
+            if (buscadorCatalogo) buscadorCatalogo.value = "";
+            aplicarFiltrosCatalogo();
+        });
+    }
+
+
     cargarTema();
     cargarNombre();
     configurarVideo();
