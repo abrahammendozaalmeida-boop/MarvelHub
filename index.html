@@ -6,6 +6,7 @@
     <title>ABRAHAM G4 — MARVEL HUB</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="supabase-config.js"></script>
     <meta name="theme-color" content="#0b0b0f">
     <link rel="manifest" href="manifest.json">
@@ -23,15 +24,15 @@
     </div>
 
     <nav>
-        <button class="nav-boton activo-nav" data-seccion="inicio" onclick="mostrarSeccion('inicio')">Inicio</button>
-        <button class="nav-boton" data-seccion="marvel" onclick="mostrarSeccion('marvel')">Marvel</button>
-        <button class="nav-boton" data-seccion="favoritos" onclick="mostrarSeccion('favoritos')">❤️ Favoritos</button>
-        <button class="nav-boton" data-seccion="perfil" onclick="mostrarSeccion('perfil')">👤 Perfil</button>
-        <button class="nav-boton" data-seccion="cuenta" onclick="mostrarSeccion('cuenta')">🔐 Cuenta</button>
-        <button class="nav-boton" data-seccion="editor" onclick="mostrarSeccion('editor')">Editor</button>
-        <button class="nav-boton" data-seccion="widgets" onclick="mostrarSeccion('widgets')">Widgets</button>
-        <button class="nav-boton" data-seccion="ajustes" onclick="mostrarSeccion('ajustes')">Ajustes</button>
-        <button id="botonInstalar" class="boton-instalar" hidden>📲 Instalar</button>
+        <button class="nav-boton activo-nav" data-seccion="inicio" onclick="mostrarSeccion('inicio')"><i data-lucide="house"></i><span>Inicio</span></button>
+        <button class="nav-boton" data-seccion="marvel" onclick="mostrarSeccion('marvel')"><i data-lucide="compass"></i><span>Marvel</span></button>
+        <button class="nav-boton" data-seccion="favoritos" onclick="mostrarSeccion('favoritos')"><i data-lucide="heart"></i><span>Favoritos</span></button>
+        <button class="nav-boton" data-seccion="perfil" onclick="mostrarSeccion('perfil')"><i data-lucide="user-round"></i><span>Perfil</span></button>
+        <button class="nav-boton" data-seccion="cuenta" onclick="mostrarSeccion('cuenta')"><i data-lucide="lock-keyhole"></i><span>Cuenta</span></button>
+        <button class="nav-boton" data-seccion="editor" onclick="mostrarSeccion('editor')"><i data-lucide="scissors"></i><span>Editor</span></button>
+        <button class="nav-boton" data-seccion="widgets" onclick="mostrarSeccion('widgets')"><i data-lucide="layout-grid"></i><span>Widgets</span></button>
+        <button class="nav-boton" data-seccion="ajustes" onclick="mostrarSeccion('ajustes')"><i data-lucide="settings"></i><span>Ajustes</span></button>
+        <button id="botonInstalar" class="boton-instalar" hidden><i data-lucide="download"></i><span>Instalar</span></button>
     </nav>
 </header>
 
@@ -45,8 +46,8 @@
                 <p id="textoPortada">Descubre películas, series, próximos estrenos y tus favoritos.</p>
 
                 <div class="portada-botones">
-                    <button class="boton-principal" onclick="nuevaRecomendacion()">🎲 Recomendarme algo</button>
-                    <button class="boton-secundario" onclick="mostrarSeccion('marvel')">🦸 Ver catálogo</button>
+                    <button class="boton-principal" onclick="nuevaRecomendacion()"><i data-lucide="dices"></i><span>Recomendarme algo</span></button>
+                    <button class="boton-secundario" onclick="mostrarSeccion('marvel')"><i data-lucide="library"></i><span>Ver catálogo</span></button>
                 </div>
             </div>
         </div>
@@ -54,7 +55,7 @@
         <div class="hero">
             <div class="titulo-seccion titulo-home">
                 <span class="mini-etiqueta">PARA TI</span>
-                <h2>🔥 Recomendación Marvel</h2>
+                <h2><i data-lucide="flame"></i> Recomendación Marvel</h2>
             </div>
 
             <div class="recomendacion">
@@ -66,8 +67,8 @@
                     <p id="descripcion">Espera un momento...</p>
 
                     <div class="recomendacion-acciones">
-                        <button class="boton-principal" onclick="nuevaRecomendacion()">🎲 Otra recomendación</button>
-                        <button class="boton-secundario" onclick="mostrarSeccion('marvel')">Ver más Marvel</button>
+                        <button class="boton-principal" onclick="nuevaRecomendacion()"><i data-lucide="dices"></i><span>Otra recomendación</span></button>
+                        <button class="boton-secundario" onclick="mostrarSeccion('marvel')"><i data-lucide="arrow-right"></i><span>Ver más Marvel</span></button>
                     </div>
                 </div>
             </div>
@@ -76,7 +77,7 @@
         <div class="proximos-estrenos">
             <div class="titulo-seccion titulo-home">
                 <span class="mini-etiqueta">MUY PRONTO</span>
-                <h2>📅 Próximos estrenos Marvel</h2>
+                <h2><i data-lucide="calendar-days"></i> Próximos estrenos Marvel</h2>
                 <p>Películas de Marvel Studios que llegarán próximamente.</p>
             </div>
 
@@ -88,7 +89,7 @@
         <div class="home-rail">
             <div class="titulo-seccion titulo-home">
                 <span class="mini-etiqueta">POPULAR</span>
-                <h2>🔥 Marvel más popular</h2>
+                <h2><i data-lucide="trending-up"></i> Marvel más popular</h2>
                 <p>Las películas Marvel que están destacando en el catálogo.</p>
             </div>
             <div id="homePopulares" class="catalogo catalogo-horizontal">
@@ -99,7 +100,7 @@
         <div class="home-rail">
             <div class="titulo-seccion titulo-home">
                 <span class="mini-etiqueta">SERIES</span>
-                <h2>📺 Series Marvel</h2>
+                <h2><i data-lucide="tv"></i> Series Marvel</h2>
                 <p>Una selección para seguir el universo Marvel desde casa.</p>
             </div>
             <div id="homeSeries" class="catalogo catalogo-horizontal">
@@ -110,7 +111,7 @@
         <div class="home-rail">
             <div class="titulo-seccion titulo-home">
                 <span class="mini-etiqueta">TU LISTA</span>
-                <h2>❤️ Mis favoritos</h2>
+                <h2><i data-lucide="heart"></i> Mis favoritos</h2>
                 <p>Contenido que guardaste para volver a verlo.</p>
             </div>
             <div id="homeFavoritos" class="catalogo catalogo-horizontal">
@@ -123,7 +124,7 @@
                 <span class="mini-etiqueta">RECENTEMENTE</span>
                 <div class="titulo-fila-home">
                     <div>
-                        <h2>🕘 Visto recientemente</h2>
+                        <h2><i data-lucide="history"></i> Visto recientemente</h2>
                         <p id="textoHistorial">Abre los detalles de cualquier título para empezar.</p>
                     </div>
                     <button type="button" class="boton-limpiar-historial" onclick="limpiarHistorialMarvel()">Limpiar</button>
@@ -137,7 +138,7 @@
         <div class="home-rail home-personalizado">
             <div class="titulo-seccion titulo-home">
                 <span class="mini-etiqueta">PARA TI</span>
-                <h2>⭐ Tu selección</h2>
+                <h2><i data-lucide="sparkles"></i> Tu selección</h2>
                 <p id="textoPersonalizado">Contenido basado en tus favoritos.</p>
             </div>
             <div id="homePersonalizado" class="catalogo catalogo-horizontal">
@@ -148,7 +149,7 @@
         <div class="home-rail">
             <div class="titulo-seccion titulo-home">
                 <span class="mini-etiqueta">DESCUBRE</span>
-                <h2>✨ Porque eres fan de Marvel</h2>
+                <h2><i data-lucide="wand-sparkles"></i> Porque eres fan de Marvel</h2>
                 <p>Una selección diferente para descubrir algo nuevo.</p>
             </div>
             <div id="homeDescubre" class="catalogo catalogo-horizontal">
@@ -158,7 +159,7 @@
 
         <div class="home-atajos">
             <div class="atajo-card" onclick="mostrarSeccion('marvel')">
-                <span>🦸</span>
+                <span class="atajo-icono"><i data-lucide="compass"></i></span>
                 <div>
                     <strong>Explorar Marvel</strong>
                     <p>Películas y series</p>
@@ -167,7 +168,7 @@
             </div>
 
             <div class="atajo-card" onclick="mostrarSeccion('favoritos')">
-                <span>❤️</span>
+                <span class="atajo-icono"><i data-lucide="heart"></i></span>
                 <div>
                     <strong>Mis favoritos</strong>
                     <p>Tu lista personal</p>
@@ -176,7 +177,7 @@
             </div>
 
             <div class="atajo-card" onclick="mostrarSeccion('editor')">
-                <span>🎬</span>
+                <span class="atajo-icono"><i data-lucide="clapperboard"></i></span>
                 <div>
                     <strong>Editor de video</strong>
                     <p>Crea y ajusta tus videos</p>
@@ -189,13 +190,13 @@
     <section id="marvel" class="seccion">
         <div class="titulo-seccion">
             <span class="mini-etiqueta">MARVEL</span>
-            <h2>🦸 Catálogo Marvel</h2>
+            <h2><i data-lucide="library"></i> Catálogo Marvel</h2>
             <p>Películas y series de Marvel</p>
         </div>
 
         <div class="catalogo-controles">
-            <button id="botonPeliculas" class="filtro activo-filtro" onclick="mostrarTipoMarvel('peliculas')">🎬 Películas</button>
-            <button id="botonSeries" class="filtro" onclick="mostrarTipoMarvel('series')">📺 Series</button>
+            <button id="botonPeliculas" class="filtro activo-filtro" onclick="mostrarTipoMarvel('peliculas')"><i data-lucide="clapperboard"></i><span>Películas</span></button>
+            <button id="botonSeries" class="filtro" onclick="mostrarTipoMarvel('series')"><i data-lucide="tv"></i><span>Series</span></button>
         </div>
 
         <div class="catalogo-busqueda">
@@ -212,13 +213,13 @@
             <div class="busqueda-global-cabecera">
                 <div>
                     <span class="mini-etiqueta">BÚSQUEDA GLOBAL</span>
-                    <h3>🔎 Encuentra cualquier Marvel</h3>
+                    <h3><i data-lucide="search"></i> Encuentra cualquier Marvel</h3>
                     <p>Busca directamente en TMDB, incluso si todavía no aparece en tu catálogo.</p>
                 </div>
             </div>
             <div class="busqueda-global-form">
                 <input type="search" id="busquedaGlobalMarvel" placeholder="Ej. Spider-Man, Loki, Deadpool..." maxlength="80" autocomplete="off">
-                <button id="botonBusquedaGlobal" type="button">🔎 Buscar</button>
+                <button id="botonBusquedaGlobal" type="button"><i data-lucide="search"></i><span>Buscar</span></button>
             </div>
             <div id="estadoBusquedaGlobal" class="busqueda-global-estado" aria-live="polite"></div>
         </div>
@@ -235,14 +236,14 @@
         </div>
 
         <div class="catalogo-cargar-mas">
-            <button id="cargarMasMarvel" type="button" onclick="cargarMasMarvel()" hidden>➕ Cargar más</button>
+            <button id="cargarMasMarvel" type="button" onclick="cargarMasMarvel()" hidden><i data-lucide="plus"></i><span>Cargar más</span></button>
         </div>
     </section>
 
     <section id="favoritos" class="seccion">
         <div class="titulo-seccion">
             <span class="mini-etiqueta">TU LISTA</span>
-            <h2>❤️ Mis favoritos</h2>
+            <h2><i data-lucide="heart"></i> Mis favoritos</h2>
             <p>Tus películas y series Marvel guardadas</p>
         </div>
 
@@ -283,7 +284,7 @@
     <section id="editor" class="seccion">
         <div class="titulo-seccion">
             <span class="mini-etiqueta">CREADOR</span>
-            <h2>🎬 Editor de video</h2>
+            <h2><i data-lucide="clapperboard"></i> Editor de video</h2>
             <p>Recorta, ajusta el audio, cambia la velocidad y prepara el formato de tu video.</p>
         </div>
 
@@ -320,7 +321,7 @@
 
             <div class="editor-panel">
                 <div class="editor-bloque">
-                    <h3>✂️ Recorte</h3>
+                    <h3><i data-lucide="scissors"></i> Recorte</h3>
                     <div class="editor-dos-columnas">
                         <label>
                             Inicio
@@ -337,7 +338,7 @@
                 </div>
 
                 <div class="editor-bloque">
-                    <h3>🔊 Audio</h3>
+                    <h3><i data-lucide="volume-2"></i> Audio</h3>
                     <label class="editor-control-linea">
                         <span>Volumen</span>
                         <input type="range" id="volumen" min="0" max="1" step="0.01" value="1">
@@ -345,7 +346,7 @@
                 </div>
 
                 <div class="editor-bloque">
-                    <h3>⚡ Velocidad</h3>
+                    <h3><i data-lucide="gauge"></i> Velocidad</h3>
                     <div class="editor-opciones">
                         <button type="button" data-velocidad="0.5">0.5x</button>
                         <button type="button" data-velocidad="1" class="activo-editor">1x</button>
@@ -355,7 +356,7 @@
                 </div>
 
                 <div class="editor-bloque">
-                    <h3>🎨 Filtros</h3>
+                    <h3><i data-lucide="sliders-horizontal"></i> Filtros</h3>
                     <label class="editor-control-linea">
                         <span>Brillo</span>
                         <input type="range" id="editorBrillo" min="50" max="150" value="100">
@@ -371,7 +372,7 @@
                 </div>
 
                 <div class="editor-bloque">
-                    <h3>📐 Formato</h3>
+                    <h3><i data-lucide="smartphone"></i> Formato</h3>
                     <div class="formatos">
                         <button type="button" data-formato="9:16">📱 9:16</button>
                         <button type="button" data-formato="1:1">⬜ 1:1</button>
@@ -395,7 +396,7 @@
     <section id="widgets" class="seccion">
         <div class="titulo-seccion">
             <span class="mini-etiqueta">CENTRO</span>
-            <h2>🧩 Widgets</h2>
+            <h2><i data-lucide="layout-grid"></i> Widgets</h2>
             <p>Herramientas rápidas para tener tu Marvel Hub siempre activo.</p>
         </div>
 
@@ -480,7 +481,7 @@
     <section id="perfil" class="seccion">
         <div class="titulo-seccion">
             <span class="mini-etiqueta">CUENTA</span>
-            <h2>👤 Mi perfil</h2>
+            <h2><i data-lucide="user-round"></i> Mi perfil</h2>
             <p>Tu identidad, actividad y biblioteca quedan organizadas y sincronizadas con tu cuenta.</p>
         </div>
 
@@ -587,7 +588,7 @@
     <section id="cuenta" class="seccion">
         <div class="titulo-seccion">
             <span class="mini-etiqueta">CUENTA</span>
-            <h2>🔐 Iniciar sesión</h2>
+            <h2><i data-lucide="lock-keyhole"></i> Iniciar sesión</h2>
             <p>Cuenta real para preparar la sincronización de tu perfil, favoritos e historial.</p>
         </div>
 
@@ -639,7 +640,7 @@
     <section id="ajustes" class="seccion">
         <div class="titulo-seccion">
             <span class="mini-etiqueta">APP</span>
-            <h2>⚙️ Ajustes</h2>
+            <h2><i data-lucide="settings"></i> Ajustes</h2>
             <p>Personaliza tu Marvel Hub y conserva tus preferencias.</p>
         </div>
 
