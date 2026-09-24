@@ -969,12 +969,100 @@ function cambiarFormato(formato) {
     }
 }
 
+function actualizarWidgetReloj() {
+    const reloj = document.getElementById("widgetReloj");
+    const fecha = document.getElementById("widgetFecha");
+
+    if (!reloj || !fecha) return;
+
+    const ahora = new Date();
+
+    reloj.textContent = ahora.toLocaleTimeString("es-MX", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+    });
+
+    fecha.textContent = ahora.toLocaleDateString("es-MX", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
+}
+
+function actualizarWidgetResumen() {
+    const resumen = document.getElementById("widgetResumen");
+    const estado = document.getElementById("widgetEstado");
+
+    if (!resumen || !estado) return;
+
+    resumen.textContent =
+        favoritosMarvel.length +
+        " favoritos";
+
+    estado.textContent =
+        peliculasTMDB.length +
+        " películas • " +
+        seriesTMDB.length +
+        " series cargadas";
+}
+
+function actualizarWidgetDato() {
+    const titulo = document.getElementById("widgetDato");
+    const texto = document.getElementById("widgetDatoTexto");
+
+    if (!titulo || !texto) return;
+
+    const datos = [
+        {
+            titulo: "Stan Lee",
+            texto: "Stan Lee fue uno de los principales impulsores creativos de Marvel durante décadas."
+        },
+        {
+            titulo: "Wakanda",
+            texto: "Wakanda es el país ficticio de Marvel asociado con Black Panther."
+        },
+        {
+            titulo: "Spider-Man",
+            texto: "Spider-Man apareció por primera vez en 1962, creado por Stan Lee y Steve Ditko."
+        },
+        {
+            titulo: "Los Vengadores",
+            texto: "The Avengers debutaron como equipo en los cómics en 1963."
+        },
+        {
+            titulo: "Guardianes",
+            texto: "Los Guardianes de la Galaxia han tenido distintas alineaciones a lo largo de los cómics."
+        }
+    ];
+
+    const indice =
+        (new Date().getDate() + new Date().getMonth()) %
+        datos.length;
+
+    titulo.textContent = datos[indice].titulo;
+    texto.textContent = datos[indice].texto;
+}
+
 function configurarWidgets() {
     const recomendacion =
         document.getElementById("widgetRecomendacion");
 
     const estrenos =
         document.getElementById("widgetEstrenos");
+
+    const noticias =
+        document.getElementById("widgetNoticias");
+
+    const musica =
+        document.getElementById("widgetMusica");
+
+    actualizarWidgetReloj();
+    actualizarWidgetResumen();
+    actualizarWidgetDato();
+
+    setInterval(actualizarWidgetReloj, 1000);
 
     if (recomendacion) {
         recomendacion.addEventListener("change", function() {
@@ -994,6 +1082,28 @@ function configurarWidgets() {
             if (bloque) {
                 bloque.style.display =
                     this.checked ? "" : "none";
+            }
+        });
+    }
+
+    if (noticias) {
+        noticias.addEventListener("change", function() {
+            const panel =
+                document.getElementById("widgetNoticiasPanel");
+
+            if (panel) {
+                panel.hidden = !this.checked;
+            }
+        });
+    }
+
+    if (musica) {
+        musica.addEventListener("change", function() {
+            const panel =
+                document.getElementById("widgetMusicaPanel");
+
+            if (panel) {
+                panel.hidden = !this.checked;
             }
         });
     }
@@ -1019,6 +1129,10 @@ document.addEventListener("DOMContentLoaded", function() {
     recomendacionTMDB();
     cargarMarvelTMDB();
     cargarProximosEstrenos();
+
+    setTimeout(function() {
+        actualizarWidgetResumen();
+    }, 1500);
 });
 
 /* ================================
