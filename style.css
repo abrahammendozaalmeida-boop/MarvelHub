@@ -2135,3 +2135,34 @@ body.tema-claro .favoritos-resumen span {
         background: rgba(12,12,16,.62);
     }
 }
+
+
+/* ================================
+   ESTADOS DEL CATÁLOGO
+   ================================ */
+
+#catalogo > p {
+    min-height: 150px;
+    display: grid;
+    place-items: center;
+    margin: 0;
+    padding: 30px 20px;
+    background: #15151c;
+    border: 1px dashed #34343e;
+    border-radius: 14px;
+    color: #9b9ba5;
+    font-size: 14px;
+}
+
+body.tema-claro #catalogo > p {
+    background: #fff;
+    border-color: #d7d7d7;
+    color: #666;
+}
+
+@media (max-width: 600px) {
+    #catalogo > p {
+        min-height: 120px;
+        padding: 25px 15px;
+    }
+}
