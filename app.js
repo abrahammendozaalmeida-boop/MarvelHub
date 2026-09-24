@@ -917,42 +917,359 @@ function cargarTema() {
     }
 }
 
-function configurarVideo() {
-    const videoInput =
-        document.getElementById("videoInput");
+let editorUrlActual = "";
 
-    const videoPreview =
-        document.getElementById("videoPreview");
-
-    const volumen =
-        document.getElementById("volumen");
-
-    if (videoInput && videoPreview) {
-        videoInput.addEventListener("change", function(event) {
-            const archivo = event.target.files[0];
-
-            if (!archivo) return;
-
-            const url = URL.createObjectURL(archivo);
-
-            videoPreview.src = url;
-            videoPreview.load();
-        });
+function formatearTiempoEditor(segundos) {
+    if (!Number.isFinite(segundos) || segundos < 0) {
+        return "00:00";
     }
 
-    if (volumen && videoPreview) {
-        volumen.addEventListener("input", function() {
-            videoPreview.volume = Number(this.value);
-        });
+    const minutos = Math.floor(segundos / 60);
+    const segundosRestantes = Math.floor(segundos % 60);
+
+    return (
+        String(minutos).padStart(2, "0") +
+        ":" +
+        String(segundosRestantes).padStart(2, "0")
+    );
+}
+
+function actualizarTiempoEditor() {
+    const video = document.getElementById("videoPreview");
+    const tiempo = document.getElementById("editorTiempoActual");
+    const duracion = document.getElementById("editorDuracion");
+    const progreso = document.getElementById("editorProgreso");
+
+    if (!video) return;
+
+    if (tiempo) {
+        tiempo.textContent = formatearTiempoEditor(video.currentTime);
+    }
+
+    if (duracion) {
+        duracion.textContent = formatearTiempoEditor(video.duration);
+    }
+
+    if (progreso && Number.isFinite(video.duration)) {
+        progreso.max = video.duration;
+        progreso.value = video.currentTime;
     }
 }
 
-function cambiarFormato(formato) {
-    const formatoActual =
-        document.getElementById("formatoActual");
+function actualizarFiltroEditor() {
+    const video = document.getElementById("videoPreview");
+    const brillo = document.getElementById("editorBrillo");
+    const contraste = document.getElementById("editorContraste");
+    const saturacion = document.getElementById("editorSaturacion");
 
-    const videoPreview =
-        document.getElementById("videoPreview");
+    if (!video) return;
+
+    const valorBrillo = brillo ? brillo.value : 100;
+    const valorContraste = contraste ? contraste.value : 100;
+    const valorSaturacion = saturacion ? saturacion.value : 100;
+
+    video.style.filter =
+        "brightness(" + valorBrillo + "%) " +
+        "contrast(" + valorContraste + "%) " +
+        "saturate(" + valorSaturacion + "%)";
+}
+
+function configurarVelocidadEditor(video) {
+    document.querySelectorAll("[data-velocidad]").forEach(function(boton) {
+        boton.addEventListener("click", function() {
+            const velocidad = Number(this.dataset.velocidad);
+
+            video.playbackRate = velocidad;
+
+            document.querySelectorAll("[data-velocidad]").forEach(function(elemento) {
+                elemento.classList.remove("activo-editor");
+            });
+
+            this.classList.add("activo-editor");
+        });
+    });
+}
+
+function configurarFormatosEditor() {
+    document.querySelectorAll("[data-formato]").forEach(function(boton) {
+        boton.addEventListener("click", function() {
+            cambiarFormato(this.dataset.formato);
+
+            document.querySelectorAll("[data-formato]").forEach(function(elemento) {
+                elemento.classList.remove("activo-editor");
+            });
+
+            this.classList.add("activo-editor");
+        });
+    });
+}
+
+function configurarVideo() {
+    const videoInput = document.getElementById("videoInput");
+    const videoPreview = document.getElementById("videoPreview");
+    const volumen = document.getElementById("volumen");
+    const progreso = document.getElementById("editorProgreso");
+    const botonPlay = document.getElementById("editorPlay");
+    const botonRetroceder = document.getElementById("editorRetroceder");
+    const botonAvanzar = document.getElementById("editorAvanzar");
+    const botonSilenciar = document.getElementById("editorSilenciar");
+    const inicio = document.getElementById("recorteInicio");
+    const fin = document.getElementById("recorteFin");
+    const aplicarRecorte = document.getElementById("aplicarRecorte");
+    const quitarRecorte = document.getElementById("quitarRecorte");
+    const estadoRecorte = document.getElementById("estadoRecorte");
+    const nombreArchivo = document.getElementById("editorNombreArchivo");
+    const reset = document.getElementById("resetEditor");
+
+    if (!videoInput || !videoPreview) return;
+
+    videoPreview.volume = 1;
+
+    videoInput.addEventListener("change", function(event) {
+        const archivo = event.target.files[0];
+
+        if (!archivo) return;
+
+        if (editorUrlActual) {
+            URL.revokeObjectURL(editorUrlActual);
+        }
+
+        editorUrlActual = URL.createObjectURL(archivo);
+        videoPreview.src = editorUrlActual;
+        videoPreview.load();
+
+        if (nombreArchivo) {
+            nombreArchivo.textContent =
+                archivo.name +
+                " • " +
+                Math.round(archivo.size / 1024 / 1024 * 10) / 10 +
+                " MB";
+        }
+    });
+
+    videoPreview.addEventListener("loadedmetadata", function() {
+        const duracion = Number.isFinite(videoPreview.duration)
+            ? videoPreview.duration
+            : 0;
+
+        if (inicio) {
+            inicio.value = 0;
+            inicio.max = duracion;
+        }
+
+        if (fin) {
+            fin.value = duracion.toFixed(1);
+            fin.max = duracion;
+        }
+
+        if (progreso) {
+            progreso.max = duracion;
+            progreso.value = 0;
+        }
+
+        actualizarTiempoEditor();
+    });
+
+    videoPreview.addEventListener("timeupdate", function() {
+        actualizarTiempoEditor();
+
+        if (
+            fin &&
+            Number.isFinite(Number(fin.value)) &&
+            Number(fin.value) > 0 &&
+            videoPreview.currentTime >= Number(fin.value)
+        ) {
+            videoPreview.pause();
+            videoPreview.currentTime = Number(inicio ? inicio.value : 0);
+        }
+    });
+
+    videoPreview.addEventListener("play", function() {
+        if (botonPlay) botonPlay.textContent = "⏸ Pausar";
+    });
+
+    videoPreview.addEventListener("pause", function() {
+        if (botonPlay) botonPlay.textContent = "▶ Reproducir";
+    });
+
+    if (progreso) {
+        progreso.addEventListener("input", function() {
+            videoPreview.currentTime = Number(this.value);
+        });
+    }
+
+    if (botonPlay) {
+        botonPlay.addEventListener("click", function() {
+            if (videoPreview.paused) {
+                videoPreview.play().catch(function(error) {
+                    console.error("Editor: no se pudo reproducir el video.", error);
+                });
+            } else {
+                videoPreview.pause();
+            }
+        });
+    }
+
+    if (botonRetroceder) {
+        botonRetroceder.addEventListener("click", function() {
+            videoPreview.currentTime = Math.max(
+                0,
+                videoPreview.currentTime - 5
+            );
+        });
+    }
+
+    if (botonAvanzar) {
+        botonAvanzar.addEventListener("click", function() {
+            const limite = Number.isFinite(videoPreview.duration)
+                ? videoPreview.duration
+                : videoPreview.currentTime + 5;
+
+            videoPreview.currentTime = Math.min(
+                limite,
+                videoPreview.currentTime + 5
+            );
+        });
+    }
+
+    if (botonSilenciar) {
+        botonSilenciar.addEventListener("click", function() {
+            videoPreview.muted = !videoPreview.muted;
+            this.textContent = videoPreview.muted
+                ? "🔇 Silenciado"
+                : "🔊 Audio";
+        });
+    }
+
+    if (volumen) {
+        volumen.addEventListener("input", function() {
+            videoPreview.volume = Number(this.value);
+            videoPreview.muted = Number(this.value) === 0;
+
+            if (botonSilenciar) {
+                botonSilenciar.textContent =
+                    videoPreview.muted ? "🔇 Silenciado" : "🔊 Audio";
+            }
+        });
+    }
+
+    [inicio, fin].forEach(function(campo) {
+        if (!campo) return;
+
+        campo.addEventListener("change", function() {
+            let inicioValor = inicio ? Number(inicio.value) : 0;
+            let finValor = fin ? Number(fin.value) : videoPreview.duration;
+
+            if (inicioValor < 0) inicioValor = 0;
+            if (finValor > videoPreview.duration) finValor = videoPreview.duration;
+
+            if (inicioValor >= finValor) {
+                if (this === inicio && fin) {
+                    inicioValor = Math.max(0, finValor - 0.1);
+                } else if (inicio) {
+                    finValor = Math.min(videoPreview.duration, inicioValor + 0.1);
+                }
+            }
+
+            if (inicio) inicio.value = inicioValor.toFixed(1);
+            if (fin) fin.value = finValor.toFixed(1);
+        });
+    });
+
+    if (aplicarRecorte) {
+        aplicarRecorte.addEventListener("click", function() {
+            const inicioValor = inicio ? Number(inicio.value) : 0;
+            const finValor = fin ? Number(fin.value) : videoPreview.duration;
+
+            if (
+                finValor <= inicioValor ||
+                !Number.isFinite(finValor) ||
+                finValor > videoPreview.duration
+            ) {
+                if (estadoRecorte) {
+                    estadoRecorte.textContent = "Revisa los tiempos de inicio y fin.";
+                }
+                return;
+            }
+
+            videoPreview.currentTime = inicioValor;
+
+            if (estadoRecorte) {
+                estadoRecorte.textContent =
+                    "Vista previa: " +
+                    formatearTiempoEditor(inicioValor) +
+                    " → " +
+                    formatearTiempoEditor(finValor);
+            }
+        });
+    }
+
+    if (quitarRecorte) {
+        quitarRecorte.addEventListener("click", function() {
+            if (inicio) inicio.value = 0;
+            if (fin && Number.isFinite(videoPreview.duration)) {
+                fin.value = videoPreview.duration.toFixed(1);
+            }
+
+            if (estadoRecorte) {
+                estadoRecorte.textContent =
+                    "El video completo está seleccionado.";
+            }
+        });
+    }
+
+    ["editorBrillo", "editorContraste", "editorSaturacion"].forEach(function(id) {
+        const control = document.getElementById(id);
+
+        if (control) {
+            control.addEventListener("input", actualizarFiltroEditor);
+        }
+    });
+
+    if (reset) {
+        reset.addEventListener("click", function() {
+            videoPreview.currentTime = 0;
+            videoPreview.playbackRate = 1;
+            videoPreview.volume = 1;
+            videoPreview.muted = false;
+
+            if (volumen) volumen.value = 1;
+            if (inicio) inicio.value = 0;
+            if (fin && Number.isFinite(videoPreview.duration)) {
+                fin.value = videoPreview.duration.toFixed(1);
+            }
+
+            ["editorBrillo", "editorContraste", "editorSaturacion"].forEach(function(id) {
+                const control = document.getElementById(id);
+                if (control) control.value = 100;
+            });
+
+            document.querySelectorAll("[data-velocidad]").forEach(function(elemento) {
+                elemento.classList.toggle(
+                    "activo-editor",
+                    elemento.dataset.velocidad === "1"
+                );
+            });
+
+            actualizarFiltroEditor();
+
+            if (estadoRecorte) {
+                estadoRecorte.textContent =
+                    "El video completo está seleccionado.";
+            }
+
+            if (botonSilenciar) botonSilenciar.textContent = "🔊 Audio";
+        });
+    }
+
+    configurarVelocidadEditor(videoPreview);
+    configurarFormatosEditor();
+    actualizarFiltroEditor();
+}
+
+function cambiarFormato(formato) {
+    const formatoActual = document.getElementById("formatoActual");
+    const videoPreview = document.getElementById("videoPreview");
 
     if (formatoActual) {
         formatoActual.textContent = formato;
