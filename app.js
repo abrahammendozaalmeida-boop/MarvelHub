@@ -88,6 +88,7 @@ function guardarFavoritos() {
 }
 
 function alternarFavorito(id, tipo) {
+
     const indice = favoritosMarvel.findIndex(function(item) {
         return item.id === id && item.tipo === tipo;
     });
@@ -874,6 +875,85 @@ function guardarNombre() {
     alert("Nombre guardado correctamente 👍");
 }
 
+function actualizarResumenAjustes() {
+    const resumen = document.getElementById("ajusteFavoritosResumen");
+    if (resumen) {
+        resumen.textContent =
+            favoritosMarvel.length +
+            (favoritosMarvel.length === 1 ? " favorito guardado." : " favoritos guardados.");
+    }
+
+    const estado = document.getElementById("estadoNombre");
+    const nombre = localStorage.getItem("nombreMarvel") || "";
+
+    if (estado) {
+        estado.textContent = nombre
+            ? "Tu nombre está guardado en este dispositivo."
+            : "Todavía no has configurado un nombre.";
+    }
+}
+
+function actualizarBotonTema() {
+    const boton = document.getElementById("botonTema");
+    if (!boton) return;
+
+    boton.textContent = document.body.classList.contains("tema-claro")
+        ? "🌙 Usar tema oscuro"
+        : "☀️ Usar tema claro";
+}
+
+function actualizarEstadoPWAEnAjustes() {
+    const estado = document.getElementById("estadoPWA");
+    const boton = document.getElementById("botonInstalarAjustes");
+
+    if (!estado) return;
+
+    const instalada =
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.navigator.standalone === true;
+
+    if (instalada) {
+        estado.textContent = "Marvel Hub ya está instalada como aplicación.";
+        if (boton) boton.hidden = true;
+        return;
+    }
+
+    if (instalacionPendiente) {
+        estado.textContent = "Lista para instalarse en este dispositivo.";
+        if (boton) boton.hidden = false;
+        return;
+    }
+
+    estado.textContent = "La instalación depende de las funciones de tu navegador.";
+    if (boton) boton.hidden = true;
+}
+
+function restablecerPreferencias() {
+    const confirmar = window.confirm(
+        "¿Quieres restablecer nombre, tema y preferencias de widgets?"
+    );
+
+    if (!confirmar) return;
+
+    localStorage.removeItem("nombreMarvel");
+    localStorage.removeItem("temaMarvel");
+    localStorage.removeItem("widgetsMarvel");
+
+    const nombre = document.getElementById("nombre");
+    if (nombre) nombre.value = "";
+
+    cargarTema();
+    cargarNombre();
+    configurarWidgets();
+    actualizarResumenAjustes();
+    actualizarBotonTema();
+
+    const estado = document.getElementById("estadoNombre");
+    if (estado) {
+        estado.textContent = "Preferencias restablecidas.";
+    }
+}
+
 function actualizarSaludoInicio() {
     const saludo = document.getElementById("saludoInicio");
 
@@ -900,6 +980,7 @@ function cargarNombre() {
 }
 
 function cambiarTema() {
+    actualizarBotonTema();
     document.body.classList.toggle("tema-claro");
 
     const temaClaro =
@@ -1614,6 +1695,78 @@ function actualizarWidgetDato() {
 }
 
 function configurarWidgets() {
+    const recomendacion = document.getElementById("widgetRecomendacion");
+    const estrenos = document.getElementById("widgetEstrenos");
+    const noticias = document.getElementById("widgetNoticias");
+    const musica = document.getElementById("widgetMusica");
+
+    let preferencias = {};
+    try {
+        preferencias = JSON.parse(localStorage.getItem("widgetsMarvel") || "{}");
+    } catch (error) {
+        preferencias = {};
+    }
+
+    if (recomendacion) recomendacion.checked = preferencias.recomendacion !== false;
+    if (estrenos) estrenos.checked = preferencias.estrenos !== false;
+    if (noticias) noticias.checked = preferencias.noticias === true;
+    if (musica) musica.checked = preferencias.musica === true;
+
+    actualizarWidgetReloj();
+    actualizarWidgetResumen();
+    actualizarWidgetDato();
+
+    setInterval(actualizarWidgetReloj, 1000);
+
+    const guardarWidgets = function() {
+        localStorage.setItem("widgetsMarvel", JSON.stringify({
+            recomendacion: recomendacion ? recomendacion.checked : true,
+            estrenos: estrenos ? estrenos.checked : true,
+            noticias: noticias ? noticias.checked : false,
+            musica: musica ? musica.checked : false
+        }));
+    };
+
+    if (recomendacion) {
+        recomendacion.addEventListener("change", function() {
+            const hero = document.querySelector(".hero");
+            if (hero) hero.style.display = this.checked ? "" : "none";
+            guardarWidgets();
+        });
+        const hero = document.querySelector(".hero");
+        if (hero) hero.style.display = recomendacion.checked ? "" : "none";
+    }
+
+    if (estrenos) {
+        estrenos.addEventListener("change", function() {
+            const bloque = document.querySelector(".proximos-estrenos");
+            if (bloque) bloque.style.display = this.checked ? "" : "none";
+            guardarWidgets();
+        });
+        const bloque = document.querySelector(".proximos-estrenos");
+        if (bloque) bloque.style.display = estrenos.checked ? "" : "none";
+    }
+
+    if (noticias) {
+        noticias.addEventListener("change", function() {
+            const panel = document.getElementById("widgetNoticiasPanel");
+            if (panel) panel.hidden = !this.checked;
+            guardarWidgets();
+        });
+        const panel = document.getElementById("widgetNoticiasPanel");
+        if (panel) panel.hidden = !noticias.checked;
+    }
+
+    if (musica) {
+        musica.addEventListener("change", function() {
+            const panel = document.getElementById("widgetMusicaPanel");
+            if (panel) panel.hidden = !this.checked;
+            guardarWidgets();
+        });
+        const panel = document.getElementById("widgetMusicaPanel");
+        if (panel) panel.hidden = !musica.checked;
+    }
+}
     const recomendacion =
         document.getElementById("widgetRecomendacion");
 
@@ -1685,6 +1838,7 @@ window.guardarNombre = guardarNombre;
 window.cambiarTema = cambiarTema;
 window.cambiarFormato = cambiarFormato;
 window.exportarVideoEditor = exportarVideoEditor;
+window.restablecerPreferencias = restablecerPreferencias;
 
 document.addEventListener("DOMContentLoaded", function() {
     cargarTema();
@@ -1728,7 +1882,18 @@ function actualizarEstadoInstalacion() {
 }
 
 function configurarPWA() {
+    const botonInstalarAjustes = document.getElementById("botonInstalarAjustes");
     const botonInstalar = document.getElementById("botonInstalar");
+
+    if (botonInstalarAjustes) {
+        botonInstalarAjustes.addEventListener("click", function() {
+            if (instalacionPendiente) {
+                instalacionPendiente.prompt();
+            } else {
+                actualizarEstadoPWAEnAjustes();
+            }
+        });
+    }
 
     if ("serviceWorker" in navigator) {
         window.addEventListener("load", function() {
@@ -1749,6 +1914,8 @@ function configurarPWA() {
         if (botonInstalar) {
             botonInstalar.hidden = false;
             actualizarEstadoInstalacion();
+        actualizarEstadoPWAEnAjustes();
+            actualizarEstadoPWAEnAjustes();
         }
     });
 
@@ -1784,4 +1951,13 @@ function configurarPWA() {
 document.addEventListener("DOMContentLoaded", function() {
     configurarPWA();
     actualizarEstadoInstalacion();
+    actualizarEstadoPWAEnAjustes();
+
+    const botonRestablecer = document.getElementById("restablecerPreferencias");
+    if (botonRestablecer) {
+        botonRestablecer.addEventListener("click", restablecerPreferencias);
+    }
+
+    actualizarResumenAjustes();
+    actualizarBotonTema();
 });
