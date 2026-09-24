@@ -32,29 +32,87 @@
 
 <main>
     <section id="inicio" class="seccion activa">
+
+        <div class="inicio-portada">
+            <div class="portada-contenido">
+                <span class="etiqueta-marvel">MARVEL HUB • ABRAHAM G4</span>
+                <h2>Tu universo Marvel,<br><strong>todo en un solo lugar.</strong></h2>
+                <p>Descubre películas, series, próximos estrenos y tus favoritos.</p>
+
+                <div class="portada-botones">
+                    <button class="boton-principal" onclick="nuevaRecomendacion()">🎲 Recomendarme algo</button>
+                    <button class="boton-secundario" onclick="mostrarSeccion('marvel')">🦸 Ver catálogo</button>
+                </div>
+            </div>
+        </div>
+
         <div class="hero">
-            <h2>🔥 Recomendación Marvel</h2>
+            <div class="titulo-seccion titulo-home">
+                <span class="mini-etiqueta">PARA TI</span>
+                <h2>🔥 Recomendación Marvel</h2>
+            </div>
+
             <div class="recomendacion">
                 <div id="recomendacionPoster"></div>
-                <h3 id="recomendacion">Cargando...</h3>
-                <p id="descripcion">Espera un momento...</p>
-                <button onclick="nuevaRecomendacion()">🎲 Otra recomendación</button>
+
+                <div class="recomendacion-info">
+                    <span class="recomendacion-etiqueta">RECOMENDACIÓN DEL DÍA</span>
+                    <h3 id="recomendacion">Cargando...</h3>
+                    <p id="descripcion">Espera un momento...</p>
+
+                    <div class="recomendacion-acciones">
+                        <button class="boton-principal" onclick="nuevaRecomendacion()">🎲 Otra recomendación</button>
+                        <button class="boton-secundario" onclick="mostrarSeccion('marvel')">Ver más Marvel</button>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="proximos-estrenos">
-            <div class="titulo-seccion">
+            <div class="titulo-seccion titulo-home">
+                <span class="mini-etiqueta">MUY PRONTO</span>
                 <h2>📅 Próximos estrenos Marvel</h2>
-                <p>Películas de Marvel Studios que llegarán próximamente</p>
+                <p>Películas de Marvel Studios que llegarán próximamente.</p>
             </div>
-            <div id="proximosEstrenos" class="catalogo">
+
+            <div id="proximosEstrenos" class="catalogo catalogo-horizontal">
                 <p>Cargando próximos estrenos...</p>
+            </div>
+        </div>
+
+        <div class="home-atajos">
+            <div class="atajo-card" onclick="mostrarSeccion('marvel')">
+                <span>🦸</span>
+                <div>
+                    <strong>Explorar Marvel</strong>
+                    <p>Películas y series</p>
+                </div>
+                <b>›</b>
+            </div>
+
+            <div class="atajo-card" onclick="mostrarSeccion('favoritos')">
+                <span>❤️</span>
+                <div>
+                    <strong>Mis favoritos</strong>
+                    <p>Tu lista personal</p>
+                </div>
+                <b>›</b>
+            </div>
+
+            <div class="atajo-card" onclick="mostrarSeccion('editor')">
+                <span>🎬</span>
+                <div>
+                    <strong>Editor de video</strong>
+                    <p>Crea y ajusta tus videos</p>
+                </div>
+                <b>›</b>
             </div>
         </div>
     </section>
 
     <section id="marvel" class="seccion">
         <div class="titulo-seccion">
+            <span class="mini-etiqueta">MARVEL</span>
             <h2>🦸 Catálogo Marvel</h2>
             <p>Películas y series de Marvel</p>
         </div>
@@ -73,6 +131,7 @@
 
     <section id="favoritos" class="seccion">
         <div class="titulo-seccion">
+            <span class="mini-etiqueta">TU LISTA</span>
             <h2>❤️ Mis favoritos</h2>
             <p>Tus películas y series Marvel guardadas</p>
         </div>
@@ -155,7 +214,7 @@
 
 <div id="avisoApp" class="aviso-app" hidden></div>
 
-    <footer>
+<footer>
     <p>ABRAHAM G4 © 2026 — MARVEL HUB</p>
 </footer>
 
