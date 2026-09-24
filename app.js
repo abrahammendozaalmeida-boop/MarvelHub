@@ -282,18 +282,12 @@ function renderizarCatalogo(lista) {
             titulo +
             "</h3>" +
             "<p class='tipo-contenido'>📅 " +
-            fecha +
-            "</p>" +
-            "<p>⭐ " +
-            puntuacion +
-            "/10</p>" +
-            "<p>📅 " +
-            fecha +
-            "</p>" +
-            "<p class='puntuacion'>⭐ " +
-            puntuacion +
-            "/10</p>" +
-            "<p class='descripcion-pelicula'>" +
+        fecha +
+        "</p>" +
+        "<p class='puntuacion'>⭐ " +
+        puntuacion +
+        "/10</p>" +
+        "<p class='descripcion-pelicula'>" +
             descripcion +
             "</p>" +
             "<div class='botones-card'>" +
@@ -1060,7 +1054,7 @@ function actualizarResumenAjustes() {
     }
 
     const estado = document.getElementById("estadoNombre");
-    const nombre = localStorage.getItem("nombreMarvel") || "";
+    const nombre = localStorage.getItem("nombre") || "";
 
     if (estado) {
         estado.textContent = nombre
@@ -1111,18 +1105,37 @@ function restablecerPreferencias() {
 
     if (!confirmar) return;
 
-    localStorage.removeItem("nombreMarvel");
-    localStorage.removeItem("temaMarvel");
+    localStorage.removeItem("nombre");
+    localStorage.removeItem("tema");
     localStorage.removeItem("widgetsMarvel");
 
     const nombre = document.getElementById("nombre");
     if (nombre) nombre.value = "";
 
-    configurarFavoritos();
-
     cargarTema();
     cargarNombre();
-    configurarWidgets();
+
+    const widgetRecomendacion = document.getElementById("widgetRecomendacion");
+    const widgetEstrenos = document.getElementById("widgetEstrenos");
+    const widgetNoticias = document.getElementById("widgetNoticias");
+    const widgetMusica = document.getElementById("widgetMusica");
+
+    if (widgetRecomendacion) widgetRecomendacion.checked = true;
+    if (widgetEstrenos) widgetEstrenos.checked = true;
+    if (widgetNoticias) widgetNoticias.checked = false;
+    if (widgetMusica) widgetMusica.checked = false;
+
+    const hero = document.querySelector(".hero");
+    const estrenos = document.querySelector(".proximos-estrenos");
+    const panelNoticias = document.getElementById("widgetNoticiasPanel");
+    const panelMusica = document.getElementById("widgetMusicaPanel");
+
+    if (hero) hero.style.display = "";
+    if (estrenos) estrenos.style.display = "";
+    if (panelNoticias) panelNoticias.hidden = true;
+    if (panelMusica) panelMusica.hidden = true;
+
+    actualizarWidgetResumen();
     actualizarResumenAjustes();
     actualizarBotonTema();
 
@@ -2068,7 +2081,6 @@ function configurarPWA() {
         if (botonInstalar) {
             botonInstalar.hidden = false;
             actualizarEstadoInstalacion();
-        actualizarEstadoPWAEnAjustes();
             actualizarEstadoPWAEnAjustes();
         }
     });
