@@ -3362,3 +3362,31 @@ body.tema-claro .cuenta-modo.activo{background:#fff;border-color:#ddd}
 body.tema-claro .cuenta-sincronizacion{border-color:#ddd;background:#f7f7f7}
 body.tema-claro .cuenta-hero{background:linear-gradient(135deg,rgba(230,36,41,.07),#fff);border-color:rgba(230,36,41,.15)}
 @media(max-width:600px){.cuenta-hero{align-items:flex-start}.cuenta-hero-icon{width:42px;height:42px;flex-basis:42px}.cuenta-sync-titulo span{display:none}}
+
+/* ================================ INICIO 2.0 — EXPERIENCIA STREAMING ================================ */
+.inicio-portada{position:relative;min-height:390px;overflow:hidden;isolation:isolate;border:1px solid rgba(255,255,255,.08);box-shadow:0 24px 70px rgba(0,0,0,.28)}
+.inicio-portada::before{content:"";position:absolute;inset:0;z-index:-2;background:radial-gradient(circle at 78% 28%,rgba(230,36,41,.34),transparent 28%),radial-gradient(circle at 18% 90%,rgba(112,35,180,.18),transparent 30%),linear-gradient(120deg,#09090d 0%,#111118 48%,#1b0d10 100%)}
+.inicio-portada::after{content:"MARVEL HUB";position:absolute;right:-18px;bottom:-34px;z-index:-1;font-size:clamp(70px,13vw,170px);font-weight:1000;letter-spacing:-.08em;color:rgba(255,255,255,.025);transform:skewX(-8deg);pointer-events:none}
+.portada-contenido{position:relative;max-width:720px;padding:64px 56px}
+.portada-contenido h2{max-width:680px;margin:16px 0 14px;font-size:clamp(34px,5vw,64px);line-height:1.02;letter-spacing:-.04em}
+.portada-contenido h2 strong{background:linear-gradient(90deg,#fff 20%,#ff777b 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.portada-contenido>p{max-width:580px;font-size:15px;line-height:1.65;color:#b4b4bf}
+.portada-botones{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.portada-botones button{min-height:44px}
+.inicio-estado-barra{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0 28px}
+.inicio-estado-item{display:flex;align-items:center;gap:11px;min-width:0;padding:12px 14px;border:1px solid rgba(255,255,255,.07);border-radius:13px;background:rgba(255,255,255,.025)}
+.inicio-estado-icono{width:36px;height:36px;flex:0 0 36px;display:grid;place-items:center;border-radius:10px;background:rgba(230,36,41,.09);color:#e62429}
+.inicio-estado-icono svg{width:18px;height:18px}
+.inicio-estado-item strong,.inicio-estado-item small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.inicio-estado-item strong{font-size:11px}.inicio-estado-item small{margin-top:3px;color:#777781;font-size:10px}
+.catalogo-horizontal .tarjeta-pelicula{transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.catalogo-horizontal .tarjeta-pelicula:hover{transform:translateY(-6px);box-shadow:0 18px 38px rgba(0,0,0,.28);border-color:rgba(230,36,41,.35)}
+.atajo-card{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.atajo-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.2);border-color:rgba(230,36,41,.35)}
+body.tema-claro .inicio-portada::before{background:radial-gradient(circle at 78% 28%,rgba(230,36,41,.16),transparent 28%),linear-gradient(120deg,#fff 0%,#f4f4f6 55%,#fff1f2 100%)}
+body.tema-claro .inicio-portada{border-color:#ddd;box-shadow:0 18px 45px rgba(0,0,0,.08)}
+body.tema-claro .portada-contenido h2 strong{background:linear-gradient(90deg,#111 20%,#b21e23 100%);-webkit-background-clip:text;background-clip:text}
+body.tema-claro .portada-contenido>p{color:#666}
+body.tema-claro .inicio-estado-item{border-color:#ddd;background:#fff}
+@media(max-width:800px){.portada-contenido{padding:46px 30px}.inicio-portada{min-height:350px}}
+@media(max-width:600px){.inicio-estado-barra{grid-template-columns:1fr;margin-bottom:22px}.inicio-estado-item{padding:11px 12px}.portada-contenido{padding:38px 22px}.portada-contenido h2{font-size:36px}.portada-botones{flex-direction:column}.portada-botones button{width:100%}}
