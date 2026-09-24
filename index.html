@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ABRAHAM G4 — MARVEL HUB</title>
     <link rel="stylesheet" href="style.css">
+    <meta name="theme-color" content="#0b0b0f">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
 
@@ -21,6 +26,7 @@
         <button onclick="mostrarSeccion('editor')">Editor</button>
         <button onclick="mostrarSeccion('widgets')">Widgets</button>
         <button onclick="mostrarSeccion('ajustes')">Ajustes</button>
+        <button id="botonInstalar" class="boton-instalar" hidden>📲 Instalar</button>
     </nav>
 </header>
 
@@ -147,7 +153,9 @@
     </div>
 </main>
 
-<footer>
+<div id="avisoApp" class="aviso-app" hidden></div>
+
+    <footer>
     <p>ABRAHAM G4 © 2026 — MARVEL HUB</p>
 </footer>
 
