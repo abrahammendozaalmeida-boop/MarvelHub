@@ -3790,3 +3790,95 @@ body.tema-claro .catalogo-command .filtro.activo-filtro{color:#222;background:rg
 body.tema-claro .catalogo-search-box input,
 body.tema-claro .catalogo-sort-box select{color:#222}
 body.tema-claro .catalogo-search-box input::placeholder{color:#9999a2}
+
+
+/* RESULTADOS GLOBALES — EXPERIENCIA UNIFICADA */
+#resultadosBusquedaGlobal{
+    margin:0 0 28px;
+}
+.resultados-global-cabecera{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin:8px 0 12px;
+    padding:0 2px;
+}
+.resultados-global-cabecera strong{
+    display:block;
+    margin-top:4px;
+    font-size:15px;
+    letter-spacing:-.02em;
+}
+.resultados-global-fuente{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:7px 10px;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:9px;
+    background:rgba(255,255,255,.025);
+    color:#888894;
+    font-size:10px;
+    font-weight:800;
+}
+.resultados-global-fuente svg{
+    width:13px;
+    height:13px;
+    color:#e62429;
+}
+.resultados-global-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:14px;
+}
+.resultados-global-grid .tarjeta-pelicula{
+    min-width:0;
+}
+.resultado-persona{
+    border-style:dashed;
+}
+.busqueda-vacia-global{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    min-height:170px;
+    padding:24px;
+    box-sizing:border-box;
+    border:1px dashed rgba(255,255,255,.12);
+    border-radius:16px;
+    background:rgba(255,255,255,.02);
+    text-align:center;
+}
+.busqueda-vacia-global svg{
+    width:28px;
+    height:28px;
+    margin-bottom:4px;
+    color:#e62429;
+}
+.busqueda-vacia-global strong{font-size:14px}
+.busqueda-vacia-global span{
+    color:#777783;
+    font-size:11px;
+}
+body.tema-claro .resultados-global-fuente{
+    border-color:#ddd;
+    background:#fff;
+    color:#777781;
+}
+body.tema-claro .busqueda-vacia-global{
+    border-color:#d7d7dc;
+    background:#fafafa;
+}
+@media(max-width:1000px){
+    .resultados-global-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:700px){
+    .resultados-global-cabecera{align-items:flex-start}
+    .resultados-global-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+}
+@media(max-width:430px){
+    .resultados-global-grid{grid-template-columns:1fr}
+}
