@@ -2393,4 +2393,70 @@ function configurarWidgets() {
     }
 }
 
+function inicializarMarvelHub() {
+    cargarTema();
+    cargarNombre();
+    configurarFavoritos();
+    configurarModal();
+    configurarTeclado();
+    configurarVideo();
+    configurarWidgets();
+    activarBuscador();
+
+    const botonInstalar = document.getElementById("botonInstalar");
+    const botonInstalarAjustes = document.getElementById("botonInstalarAjustes");
+
+    const instalarApp = async function() {
+        if (!instalacionPendiente) return;
+
+        instalacionPendiente.prompt();
+
+        try {
+            await instalacionPendiente.userChoice;
+        } catch (error) {
+            console.warn("No se pudo completar la instalación.", error);
+        }
+
+        instalacionPendiente = null;
+        actualizarEstadoPWAEnAjustes();
+    };
+
+    if (botonInstalar) {
+        botonInstalar.addEventListener("click", instalarApp);
+    }
+
+    if (botonInstalarAjustes) {
+        botonInstalarAjustes.addEventListener("click", instalarApp);
+    }
+
+    window.addEventListener("beforeinstallprompt", function(event) {
+        event.preventDefault();
+        instalacionPendiente = event;
+
+        if (botonInstalar) botonInstalar.hidden = false;
+        actualizarEstadoPWAEnAjustes();
+    });
+
+    window.addEventListener("appinstalled", function() {
+        instalacionPendiente = null;
+        if (botonInstalar) botonInstalar.hidden = true;
+        actualizarEstadoPWAEnAjustes();
+    });
+
+    actualizarResumenAjustes();
+    actualizarBotonTema();
+    actualizarEstadoPWAEnAjustes();
+    actualizarWidgetResumen();
+
+    cargarMarvelTMDB();
+    cargarProximosEstrenos();
+    recomendacionTMDB();
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", inicializarMarvelHub);
+} else {
+    inicializarMarvelHub();
+}
+
 window.mostrarSeccion = mostrarSeccion;
