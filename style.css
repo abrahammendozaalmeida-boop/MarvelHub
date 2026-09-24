@@ -2021,3 +2021,77 @@ body.tema-claro .catalogo-busqueda select {
         filter: none;
     }
 }
+
+
+/* ================================
+   BIBLIOTECA DE FAVORITOS
+   ================================ */
+
+.favoritos-resumen {
+    max-width: 1050px;
+    margin: 0 0 22px;
+    padding: 16px 18px;
+    border: 1px solid #292933;
+    border-radius: 14px;
+    background: #15151c;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.favoritos-resumen > div:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.favoritos-resumen strong {
+    font-size: 20px;
+}
+
+.favoritos-resumen span {
+    color: #9999a3;
+    font-size: 12px;
+}
+
+.favoritos-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.filtro-favoritos {
+    padding: 8px 11px;
+    font-size: 12px;
+    background: #25252d;
+}
+
+.filtro-favoritos.activo-filtro {
+    background: #e62429;
+}
+
+body.tema-claro .favoritos-resumen {
+    background: #fff;
+    border-color: #ddd;
+}
+
+body.tema-claro .favoritos-resumen span {
+    color: #666;
+}
+
+@media (max-width: 700px) {
+    .favoritos-resumen {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .favoritos-filtros {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .filtro-favoritos {
+        padding: 9px 5px;
+    }
+}
