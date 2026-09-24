@@ -212,25 +212,87 @@
     </section>
 
     <section id="widgets" class="seccion">
-        <h2>🧩 Widgets</h2>
+        <div class="titulo-seccion">
+            <span class="mini-etiqueta">CENTRO</span>
+            <h2>🧩 Widgets</h2>
+            <p>Herramientas rápidas para tener tu Marvel Hub siempre activo.</p>
+        </div>
 
-        <div class="widget">
+        <div class="widgets-panel">
+            <div class="widget widget-reloj">
+                <span class="widget-icono">🕒</span>
+                <div>
+                    <small>HORA LOCAL</small>
+                    <strong id="widgetReloj">--:--:--</strong>
+                    <p id="widgetFecha">Cargando fecha...</p>
+                </div>
+            </div>
+
+            <div class="widget widget-actividad">
+                <span class="widget-icono">📊</span>
+                <div>
+                    <small>MI MARVEL HUB</small>
+                    <strong id="widgetResumen">Cargando...</strong>
+                    <p id="widgetEstado">Preparando tu catálogo.</p>
+                </div>
+            </div>
+
+            <div class="widget widget-favorito">
+                <span class="widget-icono">✨</span>
+                <div>
+                    <small>MARVEL DEL DÍA</small>
+                    <strong id="widgetDato">Cargando dato...</strong>
+                    <p id="widgetDatoTexto">Un dato nuevo puede aparecer cada día.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="widget-controles">
+            <h3>Personaliza tu inicio</h3>
+
             <label>
                 <input type="checkbox" id="widgetRecomendacion" checked>
                 ⭐ Recomendación del día
             </label>
+
             <label>
                 <input type="checkbox" id="widgetEstrenos" checked>
                 🎬 Próximos estrenos
             </label>
+
             <label>
                 <input type="checkbox" id="widgetNoticias">
-                📰 Noticias Marvel
+                📰 Centro de noticias
             </label>
+
             <label>
                 <input type="checkbox" id="widgetMusica">
-                🎵 Música
+                🎵 Música Marvel
             </label>
+        </div>
+
+        <div id="widgetNoticiasPanel" class="widget-extra" hidden>
+            <div>
+                <span class="mini-etiqueta">NOTICIAS</span>
+                <h3>📰 Centro de noticias Marvel</h3>
+                <p>Consulta novedades recientes directamente desde fuentes externas.</p>
+            </div>
+            <div class="widget-enlaces">
+                <a href="https://www.marvel.com/" target="_blank" rel="noopener noreferrer">🌐 Marvel oficial</a>
+                <a href="https://news.google.com/search?q=Marvel" target="_blank" rel="noopener noreferrer">🔎 Buscar noticias</a>
+            </div>
+        </div>
+
+        <div id="widgetMusicaPanel" class="widget-extra" hidden>
+            <div>
+                <span class="mini-etiqueta">MÚSICA</span>
+                <h3>🎵 Música Marvel</h3>
+                <p>Abre una búsqueda de bandas sonoras y playlists de Marvel.</p>
+            </div>
+            <div class="widget-enlaces">
+                <a href="https://www.youtube.com/results?search_query=Marvel+soundtrack" target="_blank" rel="noopener noreferrer">▶️ YouTube</a>
+                <a href="https://open.spotify.com/search/Marvel%20soundtrack" target="_blank" rel="noopener noreferrer">🎧 Spotify</a>
+            </div>
         </div>
     </section>
 
