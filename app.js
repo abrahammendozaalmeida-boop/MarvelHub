@@ -6,6 +6,7 @@ let peliculasTMDB = [];
 let seriesTMDB = [];
 let tipoActual = "peliculas";
 let favoritosMarvel = JSON.parse(localStorage.getItem("favoritosMarvel") || "[]");
+let instalacionPendiente = null;
 
 function actualizarInicioPersonalizado() {
     const nombre = localStorage.getItem("nombre") || "";
@@ -232,6 +233,85 @@ function crearPoster(url, titulo, clase) {
         "'>"
     );
 }
+
+
+function crearTarjetaMarvel(item, opciones) {
+    const datos = item || {};
+    const tipo = datos.tipo || "movie";
+    const titulo = datos.title || datos.name || datos.titulo || "Sin título";
+    const fecha = datos.release_date || datos.first_air_date || datos.fecha || "Sin fecha";
+    const puntuacion = datos.vote_average
+        ? Number(datos.vote_average).toFixed(1)
+        : "N/A";
+    const descripcion = datos.overview || "Sin descripción disponible.";
+    const esFavorito = esFavoritoMarvel(datos.id, tipo);
+
+    const tarjeta = document.createElement("article");
+    tarjeta.className = "tarjeta-pelicula";
+
+    tarjeta.innerHTML =
+        "<div class='card-media'>" +
+        crearPoster(
+            datos.poster_path
+                ? TMDB_IMAGE_URL + datos.poster_path
+                : "",
+            escaparHTML(titulo),
+            ""
+        ) +
+        "<div class='card-overlay'>" +
+        "<button class='card-ver' type='button'>▶ Ver detalles</button>" +
+        "</div>" +
+        "<span class='card-badge'>" +
+        (tipo === "tv" ? "📺 Serie" : "🎬 Película") +
+        "</span>" +
+        "<span class='card-rating'>⭐ " +
+        puntuacion +
+        "</span>" +
+        "</div>" +
+        "<div class='card-content'>" +
+        "<h3>" + escaparHTML(titulo) + "</h3>" +
+        "<div class='card-meta'>" +
+        "<span>" + (tipo === "tv" ? "Serie" : "Película") + "</span>" +
+        "<span>📅 " + escaparHTML(fecha) + "</span>" +
+        "</div>" +
+        "<p class='puntuacion'>⭐ " + puntuacion + "/10</p>" +
+        "<p class='descripcion-pelicula'>" +
+        escaparHTML(descripcion) +
+        "</p>" +
+        "<div class='botones-card'>" +
+        "<button class='boton-detalles' type='button'>Ver detalles</button>" +
+        "<button class='" +
+        (esFavorito ? "boton-quitar-favorito" : "boton-favorito") +
+        "' type='button'>" +
+        (esFavorito ? "💔 Quitar" : "❤️ Favorito") +
+        "</button>" +
+        "</div>" +
+        "</div>";
+
+    const abrirDetalles = function() {
+        verDetallesTMDB(datos.id, tipo);
+    };
+
+    const botonVer = tarjeta.querySelector(".card-ver");
+    const botonDetalles = tarjeta.querySelector(".boton-detalles");
+    const botonFavorito = tarjeta.querySelector(".boton-favorito, .boton-quitar-favorito");
+
+    if (botonVer) botonVer.addEventListener("click", abrirDetalles);
+    if (botonDetalles) botonDetalles.addEventListener("click", abrirDetalles);
+
+    if (botonFavorito) {
+        botonFavorito.addEventListener("click", function() {
+            alternarFavorito(datos.id, tipo, datos);
+
+            if (opciones && opciones.actualizarInicio) {
+                renderizarFilasInicio();
+            }
+        });
+    }
+
+    return tarjeta;
+}
+
 
 function esFavoritoMarvel(id, tipo) {
     return favoritosMarvel.some(function(item) {
@@ -862,28 +942,43 @@ function mostrarTipoMarvel(tipo) {
 
 function activarBuscador() {
     const buscador = document.getElementById("buscador");
+    const orden = document.getElementById("ordenCatalogo");
+    const limpiar = document.getElementById("limpiarBusqueda");
 
-    if (!buscador) return;
+    if (buscador) {
+        buscador.addEventListener("input", function() {
+            const lista = tipoActual === "peliculas"
+                ? peliculasTMDB
+                : seriesTMDB;
 
-    buscador.addEventListener("input", function() {
-        const texto = this.value.toLowerCase().trim();
-
-        const lista = tipoActual === "peliculas"
-            ? peliculasTMDB
-            : seriesTMDB;
-
-        const resultados = lista.filter(function(item) {
-            const titulo = (
-                item.title ||
-                item.name ||
-                ""
-            ).toLowerCase();
-
-            return titulo.includes(texto);
+            renderizarCatalogo(lista);
         });
+    }
 
-        renderizarCatalogo(resultados);
-    });
+    if (orden) {
+        orden.addEventListener("change", function() {
+            const lista = tipoActual === "peliculas"
+                ? peliculasTMDB
+                : seriesTMDB;
+
+            renderizarCatalogo(lista);
+        });
+    }
+
+    if (limpiar) {
+        limpiar.addEventListener("click", function() {
+            if (buscador) {
+                buscador.value = "";
+            }
+
+            const lista = tipoActual === "peliculas"
+                ? peliculasTMDB
+                : seriesTMDB;
+
+            renderizarCatalogo(lista);
+            if (buscador) buscador.focus();
+        });
+    }
 }
 
 function escaparHTML(valor) {
