@@ -3339,3 +3339,26 @@ h3 {
         height: 18px;
     }
 }
+
+/* ================================
+   CUENTA 2.0 — EXPERIENCIA APP
+   ================================ */
+.cuenta-hero{display:flex;align-items:center;gap:15px;padding:17px;margin-bottom:16px;border:1px solid rgba(230,36,41,.18);border-radius:16px;background:linear-gradient(135deg,rgba(230,36,41,.10),rgba(255,255,255,.02))}
+.cuenta-hero-icon{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;border-radius:14px;background:rgba(230,36,41,.12);color:#e62429}
+.cuenta-hero-icon svg{width:23px;height:23px}
+.cuenta-hero h3{margin:3px 0}.cuenta-hero p{margin:0;color:#9999a3;font-size:12px}
+.cuenta-punto{width:10px;height:10px;margin-left:auto;border-radius:50%;box-shadow:0 0 0 5px rgba(255,255,255,.04)}
+.estado-esperando{background:#8c8c96}.estado-activo{background:#36d47c;box-shadow:0 0 0 5px rgba(54,212,124,.12),0 0 13px rgba(54,212,124,.45)}
+.estado-sync{background:#e62429;box-shadow:0 0 0 5px rgba(230,36,41,.10),0 0 13px rgba(230,36,41,.45);animation:cuentaPulso 1s infinite}
+@keyframes cuentaPulso{50%{opacity:.35;transform:scale(.72)}}
+.cuenta-modos{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:5px;margin-bottom:16px;border-radius:13px;background:rgba(127,127,127,.08)}
+.cuenta-modo{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 12px;border:1px solid transparent;border-radius:10px;background:transparent;color:inherit;cursor:pointer}
+.cuenta-modo svg{width:16px;height:16px}.cuenta-modo.activo{background:#22222b;border-color:#363640;box-shadow:0 5px 15px rgba(0,0,0,.16)}
+.cuenta-formulario h3{display:flex;align-items:center;gap:8px}.cuenta-formulario h3 svg{width:18px;height:18px;color:#e62429}
+.cuenta-sincronizacion{margin-top:18px;padding:14px;border:1px solid #292933;border-radius:14px;background:rgba(127,127,127,.05)}
+.cuenta-sync-titulo{display:flex;align-items:center;gap:8px;margin-bottom:7px}.cuenta-sync-titulo svg{width:17px;height:17px;color:#e62429}.cuenta-sync-titulo span{margin-left:auto;color:#9999a3;font-size:11px}
+.cuenta-nota strong{display:flex;align-items:center;gap:7px}.cuenta-nota strong svg{width:16px;height:16px;color:#e62429}
+body.tema-claro .cuenta-modo.activo{background:#fff;border-color:#ddd}
+body.tema-claro .cuenta-sincronizacion{border-color:#ddd;background:#f7f7f7}
+body.tema-claro .cuenta-hero{background:linear-gradient(135deg,rgba(230,36,41,.07),#fff);border-color:rgba(230,36,41,.15)}
+@media(max-width:600px){.cuenta-hero{align-items:flex-start}.cuenta-hero-icon{width:42px;height:42px;flex-basis:42px}.cuenta-sync-titulo span{display:none}}
