@@ -3394,3 +3394,11 @@ body.tema-claro .inicio-estado-item{border-color:#ddd;background:#fff}
 .inicio-portada.portada-con-imagen::before{background-image:linear-gradient(90deg,rgba(8,8,12,.98) 0%,rgba(8,8,12,.88) 42%,rgba(8,8,12,.55) 72%,rgba(8,8,12,.30) 100%),var(--portada-imagen);background-size:cover;background-position:center;filter:saturate(1.08)}
 .inicio-portada.portada-con-imagen::after{content:"ABRAHAM G4";color:rgba(255,255,255,.035)}
 body.tema-claro .inicio-portada.portada-con-imagen::before{background-image:linear-gradient(90deg,rgba(255,255,255,.97) 0%,rgba(255,255,255,.88) 42%,rgba(255,255,255,.55) 72%,rgba(255,255,255,.28) 100%),var(--portada-imagen)}
+
+.portada-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.portada-meta span{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid rgba(255,255,255,.10);border-radius:999px;background:rgba(255,255,255,.045);color:#aaa;font-size:10px;font-weight:700;backdrop-filter:blur(10px)}
+.portada-meta svg{width:13px;height:13px;color:#e62429}
+.portada-contenido h2[data-calificacion]::after{content:attr(data-calificacion);display:block;width:max-content;margin-top:13px;padding:5px 9px;border-radius:7px;background:rgba(255,255,255,.07);color:#a8a8b2;font-size:10px;font-weight:700}
+body.tema-claro .portada-meta span{border-color:#ddd;background:rgba(255,255,255,.62);color:#666}
+body.tema-claro .portada-contenido h2[data-calificacion]::after{background:#eee;color:#666}
+@media(max-width:600px){.portada-meta{gap:6px}.portada-meta span{font-size:9px;padding:6px 8px}}
