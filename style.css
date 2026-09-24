@@ -1697,3 +1697,143 @@ body.tema-claro .editor-dos-columnas input {
         right: 12px;
     }
 }
+
+
+/* ================================
+   AJUSTES / CENTRO DE LA APP
+   ================================ */
+
+.ajustes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    max-width: 1050px;
+}
+
+.ajustes-grid .ajuste {
+    margin: 0;
+    min-height: 150px;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.ajuste-principal {
+    grid-column: 1 / -1;
+}
+
+.ajuste-icono {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+    background: #24242c;
+    font-size: 22px;
+}
+
+.ajuste-contenido {
+    flex: 1;
+    min-width: 0;
+}
+
+.ajuste-contenido > strong {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 17px;
+}
+
+.ajuste-contenido > label,
+.ajuste-contenido > p {
+    display: block;
+    color: #9999a3;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.ajuste-fila {
+    display: flex;
+    gap: 9px;
+}
+
+.ajuste-fila input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px;
+    border: 1px solid #383842;
+    border-radius: 8px;
+    background: #111117;
+    color: #fff;
+}
+
+.ajuste-ayuda {
+    display: block;
+    margin-top: 8px;
+    color: #777781;
+    font-size: 11px;
+}
+
+.boton-peligro {
+    background: #3a2224;
+}
+
+.ajuste-version {
+    max-width: 1050px;
+    margin-top: 18px;
+    padding: 16px 18px;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    border: 1px solid #292933;
+    border-radius: 12px;
+    background: #15151c;
+    color: #9999a3;
+    font-size: 12px;
+}
+
+.ajuste-version strong {
+    color: #fff;
+}
+
+body.tema-claro .ajuste-icono {
+    background: #eeeeee;
+}
+
+body.tema-claro .ajuste-fila input {
+    background: #fff;
+    color: #111;
+    border-color: #ccc;
+}
+
+body.tema-claro .ajuste-version {
+    background: #fff;
+    border-color: #ddd;
+}
+
+body.tema-claro .ajuste-version strong {
+    color: #111;
+}
+
+@media (max-width: 700px) {
+    .ajustes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ajuste-principal {
+        grid-column: auto;
+    }
+
+    .ajuste-fila {
+        flex-direction: column;
+    }
+
+    .ajuste-fila button {
+        width: 100%;
+    }
+
+    .ajuste-version {
+        flex-direction: column;
+    }
+}
