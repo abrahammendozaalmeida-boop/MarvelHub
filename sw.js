@@ -1,10 +1,12 @@
-const CACHE_NAME = "abraham-g4-marvel-hub-v6";
+const CACHE_NAME = "abraham-g4-marvel-hub-v7";
 const ARCHIVOS = [
     "./",
     "./index.html",
     "./style.css",
     "./app.js",
-    "./manifest.json"
+    "./manifest.json",
+    "./icon-192.svg",
+    "./icon-512.svg"
 ];
 
 self.addEventListener("install", function(event) {
@@ -13,6 +15,7 @@ self.addEventListener("install", function(event) {
             return cache.addAll(ARCHIVOS);
         })
     );
+
     self.skipWaiting();
 });
 
@@ -30,11 +33,18 @@ self.addEventListener("activate", function(event) {
             );
         })
     );
+
     self.clients.claim();
 });
 
 self.addEventListener("fetch", function(event) {
     if (event.request.method !== "GET") return;
+
+    const url = new URL(event.request.url);
+
+    if (url.origin !== self.location.origin) {
+        return;
+    }
 
     event.respondWith(
         fetch(event.request)
