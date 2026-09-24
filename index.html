@@ -185,30 +185,113 @@
     </section>
 
     <section id="editor" class="seccion">
-        <h2>🎬 Editor de video</h2>
-        <p>Selecciona un video para visualizarlo y ajustar su formato.</p>
-
-        <input type="file" id="videoInput" accept="video/*">
-
-        <div class="video-container">
-            <video id="videoPreview" controls></video>
+        <div class="titulo-seccion">
+            <span class="mini-etiqueta">CREADOR</span>
+            <h2>🎬 Editor de video</h2>
+            <p>Recorta, ajusta el audio, cambia la velocidad y prepara el formato de tu video.</p>
         </div>
 
-        <div class="editor-controles">
-            <label>
-                🔊 Volumen:
-                <input type="range" id="volumen" min="0" max="1" step="0.1" value="1">
+        <div class="editor-subir">
+            <label for="videoInput" class="editor-archivo">
+                <span>📁</span>
+                <strong>Seleccionar video</strong>
+                <small>MP4, WebM, MOV y otros formatos compatibles con tu navegador</small>
             </label>
+            <input type="file" id="videoInput" accept="video/*" hidden>
+            <p id="editorNombreArchivo" class="editor-estado">Ningún video seleccionado.</p>
         </div>
 
-        <h3>Formato</h3>
-        <div class="formatos">
-            <button onclick="cambiarFormato('9:16')">📱 9:16</button>
-            <button onclick="cambiarFormato('1:1')">⬜ 1:1</button>
-            <button onclick="cambiarFormato('16:9')">🖥️ 16:9</button>
+        <div class="editor-layout">
+            <div class="editor-preview-panel">
+                <div class="video-container">
+                    <video id="videoPreview" playsinline></video>
+                </div>
+
+                <div class="editor-tiempo">
+                    <span id="editorTiempoActual">00:00</span>
+                    <span id="editorDuracion">00:00</span>
+                </div>
+
+                <input type="range" id="editorProgreso" class="editor-progreso" min="0" max="0" step="0.01" value="0">
+
+                <div class="editor-botones-reproduccion">
+                    <button id="editorRetroceder" type="button">↶ -5s</button>
+                    <button id="editorPlay" type="button" class="boton-principal">▶ Reproducir</button>
+                    <button id="editorAvanzar" type="button">+5s ↷</button>
+                    <button id="editorSilenciar" type="button">🔊 Audio</button>
+                </div>
+            </div>
+
+            <div class="editor-panel">
+                <div class="editor-bloque">
+                    <h3>✂️ Recorte</h3>
+                    <div class="editor-dos-columnas">
+                        <label>
+                            Inicio
+                            <input type="number" id="recorteInicio" min="0" step="0.1" value="0">
+                        </label>
+                        <label>
+                            Fin
+                            <input type="number" id="recorteFin" min="0" step="0.1" value="0">
+                        </label>
+                    </div>
+                    <button id="aplicarRecorte" type="button">✂️ Aplicar recorte</button>
+                    <button id="quitarRecorte" type="button" class="editor-secundario">↺ Quitar recorte</button>
+                    <p id="estadoRecorte" class="editor-ayuda">El video completo está seleccionado.</p>
+                </div>
+
+                <div class="editor-bloque">
+                    <h3>🔊 Audio</h3>
+                    <label class="editor-control-linea">
+                        <span>Volumen</span>
+                        <input type="range" id="volumen" min="0" max="1" step="0.01" value="1">
+                    </label>
+                </div>
+
+                <div class="editor-bloque">
+                    <h3>⚡ Velocidad</h3>
+                    <div class="editor-opciones">
+                        <button type="button" data-velocidad="0.5">0.5x</button>
+                        <button type="button" data-velocidad="1" class="activo-editor">1x</button>
+                        <button type="button" data-velocidad="1.5">1.5x</button>
+                        <button type="button" data-velocidad="2">2x</button>
+                    </div>
+                </div>
+
+                <div class="editor-bloque">
+                    <h3>🎨 Filtros</h3>
+                    <label class="editor-control-linea">
+                        <span>Brillo</span>
+                        <input type="range" id="editorBrillo" min="50" max="150" value="100">
+                    </label>
+                    <label class="editor-control-linea">
+                        <span>Contraste</span>
+                        <input type="range" id="editorContraste" min="50" max="150" value="100">
+                    </label>
+                    <label class="editor-control-linea">
+                        <span>Saturación</span>
+                        <input type="range" id="editorSaturacion" min="0" max="200" value="100">
+                    </label>
+                </div>
+
+                <div class="editor-bloque">
+                    <h3>📐 Formato</h3>
+                    <div class="formatos">
+                        <button type="button" data-formato="9:16">📱 9:16</button>
+                        <button type="button" data-formato="1:1">⬜ 1:1</button>
+                        <button type="button" data-formato="16:9" class="activo-editor">🖥️ 16:9</button>
+                    </div>
+                    <p>Formato actual: <strong id="formatoActual">16:9</strong></p>
+                </div>
+
+                <button id="resetEditor" type="button" class="editor-reset">↺ Restablecer editor</button>
+            </div>
         </div>
 
-        <p>Formato actual: <strong id="formatoActual">16:9</strong></p>
+        <div class="editor-nota">
+            <strong>💡 Editor local</strong>
+            <p>Tu video se procesa en tu navegador. Esta versión prepara y previsualiza los ajustes sin subir el archivo a ningún servidor.</p>
+        </div>
     </section>
 
     <section id="widgets" class="seccion">
