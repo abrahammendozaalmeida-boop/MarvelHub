@@ -205,22 +205,41 @@
             <p>Películas y series de Marvel</p>
         </div>
 
-        <div class="catalogo-controles">
-            <button id="botonPeliculas" class="filtro activo-filtro" onclick="mostrarTipoMarvel('peliculas')"><i data-lucide="clapperboard"></i><span>Películas</span></button>
-            <button id="botonSeries" class="filtro" onclick="mostrarTipoMarvel('series')"><i data-lucide="tv"></i><span>Series</span></button>
-        </div>
+        <div class="catalogo-command">
+            <div class="catalogo-command-top">
+                <div class="catalogo-command-copy">
+                    <span class="mini-etiqueta">EXPLORAR</span>
+                    <strong>Encuentra algo para ver</strong>
+                    <small>Filtra el catálogo o busca directamente en TMDB.</small>
+                </div>
+                <div class="catalogo-command-hint"><kbd>/</kbd><span>Buscar</span></div>
+            </div>
 
-        <div class="catalogo-busqueda">
-            <input type="text" id="buscador" placeholder="🔎 Buscar película o serie...">
-            <select id="ordenCatalogo" aria-label="Ordenar catálogo">
-                <option value="popularidad">🔥 Más populares</option>
-                <option value="puntuacion">⭐ Mejor puntuadas</option>
-                <option value="reciente">📅 Más recientes</option>
-                <option value="alfabetico">🔤 A-Z</option>
-            </select>
-        </div>
+            <div class="catalogo-command-tools">
+                <div class="catalogo-controles">
+                    <button id="botonPeliculas" class="filtro activo-filtro" onclick="mostrarTipoMarvel('peliculas')"><i data-lucide="clapperboard"></i><span>Películas</span></button>
+                    <button id="botonSeries" class="filtro" onclick="mostrarTipoMarvel('series')"><i data-lucide="tv"></i><span>Series</span></button>
+                </div>
 
-        <div class="busqueda-global">
+                <div class="catalogo-busqueda">
+                    <label class="catalogo-search-box" for="buscador">
+                        <i data-lucide="search"></i>
+                        <input type="search" id="buscador" placeholder="Buscar en tu catálogo..." autocomplete="off">
+                        <kbd>/</kbd>
+                    </label>
+                    <label class="catalogo-sort-box" for="ordenCatalogo">
+                        <i data-lucide="arrow-up-down"></i>
+                        <select id="ordenCatalogo" aria-label="Ordenar catálogo">
+                            <option value="popularidad">Más populares</option>
+                            <option value="puntuacion">Mejor puntuadas</option>
+                            <option value="reciente">Más recientes</option>
+                            <option value="alfabetico">A-Z</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+
+            <div class="busqueda-global">
             <div class="busqueda-global-cabecera">
                 <div>
                     <span class="mini-etiqueta">BÚSQUEDA GLOBAL</span>
