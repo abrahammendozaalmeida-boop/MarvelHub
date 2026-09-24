@@ -675,6 +675,101 @@ function activarBuscador() {
     });
 }
 
+function escaparHTML(valor) {
+    return String(valor || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function formatearDuracion(minutos) {
+    const total = Number(minutos || 0);
+
+    if (!total) return "Duración no disponible";
+
+    const horas = Math.floor(total / 60);
+    const minutosRestantes = total % 60;
+
+    if (horas > 0) {
+        return horas + " h " + minutosRestantes + " min";
+    }
+
+    return minutosRestantes + " min";
+}
+
+function obtenerTrailerTMDB(datos) {
+    if (!datos.videos || !Array.isArray(datos.videos.results)) {
+        return null;
+    }
+
+    const videos = datos.videos.results;
+
+    let trailer = videos.find(function(video) {
+        return (
+            video.site === "YouTube" &&
+            video.type === "Trailer" &&
+            video.official === true
+        );
+    });
+
+    if (!trailer) {
+        trailer = videos.find(function(video) {
+            return (
+                video.site === "YouTube" &&
+                video.type === "Trailer"
+            );
+        });
+    }
+
+    if (!trailer) {
+        trailer = videos.find(function(video) {
+            return video.site === "YouTube";
+        });
+    }
+
+    return trailer && trailer.key ? trailer : null;
+}
+
+function crearRepartoDetalles(datos) {
+    const reparto =
+        datos.credits &&
+        Array.isArray(datos.credits.cast)
+            ? datos.credits.cast.slice(0, 8)
+            : [];
+
+    if (reparto.length === 0) {
+        return "<div class='detalle-seccion'><h3>🎭 Reparto</h3><p class='detalle-vacio'>No hay reparto disponible.</p></div>";
+    }
+
+    let html =
+        "<div class='detalle-seccion'>" +
+        "<h3>🎭 Reparto principal</h3>" +
+        "<div class='detalle-reparto'>";
+
+    reparto.forEach(function(persona) {
+        const nombre = escaparHTML(persona.name || "Actor");
+        const personaje = escaparHTML(persona.character || "Personaje");
+        const foto = persona.profile_path
+            ? "https://image.tmdb.org/t/p/w185" + persona.profile_path
+            : "";
+
+        html +=
+            "<div class='detalle-actor'>" +
+            (foto
+                ? "<img src='" + foto + "' alt='" + nombre + "'>"
+                : "<div class='detalle-actor-sin-foto'>👤</div>") +
+            "<strong>" + nombre + "</strong>" +
+            "<span>" + personaje + "</span>" +
+            "</div>";
+    });
+
+    html += "</div></div>";
+
+    return html;
+}
+
 async function verDetallesTMDB(id, tipo) {
     const modal = document.getElementById("modalMarvel");
     const contenido = document.getElementById("detalleMarvel");
@@ -682,127 +777,134 @@ async function verDetallesTMDB(id, tipo) {
     if (!modal || !contenido) return;
 
     modal.classList.add("activo");
-    contenido.innerHTML = "<p>Cargando detalles...</p>";
+    contenido.innerHTML =
+        "<div class='detalle-cargando'><span>⏳</span><p>Cargando información de TMDB...</p></div>";
 
-    let endpoint = "/movie/";
-
-    if (tipo === "tv") {
-        endpoint = "/tv/";
-    }
+    const endpoint = tipo === "tv"
+        ? "/tv/" + id + "?append_to_response=videos,credits"
+        : "/movie/" + id + "?append_to_response=videos,credits";
 
     try {
-        const respuesta = await fetch(
-            TMDB_BASE_URL +
-            endpoint +
-            id +
-            "?api_key=" +
-            encodeURIComponent(TMDB_API_KEY) +
-            "&language=es-MX" +
-            "&append_to_response=videos"
-        );
+        const datos = await obtenerTMDB(endpoint);
 
-        if (!respuesta.ok) {
-            throw new Error("Error detalles");
-        }
-
-        const datos = await respuesta.json();
-
-        const titulo =
+        const titulo = escaparHTML(
             datos.title ||
             datos.name ||
-            "Sin título";
+            "Sin título"
+        );
 
-        const descripcion =
+        const descripcion = escaparHTML(
             datos.overview ||
-            "Sin descripción disponible.";
+            "Sin descripción disponible."
+        );
 
-        const fecha =
+        const fecha = escaparHTML(
             datos.release_date ||
             datos.first_air_date ||
-            "Sin fecha";
+            "Sin fecha"
+        );
 
-        const puntuacion =
-            datos.vote_average
-                ? datos.vote_average.toFixed(1)
-                : "N/A";
+        const puntuacion = datos.vote_average
+            ? Number(datos.vote_average).toFixed(1)
+            : "N/A";
 
-        let poster = "";
+        const generos = Array.isArray(datos.genres)
+            ? datos.genres.map(function(genero) {
+                return escaparHTML(genero.name);
+            }).join(" • ")
+            : "No disponibles";
 
-        if (datos.poster_path) {
-            poster =
-                "<img src='" +
-                TMDB_IMAGE_URL +
-                datos.poster_path +
-                "' alt='" +
-                titulo.replace(/'/g, "&#39;") +
-                "'>";
+        const poster = datos.poster_path
+            ? TMDB_IMAGE_URL + datos.poster_path
+            : "";
+
+        const fondo = datos.backdrop_path
+            ? "https://image.tmdb.org/t/p/w1280" + datos.backdrop_path
+            : "";
+
+        let meta = "";
+
+        if (tipo === "tv") {
+            const temporadas = Number(datos.number_of_seasons || 0);
+            const episodios = Number(datos.number_of_episodes || 0);
+            const duracion = Array.isArray(datos.episode_run_time) &&
+                datos.episode_run_time.length > 0
+                ? formatearDuracion(datos.episode_run_time[0])
+                : "Duración no disponible";
+
+            meta =
+                "<span>📺 " + temporadas + " temporadas</span>" +
+                "<span>🎞️ " + episodios + " episodios</span>" +
+                "<span>⏱️ " + escaparHTML(duracion) + "</span>";
+        } else {
+            meta =
+                "<span>🎬 Película</span>" +
+                "<span>⏱️ " + formatearDuracion(datos.runtime) + "</span>";
         }
+
+        const trailerVideo = obtenerTrailerTMDB(datos);
 
         let trailer = "";
 
-        if (
-            datos.videos &&
-            datos.videos.results &&
-            datos.videos.results.length > 0
-        ) {
-            const videos = datos.videos.results;
-
-            let videoTrailer = videos.find(function(video) {
-                return (
-                    video.site === "YouTube" &&
-                    video.type === "Trailer" &&
-                    video.official === true
-                );
-            });
-
-            if (!videoTrailer) {
-                videoTrailer = videos.find(function(video) {
-                    return (
-                        video.site === "YouTube" &&
-                        video.type === "Trailer"
-                    );
-                });
-            }
-
-            if (!videoTrailer) {
-                videoTrailer = videos.find(function(video) {
-                    return video.site === "YouTube";
-                });
-            }
-
-            if (videoTrailer && videoTrailer.key) {
-                trailer =
-                    "<div class='trailer-detalles'>" +
-                    "<h3>🎬 Tráiler</h3>" +
-                    "<div class='trailer-video'>" +
-                    "<iframe src='https://www.youtube.com/embed/" +
-                    videoTrailer.key +
-                    "' title='Tráiler de " +                    titulo.replace(/'/g, "&#39;") +
-                    "' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>" +
-                    "</div>" +
-                    "</div>";
-            }
+        if (trailerVideo) {
+            trailer =
+                "<div class='detalle-seccion'>" +
+                "<h3>🎬 Tráiler</h3>" +
+                "<div class='trailer-video'>" +
+                "<iframe src='https://www.youtube.com/embed/" +
+                encodeURIComponent(trailerVideo.key) +
+                "' title='Tráiler de " +
+                titulo +
+                "' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>" +
+                "</div>" +
+                "</div>";
         }
 
         contenido.innerHTML =
-            poster +
-            "<h2>" +
-            titulo +
-            "</h2>" +
-            "<p>📅 " +
-            fecha +
-            "</p>" +
-            "<p>⭐ " +
-            puntuacion +
-            "/10</p>" +
-            "<p>" +
-            descripcion +
-            "</p>" +
-            trailer;
+            "<div class='detalle-hero' " +
+            (fondo
+                ? "style='background-image: linear-gradient(90deg, rgba(8,8,12,.98) 0%, rgba(8,8,12,.82) 55%, rgba(8,8,12,.55) 100%), url(\"" +
+                  fondo +
+                  "\")'"
+                : "") +
+            ">" +
+            "<div class='detalle-hero-contenido'>" +
+            (poster
+                ? "<img class='detalle-poster' src='" +
+                  poster +
+                  "' alt='" +
+                  titulo +
+                  "'>"
+                : "<div class='detalle-poster detalle-poster-vacio'>🎬</div>") +
+            "<div class='detalle-principal'>" +
+            "<span class='detalle-tipo'>" +
+            (tipo === "tv" ? "📺 SERIE" : "🎬 PELÍCULA") +
+            "</span>" +
+            "<h2>" + titulo + "</h2>" +
+            "<div class='detalle-meta'>" +
+            meta +
+            "<span>📅 " + fecha + "</span>" +
+            "<span>⭐ " + puntuacion + "/10</span>" +
+            "</div>" +
+            "<p class='detalle-generos'>🏷️ " + generos + "</p>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "<div class='detalle-cuerpo'>" +
+            "<div class='detalle-seccion'>" +
+            "<h3>📖 Sinopsis</h3>" +
+            "<p class='detalle-sinopsis'>" + descripcion + "</p>" +
+            "</div>" +
+            crearRepartoDetalles(datos) +
+            trailer +
+            "</div>";
     } catch (error) {
         console.error("Error detalles:", error);
         contenido.innerHTML =
-            "<p>No se pudieron cargar los detalles.</p>";
+            "<div class='detalle-error'>" +
+            "<strong>⚠️ No se pudieron cargar los detalles.</strong>" +
+            "<p>Revisa tu conexión y vuelve a intentarlo.</p>" +
+            "</div>";
     }
 }
 
