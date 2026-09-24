@@ -1828,7 +1828,7 @@ async function sincronizarPerfilConNube(userId) {
         const subidaPerfil = await supabaseClient.from("profiles").upsert({
             id: userId,
             display_name: local.nombre || "",
-            avatar: local.avatar || "🦸",
+            avatar: local.avatar || "ironman",
             created_at: local.creadoEn || new Date().toISOString(),
             updated_at: local.actualizadoEn || new Date().toISOString()
         });
@@ -1842,7 +1842,7 @@ async function sincronizarPerfilConNube(userId) {
 
     const localEsBase =
         !local.nombre &&
-        (local.avatar || "🦸") === "🦸";
+        (local.avatar || "ironman") === "🦸";
 
     const fechaLocal = new Date(local.actualizadoEn || 0).getTime();
     const fechaRemota = new Date(remoto.updated_at || 0).getTime();
@@ -1851,7 +1851,7 @@ async function sincronizarPerfilConNube(userId) {
         guardarPerfilLocal({
             id: local.id,
             nombre: remoto.display_name || "",
-            avatar: remoto.avatar || "🦸"
+            avatar: remoto.avatar || "ironman"
         });
         return;
     }
@@ -1859,7 +1859,7 @@ async function sincronizarPerfilConNube(userId) {
     const subidaPerfil = await supabaseClient.from("profiles").upsert({
         id: userId,
         display_name: local.nombre || "",
-        avatar: local.avatar || "🦸",
+        avatar: local.avatar || "ironman",
         created_at: remoto.created_at || local.creadoEn || new Date().toISOString(),
         updated_at: local.actualizadoEn || new Date().toISOString()
     });
@@ -2117,7 +2117,7 @@ async function sincronizarPerfilLocalActual() {
             .upsert({
                 id: user.id,
                 display_name: perfil.nombre || "",
-                avatar: perfil.avatar || "🦸",
+                avatar: perfil.avatar || "ironman",
                 updated_at: perfil.actualizadoEn || new Date().toISOString()
             });
 
@@ -2159,7 +2159,7 @@ function actualizarCuentaUI(usuario) {
         if (uid) uid.textContent = "ID: " + usuario.id;
 
         const perfil = obtenerPerfilLocal();
-        if (avatar) avatar.textContent = perfil.avatar || "🦸";
+        if (avatar) avatar.textContent = perfil.avatar || "ironman";
     } else {
         estado.textContent = "Inicia sesión o crea una cuenta para preparar la sincronización.";
         formularios.hidden = false;
@@ -2449,7 +2449,7 @@ function obtenerPerfilLocal() {
                 ? window.crypto.randomUUID()
                 : "perfil-" + Date.now() + "-" + Math.random().toString(36).slice(2, 10),
             nombre: localStorage.getItem("nombre") || "",
-            avatar: "🦸",
+            avatar: "ironman",
             creadoEn: new Date().toISOString(),
             actualizadoEn: new Date().toISOString(),
             version: 1
@@ -2467,7 +2467,7 @@ function guardarPerfilLocal(perfil) {
     const datos = {
         id: perfil.id || base.id,
         nombre: String(perfil.nombre || "").trim().slice(0, 30),
-        avatar: perfil.avatar || base.avatar || "🦸",
+        avatar: perfil.avatar || base.avatar || "ironman",
         creadoEn: base.creadoEn || new Date().toISOString(),
         actualizadoEn: new Date().toISOString(),
         version: 1
@@ -2481,7 +2481,7 @@ function guardarPerfilLocal(perfil) {
 function actualizarPerfilUI() {
     const perfil = obtenerPerfilLocal();
     const nombre = perfil.nombre || "ABRAHAM G4";
-    const avatar = perfil.avatar || "🦸";
+    const avatar = perfil.avatar || "ironman";
 
     const titulo = document.getElementById("perfilNombre");
     const input = document.getElementById("perfilNombreInput");
@@ -2497,7 +2497,8 @@ function actualizarPerfilUI() {
     if (titulo) titulo.textContent = nombre;
     if (input) input.value = perfil.nombre;
     if (avatarElemento) {
-        avatarElemento.textContent = avatar;
+        avatarElemento.textContent = "";
+        avatarElemento.setAttribute("data-avatar", avatar);
         avatarElemento.setAttribute("aria-label", "Avatar de " + nombre);
     }
 
@@ -2571,7 +2572,7 @@ function restablecerPerfilLocal() {
 
     const perfil = obtenerPerfilLocal();
     perfil.nombre = "";
-    perfil.avatar = "🦸";
+    perfil.avatar = "ironman";
 
     guardarPerfilLocal(perfil);
     actualizarPerfilUI();
@@ -2597,7 +2598,7 @@ function configurarPerfil() {
 
             this.classList.add("activo-perfil-avatar");
             const avatar = document.getElementById("perfilAvatar");
-            if (avatar) avatar.textContent = this.dataset.avatar;
+            if (avatar) { avatar.textContent = ""; avatar.setAttribute("data-avatar", this.dataset.avatar); }
         });
     });
 
