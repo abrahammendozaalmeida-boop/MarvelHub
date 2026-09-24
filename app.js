@@ -243,8 +243,7 @@ function guardarFavoritos() {
     localStorage.setItem("favoritosMarvel", JSON.stringify(favoritosMarvel));
 }
 
-function alternarFavorito(id, tipo) {
-
+function alternarFavorito(id, tipo, itemProporcionado) {
     const indice = favoritosMarvel.findIndex(function(item) {
         return item.id === id && item.tipo === tipo;
     });
@@ -252,21 +251,27 @@ function alternarFavorito(id, tipo) {
     if (indice >= 0) {
         favoritosMarvel.splice(indice, 1);
     } else {
-        const lista = tipo === "movie" ? peliculasTMDB : seriesTMDB;
-        const item = lista.find(function(elemento) {
-            return elemento.id === id;
-        });
+        let item = itemProporcionado || null;
+
+        if (!item) {
+            const lista = tipo === "movie" ? peliculasTMDB : seriesTMDB;
+            item = lista.find(function(elemento) {
+                return elemento.id === id;
+            });
+        }
 
         if (!item) return;
 
         favoritosMarvel.push({
             id: item.id,
             tipo: tipo,
-            titulo: item.title || item.name,
-            poster_path: item.poster_path,
+            titulo: item.title || item.name || item.titulo || "Sin título",
+            poster_path: item.poster_path || "",
+            backdrop_path: item.backdrop_path || "",
             overview: item.overview || "",
-            fecha: item.release_date || item.first_air_date || "",
-            vote_average: item.vote_average || 0
+            fecha: item.release_date || item.first_air_date || item.fecha || "",
+            vote_average: item.vote_average || 0,
+            guardadoEn: Date.now()
         });
     }
 
@@ -373,6 +378,61 @@ function renderizarCatalogo(lista) {
     });
 }
 
+function obtenerFavoritosOrdenados(lista) {
+    const orden = document.getElementById("ordenFavoritos");
+    const valor = orden ? orden.value : "recientes";
+    const copia = (lista || []).slice();
+
+    copia.sort(function(a, b) {
+        if (valor === "alfabetico") {
+            return (a.titulo || "").localeCompare(b.titulo || "", "es", {
+                sensitivity: "base"
+            });
+        }
+
+        if (valor === "puntuacion") {
+            return Number(b.vote_average || 0) - Number(a.vote_average || 0);
+        }
+
+        return Number(b.guardadoEn || 0) - Number(a.guardadoEn || 0);
+    });
+
+    return copia;
+}
+
+function vaciarFavoritos() {
+    if (favoritosMarvel.length === 0) return;
+
+    const confirmar = window.confirm(
+        "¿Quieres quitar todos tus favoritos de este dispositivo?"
+    );
+
+    if (!confirmar) return;
+
+    favoritosMarvel = [];
+    guardarFavoritos();
+    actualizarInicioPersonalizado();
+    actualizarResumenAjustes();
+    renderizarPersonalizadoInicio();
+    renderizarFilasFavoritosInicio();
+    mostrarFavoritos();
+}
+
+function actualizarResumenFavoritos() {
+    const peliculas = favoritosMarvel.filter(function(item) {
+        return item.tipo === "movie";
+    }).length;
+    const series = favoritosMarvel.filter(function(item) {
+        return item.tipo === "tv";
+    }).length;
+    const detalle = document.getElementById("detalleFavoritos");
+
+    if (detalle) {
+        detalle.textContent =
+            peliculas + " películas · " + series + " series";
+    }
+}
+
 function renderizarFavoritos(filtro) {
     const catalogo = document.getElementById("catalogoFavoritos");
     const contador = document.getElementById("contadorFavoritos");
@@ -382,9 +442,10 @@ function renderizarFavoritos(filtro) {
 
     const filtroActual = filtro || "todos";
 
-    const lista = favoritosMarvel.filter(function(item) {
+    const listaBase = favoritosMarvel.filter(function(item) {
         return filtroActual === "todos" || item.tipo === filtroActual;
     });
+    const lista = obtenerFavoritosOrdenados(listaBase);
 
     catalogo.innerHTML = "";
 
@@ -394,15 +455,17 @@ function renderizarFavoritos(filtro) {
             (favoritosMarvel.length === 1 ? " favorito" : " favoritos");
     }
 
+    actualizarResumenFavoritos();
+
     if (texto) {
         if (favoritosMarvel.length === 0) {
             texto.textContent = "Todavía no has guardado contenido.";
         } else if (filtroActual === "movie") {
-            texto.textContent = "Mostrando tus películas guardadas.";
+            texto.textContent = "Mostrando tus películas guardadas."; 
         } else if (filtroActual === "tv") {
             texto.textContent = "Mostrando tus series guardadas.";
         } else {
-            texto.textContent = "Tu biblioteca personal de Marvel.";
+            texto.textContent = "Tu biblioteca personal de Marvel."; 
         }
     }
 
@@ -435,6 +498,9 @@ function renderizarFavoritos(filtro) {
                 titulo,
                 ""
             ) +
+            "<div class='card-overlay'>" +
+            "<button class='card-ver' type='button'>▶ Ver detalles</button>" +
+            "</div>" +
             "<span class='card-badge'>" +
             tipoTexto +
             "</span>" +
@@ -443,31 +509,38 @@ function renderizarFavoritos(filtro) {
             "</span>" +
             "</div>" +
             "<div class='card-content'>" +
-            "<h3>" +            titulo +
-            "</h3>" +
-            "<p class='tipo-contenido'>📅 " +
-            fecha +
-            "</p>" +
+            "<h3>" + titulo + "</h3>" +
+            "<div class='card-meta'>" +
+            "<span>" + (item.tipo === "tv" ? "Serie" : "Película") + "</span>" +
+            "<span>📅 " + fecha + "</span>" +
+            "</div>" +
             "<p class='descripcion-pelicula'>" +
             descripcion +
             "</p>" +
             "<div class='botones-card'>" +
-            "<button class='boton-detalles'>Ver detalles</button>" +
-            "<button class='boton-quitar-favorito'>💔 Quitar</button>" +
+            "<button class='boton-detalles' type='button'>Ver detalles</button>" +
+            "<button class='boton-quitar-favorito' type='button'>💔 Quitar</button>" +
             "</div>" +
             "</div>";
 
+        const abrirDetalles = function() {
+            verDetallesTMDB(item.id, item.tipo);
+        };
+
+        tarjeta.querySelector(".card-ver").addEventListener(
+            "click",
+            abrirDetalles
+        );
+
         tarjeta.querySelector(".boton-detalles").addEventListener(
             "click",
-            function() {
-                verDetallesTMDB(item.id, item.tipo);
-            }
+            abrirDetalles
         );
 
         tarjeta.querySelector(".boton-quitar-favorito").addEventListener(
             "click",
             function() {
-                alternarFavorito(item.id, item.tipo);
+                alternarFavorito(item.id, item.tipo, item);
             }
         );
 
