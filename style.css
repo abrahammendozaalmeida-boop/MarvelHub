@@ -1117,3 +1117,32 @@ body.tema-claro .atajo-card {
     color: #ffffff;
 }
 
+
+
+/* NAVEGACIÓN ACTIVA */
+nav .nav-boton {
+    position: relative;
+}
+
+nav .nav-boton.activo-nav {
+    background: #e62429;
+    box-shadow: 0 0 0 1px rgba(230, 36, 41, .35);
+}
+
+nav .nav-boton.activo-nav::after {
+    content: "";
+    position: absolute;
+    left: 22%;
+    right: 22%;
+    bottom: 4px;
+    height: 2px;
+    background: #ffffff;
+    border-radius: 10px;
+}
+
+@media (max-width: 600px) {
+    nav .nav-boton.activo-nav::after {
+        left: 28%;
+        right: 28%;
+    }
+}
