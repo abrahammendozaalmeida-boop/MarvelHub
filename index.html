@@ -3,213 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>ABRAHAM G4 — MARVEL HUB</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <header>
-        <div class="logo">
-            <span>ABRAHAM G4</span>
-            <h1>MARVEL HUB</h1>
+<header>
+    <div class="logo">
+        <span>ABRAHAM G4</span>
+        <h1>MARVEL HUB</h1>
+    </div>
+
+    <nav>
+        <button onclick="mostrarSeccion('inicio')">Inicio</button>
+        <button onclick="mostrarSeccion('marvel')">Marvel</button>
+        <button onclick="mostrarSeccion('favoritos')">❤️ Favoritos</button>
+        <button onclick="mostrarSeccion('editor')">Editor</button>
+        <button onclick="mostrarSeccion('widgets')">Widgets</button>
+        <button onclick="mostrarSeccion('ajustes')">Ajustes</button>
+    </nav>
+</header>
+
+<main>
+    <section id="inicio" class="seccion activa">
+        <div class="hero">
+            <h2>🔥 Recomendación Marvel</h2>
+            <div class="recomendacion">
+                <div id="recomendacionPoster"></div>
+                <h3 id="recomendacion">Cargando...</h3>
+                <p id="descripcion">Espera un momento...</p>
+                <button onclick="nuevaRecomendacion()">🎲 Otra recomendación</button>
+            </div>
         </div>
 
-        <nav>
-            <button onclick="mostrarSeccion('inicio')">Inicio</button>
-            <button onclick="mostrarSeccion('marvel')">Marvel</button>
-            <button onclick="mostrarSeccion('editor')">Editor</button>
-            <button onclick="mostrarSeccion('widgets')">Widgets</button>
-            <button onclick="mostrarSeccion('ajustes')">Ajustes</button>
-        </nav>
-    </header>
-
-
-    <main>
-
-        <!-- INICIO -->
-        <section id="inicio" class="seccion activa">
-
-            <div class="hero">
-                <h2>🔥 Recomendación Marvel</h2>
-
-                <div class="recomendacion">
-                    <h3 id="recomendacion">Cargando...</h3>
-                    <p id="descripcion">
-                        Espera un momento...
-                    </p>
-
-                    <button onclick="nuevaRecomendacion()">
-                        🎲 Otra recomendación
-                    </button>
-                </div>
+        <div class="proximos-estrenos">
+            <div class="titulo-seccion">
+                <h2>📅 Próximos estrenos Marvel</h2>
+                <p>Películas de Marvel Studios que llegarán próximamente</p>
             </div>
+            <div id="proximosEstrenos" class="catalogo">
+                <p>Cargando próximos estrenos...</p>
+            </div>
+        </div>
+    </section>
 
-        </section>
-
-
-        <!-- MARVEL -->
-        <section id="marvel" class="seccion">
-
+    <section id="marvel" class="seccion">
+        <div class="titulo-seccion">
             <h2>🦸 Catálogo Marvel</h2>
+            <p>Películas y series de Marvel</p>
+        </div>
 
-            <input
-                type="text"
-                id="buscador"
-                placeholder="🔎 Buscar película o serie..."
-            >
+        <div class="catalogo-controles">
+            <button id="botonPeliculas" class="filtro activo-filtro" onclick="mostrarTipoMarvel('peliculas')">🎬 Películas</button>
+            <button id="botonSeries" class="filtro" onclick="mostrarTipoMarvel('series')">📺 Series</button>
+        </div>
 
-            <div id="catalogo" class="catalogo"></div>
+        <input type="text" id="buscador" placeholder="🔎 Buscar película o serie...">
 
-        </section>
+        <div id="catalogo" class="catalogo">
+            <p>Cargando Marvel...</p>
+        </div>
+    </section>
 
+    <section id="favoritos" class="seccion">
+        <div class="titulo-seccion">
+            <h2>❤️ Mis favoritos</h2>
+            <p>Tus películas y series Marvel guardadas</p>
+        </div>
+        <div id="catalogoFavoritos" class="catalogo">
+            <p>No tienes favoritos todavía.</p>
+        </div>
+    </section>
 
-        <!-- EDITOR -->
-        <section id="editor" class="seccion">
+    <section id="editor" class="seccion">
+        <h2>🎬 Editor de video</h2>
+        <p>Selecciona un video para visualizarlo y ajustar su formato.</p>
 
-            <h2>🎬 Editor de video</h2>
+        <input type="file" id="videoInput" accept="video/*">
 
-            <input
-                type="file"
-                id="videoInput"
-                accept="video/*"
-            >
+        <div class="video-container">
+            <video id="videoPreview" controls></video>
+        </div>
 
-            <div class="video-container">
-                <video id="videoPreview" controls></video>
-            </div>
-
-            <div class="editor-controles">
-
-                <label>
-                    Inicio:
-                    <input
-                        type="range"
-                        id="inicio"
-                        min="0"
-                        max="100"
-                        value="0"
-                    >
-                </label>
-
-                <label>
-                    Final:
-                    <input
-                        type="range"
-                        id="final"
-                        min="0"
-                        max="100"
-                        value="100"
-                    >
-                </label>
-
-                <label>
-                    🔊 Volumen:
-                    <input
-                        type="range"
-                        id="volumen"
-                        min="0"
-                        max="1"
-                        step="0.1"
-                        value="1"
-                    >
-                </label>
-
-            </div>
-
-            <h3>Formato</h3>
-
-            <div class="formatos">
-
-                <button onclick="cambiarFormato('9:16')">
-                    📱 9:16
-                </button>
-
-                <button onclick="cambiarFormato('1:1')">
-                    ⬜ 1:1
-                </button>
-
-                <button onclick="cambiarFormato('16:9')">
-                    🖥️ 16:9
-                </button>
-
-            </div>
-
-            <p>
-                Formato actual:
-                <strong id="formatoActual">16:9</strong>
-            </p>
-
-        </section>
-
-
-        <!-- WIDGETS -->
-        <section id="widgets" class="seccion">
-
-            <h2>🧩 Widgets</h2>
-
-            <div class="widget">
-
-                <label>
-                    <input type="checkbox" checked>
-                    ⭐ Recomendación del día
-                </label>
-
-                <label>
-                    <input type="checkbox" checked>
-                    🎬 Próximo estreno
-                </label>
-
-                <label>
-                    <input type="checkbox">
-                    📰 Noticias Marvel
-                </label>
-
-                <label>
-                    <input type="checkbox">
-                    🎵 Música
-                </label>
-
-            </div>
-
-        </section>
-
-
-        <!-- AJUSTES -->
-        <section id="ajustes" class="seccion">
-
-            <h2>⚙️ Ajustes</h2>
-
+        <div class="editor-controles">
             <label>
-                Tu nombre:
-                <input
-                    type="text"
-                    id="nombre"
-                    placeholder="Escribe tu nombre"
-                >
+                🔊 Volumen:
+                <input type="range" id="volumen" min="0" max="1" step="0.1" value="1">
             </label>
+        </div>
 
-            <button onclick="guardarNombre()">
-                💾 Guardar
-            </button>
+        <h3>Formato</h3>
+        <div class="formatos">
+            <button onclick="cambiarFormato('9:16')">📱 9:16</button>
+            <button onclick="cambiarFormato('1:1')">⬜ 1:1</button>
+            <button onclick="cambiarFormato('16:9')">🖥️ 16:9</button>
+        </div>
 
-            <button onclick="cambiarTema()">
-                🌗 Cambiar tema
-            </button>
+        <p>Formato actual: <strong id="formatoActual">16:9</strong></p>
+    </section>
 
-        </section>
+    <section id="widgets" class="seccion">
+        <h2>🧩 Widgets</h2>
 
-    </main>
+        <div class="widget">
+            <label>
+                <input type="checkbox" id="widgetRecomendacion" checked>
+                ⭐ Recomendación del día
+            </label>
+            <label>
+                <input type="checkbox" id="widgetEstrenos" checked>
+                🎬 Próximos estrenos
+            </label>
+            <label>
+                <input type="checkbox" id="widgetNoticias">
+                📰 Noticias Marvel
+            </label>
+            <label>
+                <input type="checkbox" id="widgetMusica">
+                🎵 Música
+            </label>
+        </div>
+    </section>
 
+    <section id="ajustes" class="seccion">
+        <h2>⚙️ Ajustes</h2>
 
-    <footer>
-        <p>ABRAHAM G4 © 2026 — MARVEL HUB</p>
-    </footer>
+        <div class="ajuste">
+            <label for="nombre">Tu nombre:</label>
+            <input type="text" id="nombre" placeholder="Escribe tu nombre">
+            <button onclick="guardarNombre()">💾 Guardar</button>
+        </div>
 
+        <div class="ajuste">
+            <button onclick="cambiarTema()">🌗 Cambiar tema</button>
+        </div>
+    </section>
 
-    <script src="app.js"></script>
+    <div id="modalMarvel" class="modal-marvel">
+        <div class="modal-contenido">
+            <button class="modal-cerrar" onclick="cerrarDetalles()">✕</button>
+            <div id="detalleMarvel">Cargando detalles...</div>
+        </div>
+    </div>
+</main>
 
+<footer>
+    <p>ABRAHAM G4 © 2026 — MARVEL HUB</p>
+</footer>
+
+<script src="app.js"></script>
 </body>
 </html>
