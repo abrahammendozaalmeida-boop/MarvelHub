@@ -1578,3 +1578,19 @@ body.tema-claro .editor-dos-columnas input {
         flex-basis: 45%;
     }
 }
+
+.editor-exportar {
+    width: 100%;
+    margin-top: 4px;
+    background: #e62429;
+    font-weight: 800;
+}
+
+.editor-exportar:hover {
+    background: #c91f24;
+}
+
+.editor-exportar:disabled {
+    opacity: .65;
+    cursor: wait;
+}
