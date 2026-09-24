@@ -2661,3 +2661,100 @@ body.tema-claro #homeHistorial > p {
         align-self: flex-start;
     }
 }
+
+
+/* ================================
+   FAVORITOS 2.0 — BIBLIOTECA
+   ================================ */
+
+.favoritos-resumen small {
+    color: #777781;
+    font-size: 11px;
+}
+
+.favoritos-acciones {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.favoritos-orden {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.favoritos-orden label {
+    color: #8f8f99;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.favoritos-orden select {
+    min-width: 145px;
+    padding: 8px 9px;
+    border: 1px solid #34343e;
+    border-radius: 8px;
+    background: #17171e;
+    color: #fff;
+    font-size: 11px;
+}
+
+.boton-vaciar-favoritos {
+    padding: 8px 10px;
+    border: 1px solid #4a292b;
+    border-radius: 8px;
+    background: #2b191b;
+    color: #ffb5b8;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.boton-vaciar-favoritos:hover {
+    background: #e62429;
+    border-color: #e62429;
+    color: #fff;
+}
+
+body.tema-claro .favoritos-orden select {
+    background: #fff;
+    color: #111;
+    border-color: #ccc;
+}
+
+body.tema-claro .favoritos-orden label,
+body.tema-claro .favoritos-resumen small {
+    color: #666;
+}
+
+body.tema-claro .boton-vaciar-favoritos {
+    background: #fff2f2;
+    border-color: #e4bfc1;
+    color: #a72a2e;
+}
+
+@media (max-width: 900px) {
+    .favoritos-acciones {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 700px) {
+    .favoritos-orden {
+        width: 100%;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+
+    .favoritos-orden select {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .boton-vaciar-favoritos {
+        white-space: nowrap;
+    }
+}
