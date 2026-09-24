@@ -546,7 +546,7 @@ function vaciarFavoritos() {
     actualizarInicioPersonalizado();
     actualizarResumenAjustes();
     renderizarPersonalizadoInicio();
-    renderizarFilasFavoritosInicio();
+    renderizarFilaFavoritosInicio();
     mostrarFavoritos();
     sincronizarFavoritosVacios();
 }
@@ -1917,7 +1917,7 @@ async function sincronizarCuentaConNube(user) {
         actualizarCuentaUI(user);
         actualizarInicioPersonalizado();
         actualizarResumenAjustes();
-        renderizarFilasFavoritosInicio();
+        renderizarFilaFavoritosInicio();
         renderizarPersonalizadoInicio();
         renderizarHistorialInicio();
 
