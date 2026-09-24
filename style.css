@@ -2166,3 +2166,156 @@ body.tema-claro #catalogo > p {
         padding: 25px 15px;
     }
 }
+
+
+/* ================================
+   TARJETAS — INTERACCIÓN STREAMING
+   ================================ */
+
+.tarjeta-pelicula {
+    position: relative;
+    cursor: default;
+    transition:
+        transform .22s ease,
+        border-color .22s ease,
+        box-shadow .22s ease;
+}
+
+.card-media {
+    position: relative;
+    height: 310px;
+    overflow: hidden;
+    background: #202027;
+}
+
+.card-media > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .35s ease, filter .35s ease;
+}
+
+.card-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+        180deg,
+        rgba(0,0,0,.05) 25%,
+        rgba(0,0,0,.78) 100%
+    );
+    opacity: 0;
+    transition: opacity .25s ease;
+    pointer-events: none;
+}
+
+.card-ver {
+    pointer-events: auto;
+    min-width: 145px;
+    padding: 10px 15px;
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 9px;
+    background: rgba(12,12,16,.88);
+    color: #fff;
+    font-weight: 800;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transform: translateY(8px);
+    transition: transform .25s ease, background .2s ease;
+}
+
+.card-ver:hover {
+    background: #e62429;
+}
+
+.tarjeta-pelicula:hover .card-overlay,
+.tarjeta-pelicula:focus-within .card-overlay {
+    opacity: 1;
+}
+
+.tarjeta-pelicula:hover .card-ver,
+.tarjeta-pelicula:focus-within .card-ver {
+    transform: translateY(0);
+}
+
+.tarjeta-pelicula:hover .card-media > img {
+    transform: scale(1.06);
+    filter: brightness(.62);
+}
+
+.card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.card-meta span {
+    padding: 4px 7px;
+    border-radius: 6px;
+    background: #25252d;
+    color: #aaaab4;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.card-content .descripcion-pelicula {
+    min-height: 80px;
+}
+
+.card-content .botones-card {
+    margin-top: auto;
+}
+
+.card-media .card-badge,
+.card-media .card-rating {
+    z-index: 4;
+}
+
+body.tema-claro .card-meta span {
+    background: #eeeeee;
+    color: #555;
+}
+
+@media (max-width: 600px) {
+    .card-media {
+        height: 280px;
+    }
+
+    .card-overlay {
+        opacity: 1;
+        align-items: flex-end;
+        justify-content: flex-start;
+        padding: 12px;
+        background: linear-gradient(
+            180deg,
+            transparent 45%,
+            rgba(0,0,0,.78) 100%
+        );
+    }
+
+    .card-ver {
+        min-width: 0;
+        padding: 8px 11px;
+        font-size: 11px;
+        transform: none;
+    }
+
+    .tarjeta-pelicula:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .tarjeta-pelicula:hover .card-media > img {
+        transform: none;
+        filter: none;
+    }
+
+    .card-content .descripcion-pelicula {
+        min-height: 0;
+    }
+}
