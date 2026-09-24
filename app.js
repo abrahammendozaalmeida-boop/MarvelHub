@@ -12,6 +12,13 @@ function mostrarSeccion(seccion) {
         elemento.classList.remove("activa");
     });
 
+    document.querySelectorAll(".nav-boton").forEach(function(boton) {
+        boton.classList.toggle(
+            "activo-nav",
+            boton.dataset.seccion === seccion
+        );
+    });
+
     const seleccionada = document.getElementById(seccion);
 
     if (seleccionada) {
@@ -26,6 +33,11 @@ function mostrarSeccion(seccion) {
         renderizarFilaFavoritosInicio();
         renderizarDescubreInicio();
     }
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 }
 
 async function obtenerTMDB(endpoint) {
