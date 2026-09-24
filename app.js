@@ -1500,6 +1500,10 @@ function mostrarRecomendacion(item) {
     if (recomendacion) {
         recomendacion.textContent = titulo;
     }
+    const metaTitulo = document.querySelector(".portada-contenido h2");
+    if (metaTitulo && item.vote_average) {
+        metaTitulo.setAttribute("data-calificacion", "TMDB " + Number(item.vote_average).toFixed(1) + "/10");
+    }
 
     if (descripcionElemento) {
         descripcionElemento.textContent = descripcion;
