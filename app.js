@@ -883,10 +883,18 @@ function mostrarRecomendacion(item) {
         item.overview ||
         "Sin descripción disponible.";
 
-    document.getElementById("recomendacion").textContent = titulo;
-    document.getElementById("descripcion").textContent = descripcion;
-
+    const recomendacion = document.getElementById("recomendacion");
+    const descripcionElemento = document.getElementById("descripcion");
     const poster = document.getElementById("recomendacionPoster");
+    const hero = document.querySelector(".hero");
+
+    if (recomendacion) {
+        recomendacion.textContent = titulo;
+    }
+
+    if (descripcionElemento) {
+        descripcionElemento.textContent = descripcion;
+    }
 
     if (poster) {
         poster.innerHTML = item.poster_path
@@ -896,7 +904,21 @@ function mostrarRecomendacion(item) {
               "' alt='" +
               titulo.replace(/'/g, "&#39;") +
               "'>"
-            : "";
+            : "<div class='poster-faltante'>🎬</div>";
+    }
+
+    if (hero) {
+        if (item.backdrop_path) {
+            hero.style.backgroundImage =
+                "linear-gradient(90deg, rgba(11,11,15,.98) 0%, rgba(11,11,15,.88) 48%, rgba(11,11,15,.62) 100%), url('" +
+                "https://image.tmdb.org/t/p/w1280" +
+                item.backdrop_path +
+                "')";
+            hero.classList.add("hero-con-imagen");
+        } else {
+            hero.style.backgroundImage = "";
+            hero.classList.remove("hero-con-imagen");
+        }
     }
 }
 
