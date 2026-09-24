@@ -294,11 +294,105 @@ async function cargarMarvelTMDB() {
         });
 
         mostrarTipoMarvel("peliculas");
+        renderizarFilasInicio();
     } catch (error) {
         console.error("Error cargando Marvel:", error);
         catalogo.innerHTML =
             "<p>No se pudo cargar TMDB. Revisa tu clave de API.</p>";
     }
+}
+
+function crearTarjetaInicio(item) {
+    const tipo = item.tipo || "movie";
+    const titulo = item.title || item.name || "Sin título";
+    const fecha = item.release_date || item.first_air_date || "Sin fecha";
+    const puntuacion = item.vote_average
+        ? Number(item.vote_average).toFixed(1)
+        : "N/A";
+
+    const tarjeta = document.createElement("article");
+    tarjeta.className = "tarjeta-pelicula";
+
+    tarjeta.innerHTML =
+        crearPoster(
+            item.poster_path
+                ? TMDB_IMAGE_URL + item.poster_path
+                : "",
+            titulo,
+            ""
+        ) +
+        "<div class='card-content'>" +
+        "<h3>" +
+        titulo +
+        "</h3>" +
+        "<p class='tipo-contenido'>" +
+        (tipo === "tv" ? "📺 Serie" : "🎬 Película") +
+        "</p>" +
+        "<p>⭐ " +
+        puntuacion +
+        "/10</p>" +
+        "<div class='botones-card'>" +
+        "<button class='boton-detalles'>Ver detalles</button>" +
+        "<button class='" +
+        (esFavoritoMarvel(item.id, tipo)
+            ? "boton-quitar-favorito"
+            : "boton-favorito") +
+        "'>" +
+        (esFavoritoMarvel(item.id, tipo)
+            ? "💔 Quitar"
+            : "❤️ Favorito") +
+        "</button>" +
+        "</div>" +
+        "</div>";
+
+    tarjeta.querySelector(".boton-detalles").addEventListener(
+        "click",
+        function() {
+            verDetallesTMDB(item.id, tipo);
+        }
+    );
+
+    tarjeta.querySelector(".boton-favorito, .boton-quitar-favorito")
+        .addEventListener("click", function() {
+            alternarFavorito(item.id, tipo);
+            renderizarFilasInicio();
+        });
+
+    return tarjeta;
+}
+
+function renderizarFilaInicio(id, lista, cantidad) {
+    const contenedor = document.getElementById(id);
+
+    if (!contenedor) return;
+
+    contenedor.innerHTML = "";
+
+    if (!lista || lista.length === 0) {
+        contenedor.innerHTML = "<p>No hay contenido disponible.</p>";
+        return;
+    }
+
+    lista.slice(0, cantidad).forEach(function(item) {
+        contenedor.appendChild(crearTarjetaInicio(item));
+    });
+}
+
+function renderizarFilasInicio() {
+    const populares = peliculasTMDB
+        .slice()
+        .sort(function(a, b) {
+            return (b.popularity || 0) - (a.popularity || 0);
+        });
+
+    const series = seriesTMDB
+        .slice()
+        .sort(function(a, b) {
+            return (b.popularity || 0) - (a.popularity || 0);
+        });
+
+    renderizarFilaInicio("homePopulares", populares, 10);
+    renderizarFilaInicio("homeSeries", series, 10);
 }
 
 function mostrarTipoMarvel(tipo) {
