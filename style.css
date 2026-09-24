@@ -2758,3 +2758,57 @@ body.tema-claro .boton-vaciar-favoritos {
         white-space: nowrap;
     }
 }
+
+/* Búsqueda global */
+.busqueda-global {
+    margin: 20px 0;
+    padding: 22px;
+    border: 1px solid rgba(230, 36, 41, 0.25);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.busqueda-global h3 {
+    margin: 6px 0;
+}
+
+.busqueda-global p {
+    margin: 0;
+    opacity: 0.78;
+}
+
+.busqueda-global-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.busqueda-global-form input {
+    flex: 1;
+    min-width: 0;
+}
+
+.busqueda-global-form button {
+    white-space: nowrap;
+}
+
+.busqueda-global-estado {
+    min-height: 22px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+#resultadosBusquedaGlobal {
+    margin-bottom: 28px;
+}
+
+@media (max-width: 700px) {
+    .busqueda-global-form {
+        flex-direction: column;
+    }
+
+    .busqueda-global-form button {
+        width: 100%;
+    }
+}
