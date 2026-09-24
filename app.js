@@ -309,12 +309,13 @@ function crearTarjetaMarvel(item, opciones) {
             ""
         ) +
         "<div class='card-overlay'>" +
-        "<button class='card-ver' type='button'>▶ Ver detalles</button>" +
+        "<button class='card-ver' type='button'><i data-lucide='play'></i><span>Ver detalles</span></button>" +
+        "<button class='card-quick-fav " + (esFavorito ? "activo" : "") + "' type='button' aria-label='" + (esFavorito ? "Quitar de favoritos" : "Añadir a favoritos") + "'><i data-lucide='heart'></i></button>" +
         "</div>" +
         "<span class='card-badge'>" +
-        (tipo === "tv" ? "📺 Serie" : "🎬 Película") +
+        (tipo === "tv" ? "Serie" : "Película") +
         "</span>" +
-        "<span class='card-rating'>⭐ " +
+        "<span class='card-rating'><i data-lucide='star'></i> " +
         puntuacion +
         "</span>" +
         "</div>" +
@@ -322,19 +323,19 @@ function crearTarjetaMarvel(item, opciones) {
         "<h3>" + escaparHTML(titulo) + "</h3>" +
         "<div class='card-meta'>" +
         "<span>" + (tipo === "tv" ? "Serie" : "Película") + "</span>" +
-        "<span>📅 " + escaparHTML(fecha) + "</span>" +
+        "<span>" + escaparHTML(fecha) + "</span>" +
         "</div>" +
-        "<p class='puntuacion'>⭐ " + puntuacion + "/10</p>" +
+        "<p class='puntuacion'><i data-lucide='star'></i> " + puntuacion + "/10</p>" +
         "<p class='descripcion-pelicula'>" +
         escaparHTML(descripcion) +
         "</p>" +
         "<div class='botones-card'>" +
-        "<button class='boton-detalles' type='button'>Ver detalles</button>" +
+        "<button class='boton-detalles' type='button'><i data-lucide='info'></i><span>Detalles</span></button>" +
         "<button class='" +
         (esFavorito ? "boton-quitar-favorito" : "boton-favorito") +
-        "' type='button'>" +
-        (esFavorito ? "💔 Quitar" : "❤️ Favorito") +
-        "</button>" +
+        "' type='button'><i data-lucide='heart'></i><span>" +
+        (esFavorito ? "Quitar" : "Favorito") +
+        "</span></button>" +
         "</div>" +
         "</div>";
 
@@ -355,9 +356,27 @@ function crearTarjetaMarvel(item, opciones) {
 
             if (opciones && opciones.actualizarInicio) {
                 renderizarFilasInicio();
+            } else {
+                renderizarFavoritos();
             }
         });
     }
+
+    const botonQuickFavorito = tarjeta.querySelector(".card-quick-fav");
+    if (botonQuickFavorito) {
+        botonQuickFavorito.addEventListener("click", function(event) {
+            event.stopPropagation();
+            alternarFavorito(datos.id, tipo, datos);
+
+            if (opciones && opciones.actualizarInicio) {
+                renderizarFilasInicio();
+            } else {
+                renderizarFavoritos();
+            }
+        });
+    }
+
+    setTimeout(actualizarIconosLucide, 0);
 
     return tarjeta;
 }
