@@ -277,82 +277,7 @@ function renderizarCatalogo(lista) {
     }
 
     listaOrdenada.forEach(function(item) {
-        const tipoTexto = item.tipo === "tv" ? "📺 Serie" : "🎬 Película";
-        const titulo = item.title || item.name || "Sin título";
-        const fecha = item.release_date || item.first_air_date || "Sin fecha";
-        const puntuacion = item.vote_average
-            ? item.vote_average.toFixed(1)
-            : "N/A";
-        const descripcion = item.overview || "Sin descripción disponible.";
-
-        const tarjeta = document.createElement("article");
-        tarjeta.className = "tarjeta-pelicula";
-
-        const poster = crearPoster(
-            item.poster_path
-                ? TMDB_IMAGE_URL + item.poster_path
-                : "",
-            titulo,
-            ""
-        );
-
-        tarjeta.innerHTML =
-            "<div class='card-media'>" +
-            poster +
-            "<span class='card-badge'>" +
-            tipoTexto +
-            "</span>" +
-            "<span class='card-rating'>⭐ " +
-            puntuacion +
-            "</span>" +
-            "</div>" +
-            "<div class='card-content'>" +
-            "<h3>" +
-            titulo +
-            "</h3>" +
-            "<p class='tipo-contenido'>📅 " +
-        fecha +
-        "</p>" +
-        "<p class='puntuacion'>⭐ " +
-        puntuacion +
-        "/10</p>" +
-        "<p class='descripcion-pelicula'>" +
-            descripcion +
-            "</p>" +
-            "<div class='botones-card'>" +
-            "<button class='boton-detalles' data-id='" +
-            item.id +
-            "' data-tipo='" +
-            item.tipo +
-            "'>Ver detalles</button>" +
-            "<button class='" +
-            (esFavoritoMarvel(item.id, item.tipo)
-                ? "boton-quitar-favorito"
-                : "boton-favorito") +
-            "' data-favorito-id='" +
-            item.id +
-            "' data-favorito-tipo='" +
-            item.tipo +
-            "'>" +
-            (esFavoritoMarvel(item.id, item.tipo)
-                ? "💔 Quitar"
-                : "❤️ Favorito") +
-            "</button>" +
-            "</div>" +
-            "</div>";
-
-        const botonDetalles = tarjeta.querySelector(".boton-detalles");
-        const botonFavorito = tarjeta.querySelector("[data-favorito-id]");
-
-        botonDetalles.addEventListener("click", function() {
-            verDetallesTMDB(item.id, item.tipo);
-        });
-
-        botonFavorito.addEventListener("click", function() {
-            alternarFavorito(item.id, item.tipo);
-        });
-
-        catalogo.appendChild(tarjeta);
+        catalogo.appendChild(crearTarjetaMarvel(item));
     });
 }
 
@@ -533,62 +458,9 @@ async function cargarMarvelTMDB() {
 }
 
 function crearTarjetaInicio(item) {
-    const tipo = item.tipo || "movie";
-    const titulo = item.title || item.name || "Sin título";
-    const fecha = item.release_date || item.first_air_date || "Sin fecha";
-    const puntuacion = item.vote_average
-        ? Number(item.vote_average).toFixed(1)
-        : "N/A";
-
-    const tarjeta = document.createElement("article");
-    tarjeta.className = "tarjeta-pelicula";
-
-    tarjeta.innerHTML =
-        crearPoster(
-            item.poster_path
-                ? TMDB_IMAGE_URL + item.poster_path
-                : "",
-            titulo,
-            ""
-        ) +
-        "<div class='card-content'>" +
-        "<h3>" +
-        titulo +
-        "</h3>" +
-        "<p class='tipo-contenido'>" +
-        (tipo === "tv" ? "📺 Serie" : "🎬 Película") +
-        "</p>" +
-        "<p>⭐ " +
-        puntuacion +
-        "/10</p>" +
-        "<div class='botones-card'>" +
-        "<button class='boton-detalles'>Ver detalles</button>" +
-        "<button class='" +
-        (esFavoritoMarvel(item.id, tipo)
-            ? "boton-quitar-favorito"
-            : "boton-favorito") +
-        "'>" +
-        (esFavoritoMarvel(item.id, tipo)
-            ? "💔 Quitar"
-            : "❤️ Favorito") +
-        "</button>" +
-        "</div>" +
-        "</div>";
-
-    tarjeta.querySelector(".boton-detalles").addEventListener(
-        "click",
-        function() {
-            verDetallesTMDB(item.id, tipo);
-        }
-    );
-
-    tarjeta.querySelector(".boton-favorito, .boton-quitar-favorito")
-        .addEventListener("click", function() {
-            alternarFavorito(item.id, tipo);
-            renderizarFilasInicio();
-        });
-
-    return tarjeta;
+    return crearTarjetaMarvel(item, {
+        actualizarInicio: true
+    });
 }
 
 function renderizarFilaInicio(id, lista, cantidad) {
