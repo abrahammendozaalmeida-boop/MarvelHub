@@ -554,6 +554,7 @@ function mostrarFavoritos() {
 
 function configurarFavoritos() {
     const botones = document.querySelectorAll("[data-filtro-favoritos]");
+    const orden = document.getElementById("ordenFavoritos");
 
     botones.forEach(function(boton) {
         boton.addEventListener("click", function() {
@@ -567,6 +568,12 @@ function configurarFavoritos() {
             renderizarFavoritos(window.filtroFavoritosActual);
         });
     });
+
+    if (orden) {
+        orden.addEventListener("change", function() {
+            renderizarFavoritos(window.filtroFavoritosActual || "todos");
+        });
+    }
 }
 
 let paginaPeliculasTMDB = 1;
