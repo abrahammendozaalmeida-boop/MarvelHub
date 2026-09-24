@@ -1837,3 +1837,24 @@ body.tema-claro .ajuste-version strong {
         flex-direction: column;
     }
 }
+
+
+/* ================================
+   INICIO PERSONALIZADO
+   ================================ */
+
+.home-personalizado {
+    position: relative;
+}
+
+.home-personalizado .titulo-home h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (max-width: 600px) {
+    .home-personalizado .catalogo-horizontal {
+        padding-bottom: 4px;
+    }
+}
