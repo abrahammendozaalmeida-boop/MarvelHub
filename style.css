@@ -1594,3 +1594,106 @@ body.tema-claro .editor-dos-columnas input {
     opacity: .65;
     cursor: wait;
 }
+
+
+/* ================================
+   NAVEGACIÓN MÓVIL APP
+   ================================ */
+
+@media (max-width: 600px) {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        padding-bottom: calc(82px + env(safe-area-inset-bottom));
+        overscroll-behavior-y: none;
+    }
+
+    header {
+        z-index: 1400;
+        padding-top: max(10px, env(safe-area-inset-top));
+        padding-bottom: 10px;
+        background: rgba(17, 17, 22, .94);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+    }
+
+    .logo {
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0 3px;
+    }
+
+    .logo span {
+        font-size: 12px;
+    }
+
+    .logo h1 {
+        font-size: 18px;
+        letter-spacing: .5px;
+    }
+
+    nav {
+        bottom: max(7px, env(safe-area-inset-bottom));
+        padding: 6px;
+        border-radius: 18px;
+        background: rgba(14, 14, 19, .92);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+    }
+
+    nav button {
+        min-height: 44px;
+        border-radius: 12px;
+        font-size: 11px;
+        line-height: 1.1;
+    }
+
+    nav .nav-boton.activo-nav {
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
+    }
+
+    nav .nav-boton.activo-nav::after {
+        bottom: 3px;
+        height: 2px;
+    }
+
+    main {
+        padding-top: 12px;
+    }
+
+    .seccion {
+        min-height: calc(100vh - 120px);
+    }
+
+    .inicio-portada {
+        border-radius: 0 0 20px 20px;
+    }
+
+    .catalogo-horizontal {
+        scroll-padding-left: 8px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .catalogo-horizontal .tarjeta-pelicula {
+        scroll-snap-align: start;
+    }
+
+    .modal-marvel {
+        padding: 10px;
+    }
+
+    .modal-contenido {
+        max-height: calc(100vh - 20px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .aviso-app {
+        bottom: calc(86px + env(safe-area-inset-bottom));
+        left: 12px;
+        right: 12px;
+    }
+}
