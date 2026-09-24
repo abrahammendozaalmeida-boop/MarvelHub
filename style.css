@@ -1065,3 +1065,23 @@ body.tema-claro .atajo-card {
         gap: 10px;
     }
 }
+
+
+/* FILAS DE INICIO */
+.home-rail {
+    margin-top: 52px;
+}
+
+.home-rail .catalogo-horizontal {
+    margin-top: 0;
+}
+
+.home-rail .titulo-home {
+    margin-bottom: 16px;
+}
+
+@media (max-width: 600px) {
+    .home-rail {
+        margin-top: 40px;
+    }
+}
