@@ -2206,6 +2206,7 @@ async function configurarCuenta() {
     const formRegistro = document.getElementById("formRegistro");
     const recuperar = document.getElementById("botonRecuperar");
     const cerrar = document.getElementById("botonCerrarSesion");
+    const sincronizar = document.getElementById("botonSincronizarCuenta");
 
     if (formLogin) {
         formLogin.addEventListener("submit", function(event) {
@@ -2229,7 +2230,15 @@ async function configurarCuenta() {
         cerrar.addEventListener("click", cerrarSesionCuenta);
     }
 
+    if (sincronizar) {
+        sincronizar.addEventListener("click", sincronizarCuentaConNubeActual);
+    }
+
     if (!conectado) {
+        actualizarEstadoSincronizacion(
+            "Configura Supabase en supabase-config.js para activar la nube.",
+            true
+        );
         actualizarCuentaUI(null);
         return;
     }
