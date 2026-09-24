@@ -1,12 +1,14 @@
-// ================================
-// NAVEGACIÓN
-// ================================
+const TMDB_API_KEY = "TU_CLAVE_API";
+const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+const TMDB_IMAGE_URL = "https://image.tmdb.org/t/p/w500";
+
+let peliculasTMDB = [];
+let seriesTMDB = [];
+let tipoActual = "peliculas";
+let favoritosMarvel = JSON.parse(localStorage.getItem("favoritosMarvel") || "[]");
 
 function mostrarSeccion(seccion) {
-
-    const secciones = document.querySelectorAll(".seccion");
-
-    secciones.forEach(function(elemento) {
+    document.querySelectorAll(".seccion").forEach(function(elemento) {
         elemento.classList.remove("activa");
     });
 
@@ -15,335 +17,713 @@ function mostrarSeccion(seccion) {
     if (seleccionada) {
         seleccionada.classList.add("activa");
     }
+
+    if (seccion === "favoritos") {
+        mostrarFavoritos();
+    }
 }
 
-
-// ================================
-// RECOMENDACIONES
-// ================================
-
-const recomendaciones = [
-
-    {
-        titulo: "Spider-Man: No Way Home",
-        descripcion: "Peter Parker enfrenta las consecuencias de revelar su identidad y se encuentra con enemigos de otros universos."
-    },
-
-    {
-        titulo: "Avengers: Endgame",
-        descripcion: "Los Vengadores intentan revertir las consecuencias del chasquido de Thanos."
-    },
-
-    {
-        titulo: "Guardians of the Galaxy",
-        descripcion: "Un grupo de personajes muy diferentes termina formando un equipo para salvar la galaxia."
-    },
-
-    {
-        titulo: "Iron Man",
-        descripcion: "Tony Stark cambia su vida después de construir una poderosa armadura."
-    },
-
-    {
-        titulo: "Thor: Ragnarok",
-        descripcion: "Thor debe enfrentarse a nuevos enemigos mientras intenta salvar Asgard."
-    },
-
-    {
-        titulo: "Black Panther",
-        descripcion: "T'Challa regresa a Wakanda para asumir su responsabilidad como rey."
-    },
-
-    {
-        titulo: "Doctor Strange",
-        descripcion: "Stephen Strange descubre un mundo completamente nuevo relacionado con la magia."
+async function obtenerTMDB(endpoint) {
+    if (!TMDB_API_KEY || TMDB_API_KEY === "TU_CLAVE_API") {
+        throw new Error("Falta configurar la clave de TMDB.");
     }
 
-];
-
-
-function recomendacionDelDia() {
-
-    const fecha = new Date();
-
-    const dia = fecha.getDate();
-
-    const indice = dia % recomendaciones.length;
-
-    document.getElementById("recomendacion").textContent =
-        recomendaciones[indice].titulo;
-
-    document.getElementById("descripcion").textContent =
-        recomendaciones[indice].descripcion;
-}
-
-
-function nuevaRecomendacion() {
-
-    const indice = Math.floor(
-        Math.random() * recomendaciones.length
+    const respuesta = await fetch(
+        TMDB_BASE_URL +
+        endpoint +
+        (endpoint.includes("?") ? "&" : "?") +
+        "api_key=" +
+        encodeURIComponent(TMDB_API_KEY) +
+        "&language=es-MX"
     );
 
-    document.getElementById("recomendacion").textContent =
-        recomendaciones[indice].titulo;
-
-    document.getElementById("descripcion").textContent =
-        recomendaciones[indice].descripcion;
-}
-
-
-// ================================
-// CATÁLOGO MARVEL
-// ================================
-
-const peliculas = [
-
-    {
-        titulo: "Iron Man",
-        año: 2008,
-        tipo: "Película",
-        imagen: "https://image.tmdb.org/t/p/w500/78lPtwv72eTNqFW9COBYI0dWDJa.jpg",
-        descripcion: "Tony Stark construye una armadura que cambiará su vida y lo convertirá en Iron Man."
-    },
-
-    {
-        titulo: "Thor",
-        año: 2011,
-        tipo: "Película",
-        imagen: "https://image.tmdb.org/t/p/w500/prSfAi1xGrhLQNxVSUFh61xQ4Qy.jpg",
-        descripcion: "Thor es enviado a la Tierra y debe aprender a ser digno de recuperar sus poderes."
-    },
-
-    {
-        titulo: "The Avengers",
-        año: 2012,
-        tipo: "Película",
-        imagen: "https://image.tmdb.org/t/p/w500/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg",
-        descripcion: "Los héroes más poderosos de la Tierra se reúnen para enfrentar una amenaza común."
-    },
-
-    {
-        titulo: "Guardians of the Galaxy",
-        año: 2014,
-        tipo: "Película",
-        imagen: "https://image.tmdb.org/t/p/w500/r7vmZjiyZw9rpJMQJdXpjgiCOk9.jpg",
-        descripcion: "Un grupo de personajes muy diferentes termina formando un equipo para salvar la galaxia."
-    },
-
-    {
-        titulo: "Avengers: Age of Ultron",
-        año: 2015,
-        tipo: "Película",
-        imagen: "https://image.tmdb.org/t/p/w500/4ssDuvEDkSArWEdyBl2X5EHvYKU.jpg",
-        descripcion: "Los Vengadores se enfrentan a Ultron, una inteligencia artificial creada para proteger al mundo."
-    },
-
-    {
-        titulo: "Captain America: Civil War",
-        año: 2016,
-        tipo: "Película",
-        imagen: "https://image.tmdb.org/t/p/w500/rAGiXaUfPzY7CDEyNKUofk3Kw2e.jpg",
-        descripcion: "Los Vengadores se dividen por sus diferencias sobre cómo deben actuar los superhéroes."
-    },
-
-    {
-        titulo: "Doctor Strange",
-        año: 2016,
-        tipo: "Película",
-        imagen: "https://image.tmdb.org/t/p/w500/uGBVj3bEbCoqR8O2t0GHUvqmM1.jpg",
-        descripcion: "Stephen Strange descubre las artes místicas después de un accidente que cambia su vida."
-    },
-
-    {
-        titulo: "Black Panther",
-        año: 2018,
-        tipo: "Película",
-        imagen: "https://image.tmdb.org/t/p/w500/uxzzxijgPIY7slzFvMotPv8wjKA.jpg",
-        descripcion: "T'Challa regresa a Wakanda para convertirse en rey y proteger su nación."
-    },
-
-    {
-        titulo: "Avengers: Infinity War",
-        año: 2018,
-        tipo: "Película",
-        imagen: "https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
-        descripcion: "Los héroes del universo Marvel deben enfrentarse a Thanos y su búsqueda de las Gemas del Infinito."
-    },
-
-    {
-        titulo: "Avengers: Endgame",
-        año: 2019,
-        tipo: "Película",
-        imagen: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
-        descripcion: "Los Vengadores intentan encontrar una manera de revertir las consecuencias del chasquido."
-    },
-
-    {
-        titulo: "Spider-Man: No Way Home",
-        año: 2021,
-        tipo: "Película",
-        imagen: "https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg",
-        descripcion: "Peter Parker provoca un problema multiversal que trae personajes de otras realidades."
+    if (!respuesta.ok) {
+        throw new Error("TMDB respondió con un error.");
     }
 
-];
+    return await respuesta.json();
+}
 
+function crearPoster(url, titulo, clase) {
+    if (!url) {
+        return "<div class='poster-faltante'>🎬</div>";
+    }
 
-function cargarCatalogo(lista = peliculas) {
+    return (
+        "<img class='" +
+        (clase || "") +
+        "' src='" +
+        url +
+        "' alt='" +
+        titulo.replace(/'/g, "&#39;") +
+        "'>"
+    );
+}
 
+function esFavoritoMarvel(id, tipo) {
+    return favoritosMarvel.some(function(item) {
+        return item.id === id && item.tipo === tipo;
+    });
+}
+
+function guardarFavoritos() {
+    localStorage.setItem("favoritosMarvel", JSON.stringify(favoritosMarvel));
+}
+
+function alternarFavorito(id, tipo) {
+    const indice = favoritosMarvel.findIndex(function(item) {
+        return item.id === id && item.tipo === tipo;
+    });
+
+    if (indice >= 0) {
+        favoritosMarvel.splice(indice, 1);
+    } else {
+        const lista = tipo === "movie" ? peliculasTMDB : seriesTMDB;
+        const item = lista.find(function(elemento) {
+            return elemento.id === id;
+        });
+
+        if (!item) return;
+
+        favoritosMarvel.push({
+            id: item.id,
+            tipo: tipo,
+            titulo: item.title || item.name,
+            poster_path: item.poster_path,
+            overview: item.overview || "",
+            fecha: item.release_date || item.first_air_date || "",
+            vote_average: item.vote_average || 0
+        });
+    }
+
+    guardarFavoritos();
+    renderizarCatalogo(tipo === "movie" ? peliculasTMDB : seriesTMDB);
+
+    if (document.getElementById("favoritos").classList.contains("activa")) {
+        mostrarFavoritos();
+    }
+}
+
+function renderizarCatalogo(lista) {
     const catalogo = document.getElementById("catalogo");
+
+    if (!catalogo) return;
 
     catalogo.innerHTML = "";
 
-    lista.forEach(function(pelicula) {
+    if (!lista || lista.length === 0) {
+        catalogo.innerHTML = "<p>No se encontraron resultados.</p>";
+        return;
+    }
 
-        const card = document.createElement("div");
+    lista.forEach(function(item) {
+        const tipoTexto = item.tipo === "tv" ? "📺 Serie" : "🎬 Película";
+        const titulo = item.title || item.name || "Sin título";
+        const fecha = item.release_date || item.first_air_date || "Sin fecha";
+        const puntuacion = item.vote_average
+            ? item.vote_average.toFixed(1)
+            : "N/A";
+        const descripcion = item.overview || "Sin descripción disponible.";
 
-        card.className = "card";
+        const tarjeta = document.createElement("article");
+        tarjeta.className = "tarjeta-pelicula";
 
-        card.innerHTML = `
-            <img src="${pelicula.imagen}" alt="${pelicula.titulo}">
+        const poster = crearPoster(
+            item.poster_path
+                ? TMDB_IMAGE_URL + item.poster_path
+                : "",
+            titulo,
+            ""
+        );
 
-            <div class="card-content">
+        tarjeta.innerHTML =
+            poster +
+            "<div class='card-content'>" +
+            "<h3>" +
+            titulo +
+            "</h3>" +
+            "<p class='tipo-contenido'>" +
+            tipoTexto +
+            "</p>" +
+            "<p>📅 " +
+            fecha +
+            "</p>" +
+            "<p class='puntuacion'>⭐ " +
+            puntuacion +
+            "/10</p>" +
+            "<p class='descripcion-pelicula'>" +
+            descripcion +
+            "</p>" +
+            "<div class='botones-card'>" +
+            "<button class='boton-detalles' data-id='" +
+            item.id +
+            "' data-tipo='" +
+            item.tipo +
+            "'>Ver detalles</button>" +
+            "<button class='" +
+            (esFavoritoMarvel(item.id, item.tipo)
+                ? "boton-quitar-favorito"
+                : "boton-favorito") +
+            "' data-favorito-id='" +
+            item.id +
+            "' data-favorito-tipo='" +
+            item.tipo +
+            "'>" +
+            (esFavoritoMarvel(item.id, item.tipo)
+                ? "💔 Quitar"
+                : "❤️ Favorito") +
+            "</button>" +
+            "</div>" +
+            "</div>";
 
-                <h3>${pelicula.titulo}</h3>
+        const botonDetalles = tarjeta.querySelector(".boton-detalles");
+        const botonFavorito = tarjeta.querySelector("[data-favorito-id]");
 
-                <p class="año">
-                    ${pelicula.tipo} · ${pelicula.año}
-                </p>
-
-                <p>
-                    ${pelicula.descripcion}
-                </p>
-
-                <button onclick="seleccionarPelicula('${pelicula.titulo}')">
-                    Ver información
-                </button>
-
-            </div>
-        `;
-
-        catalogo.appendChild(card);
-
-    });
-}
-
-function seleccionarPelicula(titulo) {
-
-    const pelicula = peliculas.find(function(item) {
-        return item.titulo === titulo;
-    });
-
-    if (!pelicula) return;
-
-    alert(
-        pelicula.titulo +
-        "\n\n" +
-        pelicula.tipo +
-        "\nAño: " +
-        pelicula.año
-    );
-}
-
-
-// ================================
-// BUSCADOR
-// ================================
-
-document.getElementById("buscador").addEventListener(
-    "input",
-    function() {
-
-        const texto = this.value.toLowerCase();
-
-        const resultados = peliculas.filter(function(pelicula) {
-
-            return pelicula.titulo
-                .toLowerCase()
-                .includes(texto);
-
+        botonDetalles.addEventListener("click", function() {
+            verDetallesTMDB(item.id, item.tipo);
         });
 
-        cargarCatalogo(resultados);
-    }
-);
+        botonFavorito.addEventListener("click", function() {
+            alternarFavorito(item.id, item.tipo);
+        });
 
+        catalogo.appendChild(tarjeta);
+    });
+}
 
-// ================================
-// EDITOR DE VIDEO
-// ================================
+function renderizarFavoritos() {
+    const catalogo = document.getElementById("catalogoFavoritos");
 
-const videoInput =
-    document.getElementById("videoInput");
+    if (!catalogo) return;
 
-const videoPreview =
-    document.getElementById("videoPreview");
+    catalogo.innerHTML = "";
 
-
-videoInput.addEventListener(
-    "change",
-    function(event) {
-
-        const archivo = event.target.files[0];
-
-        if (!archivo) return;
-
-        const url = URL.createObjectURL(archivo);
-
-        videoPreview.src = url;
-
-        videoPreview.load();
-    }
-);
-
-
-// VOLUMEN
-
-document.getElementById("volumen").addEventListener(
-    "input",
-    function() {
-
-        videoPreview.volume = this.value;
-
-    }
-);
-
-
-// ================================
-// FORMATOS
-// ================================
-
-function cambiarFormato(formato) {
-
-    document.getElementById("formatoActual").textContent =
-        formato;
-
-    if (formato === "9:16") {
-
-        videoPreview.style.aspectRatio = "9 / 16";
-
+    if (favoritosMarvel.length === 0) {
+        catalogo.innerHTML = "<p>No tienes favoritos todavía.</p>";
+        return;
     }
 
-    else if (formato === "1:1") {
+    favoritosMarvel.forEach(function(item) {
+        const tarjeta = document.createElement("article");
+        tarjeta.className = "tarjeta-pelicula";
 
-        videoPreview.style.aspectRatio = "1 / 1";
+        const titulo = item.titulo || "Sin título";
+        const tipoTexto = item.tipo === "tv" ? "📺 Serie" : "🎬 Película";
+        const fecha = item.fecha || "Sin fecha";
+        const puntuacion = item.vote_average
+            ? Number(item.vote_average).toFixed(1)
+            : "N/A";
+        const descripcion = item.overview || "Sin descripción disponible.";
 
-    }
+        tarjeta.innerHTML =
+            crearPoster(
+                item.poster_path
+                    ? TMDB_IMAGE_URL + item.poster_path
+                    : "",
+                titulo,
+                ""
+            ) +
+            "<div class='card-content'>" +
+            "<h3>" +
+            titulo +
+            "</h3>" +
+            "<p class='tipo-contenido'>" +
+            tipoTexto +
+            "</p>" +
+            "<p>📅 " +
+            fecha +
+            "</p>" +
+            "<p class='puntuacion'>⭐ " +
+            puntuacion +
+            "/10</p>" +
+            "<p class='descripcion-pelicula'>" +
+            descripcion +
+            "</p>" +
+            "<div class='botones-card'>" +
+            "<button class='boton-detalles'>Ver detalles</button>" +
+            "<button class='boton-quitar-favorito'>💔 Quitar</button>" +
+            "</div>" +
+            "</div>";
 
-    else {
+        tarjeta.querySelector(".boton-detalles").addEventListener(
+            "click",
+            function() {
+                verDetallesTMDB(item.id, item.tipo);
+            }
+        );
 
-        videoPreview.style.aspectRatio = "16 / 9";
+        tarjeta.querySelector(".boton-quitar-favorito").addEventListener(
+            "click",
+            function() {
+                alternarFavorito(item.id, item.tipo);
+            }
+        );
 
+        catalogo.appendChild(tarjeta);
+    });
+}
+
+function mostrarFavoritos() {
+    renderizarFavoritos();
+}
+
+async function cargarMarvelTMDB() {
+    const catalogo = document.getElementById("catalogo");
+
+    if (!catalogo) return;
+
+    catalogo.innerHTML = "<p>Cargando Marvel desde TMDB...</p>";
+
+    try {
+        const peliculas = await obtenerTMDB(
+            "/discover/movie?sort_by=popularity.desc&include_adult=false&with_companies=420&page=1"
+        );
+
+        const series = await obtenerTMDB(
+            "/discover/tv?sort_by=popularity.desc&include_adult=false&with_companies=420&page=1"
+        );
+
+        peliculasTMDB = peliculas.results.map(function(item) {
+            item.tipo = "movie";
+            return item;
+        });
+
+        seriesTMDB = series.results.map(function(item) {
+            item.tipo = "tv";
+            return item;
+        });
+
+        mostrarTipoMarvel("peliculas");
+    } catch (error) {
+        console.error("Error cargando Marvel:", error);
+        catalogo.innerHTML =
+            "<p>No se pudo cargar TMDB. Revisa tu clave de API.</p>";
     }
 }
 
+function mostrarTipoMarvel(tipo) {
+    tipoActual = tipo;
 
-// ================================
-// TEMA
-// ================================
+    const botonPeliculas = document.getElementById("botonPeliculas");
+    const botonSeries = document.getElementById("botonSeries");
+
+    if (botonPeliculas) {
+        botonPeliculas.classList.toggle(
+            "activo-filtro",
+            tipo === "peliculas"
+        );
+    }
+
+    if (botonSeries) {
+        botonSeries.classList.toggle(
+            "activo-filtro",
+            tipo === "series"
+        );
+    }
+
+    const lista = tipo === "peliculas"
+        ? peliculasTMDB
+        : seriesTMDB;
+
+    renderizarCatalogo(lista);
+}
+
+function activarBuscador() {
+    const buscador = document.getElementById("buscador");
+
+    if (!buscador) return;
+
+    buscador.addEventListener("input", function() {
+        const texto = this.value.toLowerCase().trim();
+
+        const lista = tipoActual === "peliculas"
+            ? peliculasTMDB
+            : seriesTMDB;
+
+        const resultados = lista.filter(function(item) {
+            const titulo = (
+                item.title ||
+                item.name ||
+                ""
+            ).toLowerCase();
+
+            return titulo.includes(texto);
+        });
+
+        renderizarCatalogo(resultados);
+    });
+}
+
+async function verDetallesTMDB(id, tipo) {
+    const modal = document.getElementById("modalMarvel");
+    const contenido = document.getElementById("detalleMarvel");
+
+    if (!modal || !contenido) return;
+
+    modal.classList.add("activo");
+    contenido.innerHTML = "<p>Cargando detalles...</p>";
+
+    let endpoint = "/movie/";
+
+    if (tipo === "tv") {
+        endpoint = "/tv/";
+    }
+
+    try {
+        const respuesta = await fetch(
+            TMDB_BASE_URL +
+            endpoint +
+            id +
+            "?api_key=" +
+            encodeURIComponent(TMDB_API_KEY) +
+            "&language=es-MX" +
+            "&append_to_response=videos"
+        );
+
+        if (!respuesta.ok) {
+            throw new Error("Error detalles");
+        }
+
+        const datos = await respuesta.json();
+
+        const titulo =
+            datos.title ||
+            datos.name ||
+            "Sin título";
+
+        const descripcion =
+            datos.overview ||
+            "Sin descripción disponible.";
+
+        const fecha =
+            datos.release_date ||
+            datos.first_air_date ||
+            "Sin fecha";
+
+        const puntuacion =
+            datos.vote_average
+                ? datos.vote_average.toFixed(1)
+                : "N/A";
+
+        let poster = "";
+
+        if (datos.poster_path) {
+            poster =
+                "<img src='" +
+                TMDB_IMAGE_URL +
+                datos.poster_path +
+                "' alt='" +
+                titulo.replace(/'/g, "&#39;") +
+                "'>";
+        }
+
+        let trailer = "";
+
+        if (
+            datos.videos &&
+            datos.videos.results &&
+            datos.videos.results.length > 0
+        ) {
+            const videos = datos.videos.results;
+
+            let videoTrailer = videos.find(function(video) {
+                return (
+                    video.site === "YouTube" &&
+                    video.type === "Trailer" &&
+                    video.official === true
+                );
+            });
+
+            if (!videoTrailer) {
+                videoTrailer = videos.find(function(video) {
+                    return (
+                        video.site === "YouTube" &&
+                        video.type === "Trailer"
+                    );
+                });
+            }
+
+            if (!videoTrailer) {
+                videoTrailer = videos.find(function(video) {
+                    return video.site === "YouTube";
+                });
+            }
+
+            if (videoTrailer && videoTrailer.key) {
+                trailer =
+                    "<div class='trailer-detalles'>" +
+                    "<h3>🎬 Tráiler</h3>" +
+                    "<div class='trailer-video'>" +
+                    "<iframe src='https://www.youtube.com/embed/" +
+                    videoTrailer.key +
+                    "' title='Tráiler de " +
+                    titulo.replace(/'/g, "&#39;") +
+                    "' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>" +
+                    "</div>" +
+                    "</div>";
+            }
+        }
+
+        contenido.innerHTML =
+            poster +
+            "<h2>" +
+            titulo +
+            "</h2>" +
+            "<p>📅 " +
+            fecha +
+            "</p>" +
+            "<p>⭐ " +
+            puntuacion +
+            "/10</p>" +
+            "<p>" +
+            descripcion +
+            "</p>" +
+            trailer;
+    } catch (error) {
+        console.error("Error detalles:", error);
+        contenido.innerHTML =
+            "<p>No se pudieron cargar los detalles.</p>";
+    }
+}
+
+function cerrarDetalles() {
+    const modal = document.getElementById("modalMarvel");
+
+    if (modal) {
+        modal.classList.remove("activo");
+    }
+
+    const contenido = document.getElementById("detalleMarvel");
+
+    if (contenido) {
+        contenido.innerHTML = "";
+    }
+}
+
+function configurarModal() {
+    const modal = document.getElementById("modalMarvel");
+
+    if (!modal) return;
+
+    modal.addEventListener("click", function(event) {
+        if (event.target === modal) {
+            cerrarDetalles();
+        }
+    });
+}
+
+function configurarTeclado() {
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
+            cerrarDetalles();
+        }
+    });
+}
+
+function recomendacionLocalFallback() {
+    const recomendaciones = [
+        {
+            titulo: "Spider-Man: No Way Home",
+            descripcion: "Peter Parker enfrenta las consecuencias de revelar su identidad y se encuentra con enemigos de otros universos."
+        },
+        {
+            titulo: "Avengers: Endgame",
+            descripcion: "Los Vengadores intentan revertir las consecuencias del chasquido de Thanos."
+        },
+        {
+            titulo: "Guardians of the Galaxy",
+            descripcion: "Un grupo de personajes muy diferentes termina formando un equipo para salvar la galaxia."
+        },
+        {
+            titulo: "Iron Man",
+            descripcion: "Tony Stark cambia su vida después de construir una poderosa armadura."
+        }
+    ];
+
+    const indice = new Date().getDate() % recomendaciones.length;
+    const item = recomendaciones[indice];
+
+    document.getElementById("recomendacion").textContent = item.titulo;
+    document.getElementById("descripcion").textContent = item.descripcion;
+    document.getElementById("recomendacionPoster").innerHTML = "";
+}
+
+function mostrarRecomendacion(item) {
+    const titulo =
+        item.title ||
+        item.name ||
+        "Sin título";
+
+    const descripcion =
+        item.overview ||
+        "Sin descripción disponible.";
+
+    document.getElementById("recomendacion").textContent = titulo;
+    document.getElementById("descripcion").textContent = descripcion;
+
+    const poster = document.getElementById("recomendacionPoster");
+
+    if (poster) {
+        poster.innerHTML = item.poster_path
+            ? "<img class='poster-recomendacion' src='" +
+              TMDB_IMAGE_URL +
+              item.poster_path +
+              "' alt='" +
+              titulo.replace(/'/g, "&#39;") +
+              "'>"
+            : "";
+    }
+}
+
+async function recomendacionTMDB() {
+    try {
+        if (!TMDB_API_KEY || TMDB_API_KEY === "TU_CLAVE_API") {
+            recomendacionLocalFallback();
+            return;
+        }
+
+        const datos = await obtenerTMDB(
+            "/discover/movie?sort_by=popularity.desc&include_adult=false&with_companies=420&page=1"
+        );
+
+        if (!datos.results || datos.results.length === 0) {
+            recomendacionLocalFallback();
+            return;
+        }
+
+        const fecha = new Date();
+        const indice =
+            (fecha.getDate() +
+            fecha.getMonth() +
+            fecha.getFullYear()) %
+            datos.results.length;
+
+        mostrarRecomendacion(datos.results[indice]);
+    } catch (error) {
+        console.error("Error recomendación:", error);
+        recomendacionLocalFallback();
+    }
+}
+
+async function nuevaRecomendacion() {
+    try {
+        if (!TMDB_API_KEY || TMDB_API_KEY === "TU_CLAVE_API") {
+            recomendacionLocalFallback();
+            return;
+        }
+
+        const datos = await obtenerTMDB(
+            "/discover/movie?sort_by=popularity.desc&include_adult=false&with_companies=420&page=1"
+        );
+
+        if (!datos.results || datos.results.length === 0) return;
+
+        const indice = Math.floor(
+            Math.random() * datos.results.length
+        );
+
+        mostrarRecomendacion(datos.results[indice]);
+    } catch (error) {
+        console.error("Error nueva recomendación:", error);
+    }
+}
+
+async function cargarProximosEstrenos() {
+    const contenedor =
+        document.getElementById("proximosEstrenos");
+
+    if (!contenedor) return;
+
+    if (!TMDB_API_KEY || TMDB_API_KEY === "TU_CLAVE_API") {
+        contenedor.innerHTML =
+            "<p>Configura tu clave de TMDB para mostrar próximos estrenos.</p>";
+        return;
+    }
+
+    const hoy = new Date().toISOString().split("T")[0];
+
+    try {
+        const datos = await obtenerTMDB(
+            "/discover/movie?sort_by=primary_release_date.asc&include_adult=false&with_companies=420&primary_release_date.gte=" +
+            hoy +
+            "&region=MX&page=1"
+        );
+
+        contenedor.innerHTML = "";
+
+        if (!datos.results || datos.results.length === 0) {
+            contenedor.innerHTML =
+                "<p>No hay próximos estrenos disponibles.</p>";
+            return;
+        }
+
+        datos.results.slice(0, 10).forEach(function(item) {
+            const tarjeta = document.createElement("article");
+            tarjeta.className = "tarjeta-pelicula";
+
+            const titulo = item.title || "Sin título";
+            const fecha = item.release_date || "Sin fecha";
+            const descripcion =
+                item.overview ||
+                "Sin descripción disponible.";
+
+            tarjeta.innerHTML =
+                crearPoster(
+                    item.poster_path
+                        ? TMDB_IMAGE_URL + item.poster_path
+                        : "",
+                    titulo,
+                    ""
+                ) +
+                "<div class='card-content'>" +
+                "<h3>" +
+                titulo +
+                "</h3>" +
+                "<p class='tipo-contenido'>🎬 Marvel Studios</p>" +
+                "<p>📅 " +
+                fecha +
+                "</p>" +
+                "<p class='descripcion-pelicula'>" +
+                descripcion +
+                "</p>" +
+                "<div class='botones-card'>" +
+                "<button class='boton-detalles-estreno'>Ver detalles</button>" +
+                "</div>" +
+                "</div>";
+
+            tarjeta.querySelector(".boton-detalles-estreno")
+                .addEventListener("click", function() {
+                    verDetallesTMDB(item.id, "movie");
+                });
+
+            contenedor.appendChild(tarjeta);
+        });
+    } catch (error) {
+        console.error("Error próximos estrenos:", error);
+        contenedor.innerHTML =
+            "<p>No se pudieron cargar los próximos estrenos.</p>";
+    }
+}
+
+function guardarNombre() {
+    const input = document.getElementById("nombre");
+
+    if (!input) return;
+
+    localStorage.setItem("nombre", input.value.trim());
+    alert("Nombre guardado correctamente 👍");
+}
+
+function cargarNombre() {
+    const nombre = localStorage.getItem("nombre");
+    const input = document.getElementById("nombre");
+
+    if (input && nombre) {
+        input.value = nombre;
+    }
+}
 
 function cambiarTema() {
-
     document.body.classList.toggle("tema-claro");
 
     const temaClaro =
@@ -355,50 +735,112 @@ function cambiarTema() {
     );
 }
 
-
-// Cargar tema guardado
-
-if (localStorage.getItem("tema") === "claro") {
-
-    document.body.classList.add("tema-claro");
-
+function cargarTema() {
+    if (localStorage.getItem("tema") === "claro") {
+        document.body.classList.add("tema-claro");
+    }
 }
 
+function configurarVideo() {
+    const videoInput =
+        document.getElementById("videoInput");
 
-// ================================
-// NOMBRE
-// ================================
+    const videoPreview =
+        document.getElementById("videoPreview");
 
-function guardarNombre() {
+    const volumen =
+        document.getElementById("volumen");
 
-    const nombre =
-        document.getElementById("nombre").value;
+    if (videoInput && videoPreview) {
+        videoInput.addEventListener("change", function(event) {
+            const archivo = event.target.files[0];
 
-    localStorage.setItem("nombre", nombre);
+            if (!archivo) return;
 
-    alert("Nombre guardado correctamente 👍");
+            const url = URL.createObjectURL(archivo);
+
+            videoPreview.src = url;
+            videoPreview.load();
+        });
+    }
+
+    if (volumen && videoPreview) {
+        volumen.addEventListener("input", function() {
+            videoPreview.volume = Number(this.value);
+        });
+    }
 }
 
+function cambiarFormato(formato) {
+    const formatoActual =
+        document.getElementById("formatoActual");
 
-// Cargar nombre
+    const videoPreview =
+        document.getElementById("videoPreview");
 
-const nombreGuardado =
-    localStorage.getItem("nombre");
+    if (formatoActual) {
+        formatoActual.textContent = formato;
+    }
 
-if (nombreGuardado) {
+    if (!videoPreview) return;
 
-    document.getElementById("nombre").value =
-        nombreGuardado;
-
+    if (formato === "9:16") {
+        videoPreview.style.aspectRatio = "9 / 16";
+    } else if (formato === "1:1") {
+        videoPreview.style.aspectRatio = "1 / 1";
+    } else {
+        videoPreview.style.aspectRatio = "16 / 9";
+    }
 }
 
+function configurarWidgets() {
+    const recomendacion =
+        document.getElementById("widgetRecomendacion");
 
-// ================================
-// INICIO
-// ================================
+    const estrenos =
+        document.getElementById("widgetEstrenos");
 
-recomendacionDelDia();
+    if (recomendacion) {
+        recomendacion.addEventListener("change", function() {
+            const hero = document.querySelector(".hero");
+            if (hero) {
+                hero.style.display =
+                    this.checked ? "" : "none";
+            }
+        });
+    }
 
-cargarCatalogo();
+    if (estrenos) {
+        estrenos.addEventListener("change", function() {
+            const bloque =
+                document.querySelector(".proximos-estrenos");
 
-console.log("ABRAHAM G4 — MARVEL HUB funcionando correctamente 🚀");
+            if (bloque) {
+                bloque.style.display =
+                    this.checked ? "" : "none";
+            }
+        });
+    }
+}
+
+window.mostrarSeccion = mostrarSeccion;
+window.nuevaRecomendacion = nuevaRecomendacion;
+window.mostrarTipoMarvel = mostrarTipoMarvel;
+window.cerrarDetalles = cerrarDetalles;
+window.guardarNombre = guardarNombre;
+window.cambiarTema = cambiarTema;
+window.cambiarFormato = cambiarFormato;
+
+document.addEventListener("DOMContentLoaded", function() {
+    cargarTema();
+    cargarNombre();
+    configurarVideo();
+    configurarWidgets();
+    activarBuscador();
+    configurarModal();
+    configurarTeclado();
+
+    recomendacionTMDB();
+    cargarMarvelTMDB();
+    cargarProximosEstrenos();
+});
