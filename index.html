@@ -178,7 +178,20 @@
             <button id="botonSeries" class="filtro" onclick="mostrarTipoMarvel('series')">📺 Series</button>
         </div>
 
-        <input type="text" id="buscador" placeholder="🔎 Buscar película o serie...">
+        <div class="catalogo-busqueda">
+            <input type="text" id="buscador" placeholder="🔎 Buscar película o serie...">
+            <select id="ordenCatalogo" aria-label="Ordenar catálogo">
+                <option value="popularidad">🔥 Más populares</option>
+                <option value="puntuacion">⭐ Mejor puntuadas</option>
+                <option value="reciente">📅 Más recientes</option>
+                <option value="alfabetico">🔤 A-Z</option>
+            </select>
+        </div>
+
+        <div class="catalogo-info">
+            <span id="contadorCatalogo">Cargando contenido...</span>
+            <button id="limpiarBusqueda" type="button" hidden>✕ Limpiar</button>
+        </div>
 
         <div id="catalogo" class="catalogo">
             <p>Cargando Marvel...</p>
