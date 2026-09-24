@@ -232,6 +232,26 @@ function actualizarInfoCatalogo(cantidad, mostrarLimpiar) {
     }
 }
 
+function obtenerListaFiltradaCatalogo(lista) {
+    const buscador = document.getElementById("buscador");
+    const texto = buscador
+        ? buscador.value.trim().toLowerCase()
+        : "";
+
+    const base = Array.isArray(lista) ? lista : [];
+
+    if (!texto) {
+        return base.slice();
+    }
+
+    return base.filter(function(item) {
+        const titulo = (item.title || item.name || "").toLowerCase();
+        const descripcion = (item.overview || "").toLowerCase();
+
+        return titulo.includes(texto) || descripcion.includes(texto);
+    });
+}
+
 function renderizarCatalogo(lista) {
     const catalogo = document.getElementById("catalogo");
 
@@ -239,11 +259,20 @@ function renderizarCatalogo(lista) {
 
     catalogo.innerHTML = "";
 
-    const listaOrdenada = obtenerListaOrdenada(lista);
-    actualizarInfoCatalogo(listaOrdenada.length, false);
+    const filtrada = obtenerListaFiltradaCatalogo(lista);
+    const listaOrdenada = obtenerListaOrdenada(filtrada);
+    const buscador = document.getElementById("buscador");
+    const hayBusqueda = !!(
+        buscador &&
+        buscador.value.trim().length > 0
+    );
+
+    actualizarInfoCatalogo(listaOrdenada.length, hayBusqueda);
 
     if (!listaOrdenada || listaOrdenada.length === 0) {
-        catalogo.innerHTML = "<p>No se encontraron resultados.</p>";
+        catalogo.innerHTML = hayBusqueda
+            ? "<p>🔎 No encontramos coincidencias. Prueba con otro título o palabra.</p>"
+            : "<p>🎬 No hay contenido disponible en este momento.</p>";
         return;
     }
 
@@ -397,8 +426,7 @@ function renderizarFavoritos(filtro) {
             "</span>" +
             "</div>" +
             "<div class='card-content'>" +
-            "<h3>" +
-            titulo +
+            "<h3>" +            titulo +
             "</h3>" +
             "<p class='tipo-contenido'>📅 " +
             fecha +
@@ -797,8 +825,7 @@ async function verDetallesTMDB(id, tipo) {
                     "<div class='trailer-video'>" +
                     "<iframe src='https://www.youtube.com/embed/" +
                     videoTrailer.key +
-                    "' title='Tráiler de " +
-                    titulo.replace(/'/g, "&#39;") +
+                    "' title='Tráiler de " +                    titulo.replace(/'/g, "&#39;") +
                     "' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>" +
                     "</div>" +
                     "</div>";
@@ -1003,7 +1030,13 @@ async function cargarProximosEstrenos() {
         return;
     }
 
-    const hoy = new Date().toISOString().split("T")[0];
+    const ahora = new Date();
+    const hoy =
+        ahora.getFullYear() +
+        "-" +
+        String(ahora.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(ahora.getDate()).padStart(2, "0");
 
     try {
         const datos = await obtenerTMDB(
@@ -1197,8 +1230,7 @@ function actualizarSaludoInicio() {
     }
 }
 
-function cargarNombre() {
-    const nombre = localStorage.getItem("nombre");
+function cargarNombre() {    const nombre = localStorage.getItem("nombre");
     const input = document.getElementById("nombre");
 
     if (input && nombre) {
@@ -1597,8 +1629,7 @@ async function exportarVideoEditor() {
         return;
     }
 
-    if (!video.captureStream || typeof MediaRecorder === "undefined") {
-        if (estado) {
+    if (!video.captureStream || typeof MediaRecorder === "undefined") {        if (estado) {
             estado.textContent =
                 "Tu navegador no permite exportar este video directamente. Prueba con Chrome o Edge actualizado.";
         }
@@ -1998,170 +2029,3 @@ function configurarWidgets() {
 }
 
 window.mostrarSeccion = mostrarSeccion;
-window.nuevaRecomendacion = nuevaRecomendacion;
-window.mostrarTipoMarvel = mostrarTipoMarvel;
-window.cerrarDetalles = cerrarDetalles;
-window.guardarNombre = guardarNombre;
-window.cambiarTema = cambiarTema;
-window.cambiarFormato = cambiarFormato;
-window.exportarVideoEditor = exportarVideoEditor;
-window.restablecerPreferencias = restablecerPreferencias;
-
-document.addEventListener("DOMContentLoaded", function() {    const buscadorCatalogo = document.getElementById("buscador");
-    const ordenCatalogo = document.getElementById("ordenCatalogo");
-    const limpiarBusqueda = document.getElementById("limpiarBusqueda");
-
-    function aplicarFiltrosCatalogo() {
-        const texto = buscadorCatalogo
-            ? buscadorCatalogo.value.trim().toLowerCase()
-            : "";
-
-        const base = tipoActual === "peliculas"
-            ? peliculasTMDB
-            : seriesTMDB;
-
-        const filtrada = base.filter(function(item) {
-            const titulo = (item.title || item.name || "").toLowerCase();
-            const descripcion = (item.overview || "").toLowerCase();
-            return titulo.includes(texto) || descripcion.includes(texto);
-        });
-
-        renderizarCatalogo(filtrada);
-
-        actualizarInfoCatalogo(filtrada.length, texto.length > 0);
-    }
-
-    if (buscadorCatalogo) {
-        buscadorCatalogo.addEventListener("input", aplicarFiltrosCatalogo);
-    }
-
-    if (ordenCatalogo) {
-        ordenCatalogo.addEventListener("change", aplicarFiltrosCatalogo);
-    }
-
-    if (limpiarBusqueda) {
-        limpiarBusqueda.addEventListener("click", function() {
-            if (buscadorCatalogo) buscadorCatalogo.value = "";
-            aplicarFiltrosCatalogo();
-        });
-    }
-
-
-    cargarTema();
-    cargarNombre();
-    configurarVideo();
-    configurarWidgets();
-    configurarModal();
-    configurarTeclado();
-
-    recomendacionTMDB();
-    cargarMarvelTMDB();
-    cargarProximosEstrenos();
-
-    setTimeout(function() {
-        actualizarWidgetResumen();
-    }, 1500);
-});
-
-/* ================================
-   PWA / APP
-   ================================ */
-
-let instalacionPendiente = null;
-
-function actualizarEstadoInstalacion() {
-    const aviso = document.getElementById("avisoApp");
-    const boton = document.getElementById("botonInstalar");
-
-    if (!aviso && !boton) return;
-
-    if (window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true) {
-        if (aviso) aviso.hidden = true;
-        if (boton) boton.hidden = true;
-        return;
-    }
-
-    if (aviso) {
-        aviso.hidden = false;
-    }
-}
-
-function configurarPWA() {
-    const botonInstalarAjustes = document.getElementById("botonInstalarAjustes");
-    const botonInstalar = document.getElementById("botonInstalar");
-
-    if (botonInstalarAjustes) {
-        botonInstalarAjustes.addEventListener("click", function() {
-            if (instalacionPendiente) {
-                instalacionPendiente.prompt();
-            } else {
-                actualizarEstadoPWAEnAjustes();
-            }
-        });
-    }
-
-    if ("serviceWorker" in navigator) {
-        window.addEventListener("load", function() {
-            navigator.serviceWorker.register("./sw.js")
-                .then(function() {
-                    console.log("PWA: Service Worker activo.");
-                })
-                .catch(function(error) {
-                    console.error("PWA: error al registrar Service Worker:", error);
-                });
-        });
-    }
-
-    window.addEventListener("beforeinstallprompt", function(event) {
-        event.preventDefault();
-        instalacionPendiente = event;
-
-        if (botonInstalar) {
-            botonInstalar.hidden = false;
-            actualizarEstadoInstalacion();
-            actualizarEstadoPWAEnAjustes();
-        }
-    });
-
-    if (botonInstalar) {
-        botonInstalar.addEventListener("click", async function() {
-            if (!instalacionPendiente) return;
-
-            instalacionPendiente.prompt();
-
-            try {
-                await instalacionPendiente.userChoice;
-            } catch (error) {
-                console.error("PWA: instalación cancelada o no disponible.", error);
-            }
-
-            instalacionPendiente = null;
-            botonInstalar.hidden = true;
-        });
-    }
-
-    window.addEventListener("appinstalled", function() {
-        instalacionPendiente = null;
-
-        if (botonInstalar) {
-            botonInstalar.hidden = true;
-        }
-
-        console.log("ABRAHAM G4 — MARVEL HUB instalado.");
-        actualizarEstadoInstalacion();
-    });
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    configurarPWA();
-    actualizarEstadoInstalacion();
-    actualizarEstadoPWAEnAjustes();
-
-    const botonRestablecer = document.getElementById("restablecerPreferencias");
-    if (botonRestablecer) {
-        botonRestablecer.addEventListener("click", restablecerPreferencias);
-    }
-
-    actualizarResumenAjustes();
-    actualizarBotonTema();
-});
