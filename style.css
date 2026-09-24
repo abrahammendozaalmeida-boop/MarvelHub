@@ -3225,3 +3225,11 @@ body.tema-claro .perfil-estadistica b {
         min-height: 0;
     }
 }
+
+/* Biblioteca 2.0 */
+.biblioteca-buscador{display:flex;flex-direction:column;gap:7px;margin:18px 0 4px}
+.biblioteca-buscador label{font-size:12px;font-weight:700;letter-spacing:.04em;color:#b7b7c2}
+.biblioteca-buscador input{width:100%;box-sizing:border-box;padding:13px 15px;border:1px solid rgba(255,255,255,.10);border-radius:12px;background:rgba(255,255,255,.045);color:#fff;outline:none}
+.biblioteca-buscador input:focus{border-color:rgba(230,36,41,.65);box-shadow:0 0 0 3px rgba(230,36,41,.10)}
+body.tema-claro .biblioteca-buscador label{color:#555}
+body.tema-claro .biblioteca-buscador input{background:#fff;color:#111;border-color:rgba(0,0,0,.12)}
