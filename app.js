@@ -1662,6 +1662,29 @@ const SUPABASE_PUBLISHABLE_KEY = window.MARVEL_HUB_SUPABASE_PUBLISHABLE_KEY || "
 let supabaseClient = null;
 let sincronizacionEnCurso = false;
 
+function actualizarEstadoCuentaVisual(usuario, sincronizando) {
+    const punto = document.getElementById("cuentaPuntoEstado");
+    if (!punto) return;
+    punto.classList.remove("estado-esperando", "estado-activo", "estado-error", "estado-sync");
+    if (sincronizando) {
+        punto.classList.add("estado-sync");
+    } else if (usuario) {
+        punto.classList.add("estado-activo");
+    } else {
+        punto.classList.add("estado-esperando");
+    }
+}
+
+function actualizarUltimaSincronizacion() {
+    const elemento = document.getElementById("cuentaUltimaSync");
+    if (!elemento) return;
+    const hora = new Date().toLocaleTimeString("es-MX", {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+    elemento.textContent = "Última: " + hora;
+}
+
 function actualizarEstadoSincronizacion(mensaje, error) {
     const estado = document.getElementById("cuentaSincronizacion");
 
@@ -2290,6 +2313,24 @@ async function cerrarSesionCuenta() {
     mostrarMensajeCuenta("Sesión cerrada.");
 }
 
+function cambiarModoCuenta(modo) {
+    const login = document.getElementById("formLogin");
+    const registro = document.getElementById("formRegistro");
+    const botonLogin = document.getElementById("modoLoginCuenta");
+    const botonRegistro = document.getElementById("modoRegistroCuenta");
+    const esRegistro = modo === "registro";
+    if (login) login.hidden = esRegistro;
+    if (registro) registro.hidden = !esRegistro;
+    if (botonLogin) {
+        botonLogin.classList.toggle("activo", !esRegistro);
+        botonLogin.setAttribute("aria-selected", String(!esRegistro));
+    }
+    if (botonRegistro) {
+        botonRegistro.classList.toggle("activo", esRegistro);
+        botonRegistro.setAttribute("aria-selected", String(esRegistro));
+    }
+}
+
 async function configurarCuenta() {
     const conectado = configurarClienteSupabase();
     const formLogin = document.getElementById("formLogin");
@@ -2297,6 +2338,8 @@ async function configurarCuenta() {
     const recuperar = document.getElementById("botonRecuperar");
     const cerrar = document.getElementById("botonCerrarSesion");
     const sincronizar = document.getElementById("botonSincronizarCuenta");
+    const modoLogin = document.getElementById("modoLoginCuenta");
+    const modoRegistro = document.getElementById("modoRegistroCuenta");
 
     if (formLogin) {
         formLogin.addEventListener("submit", function(event) {
@@ -2323,6 +2366,17 @@ async function configurarCuenta() {
     if (sincronizar) {
         sincronizar.addEventListener("click", sincronizarCuentaConNubeActual);
     }
+    if (modoLogin) {
+        modoLogin.addEventListener("click", function() {
+            cambiarModoCuenta("login");
+        });
+    }
+    if (modoRegistro) {
+        modoRegistro.addEventListener("click", function() {
+            cambiarModoCuenta("registro");
+        });
+    }
+    cambiarModoCuenta("login");
 
     if (!conectado) {
         actualizarEstadoSincronizacion(
