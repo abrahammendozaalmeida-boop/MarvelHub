@@ -581,11 +581,48 @@ let paginaSeriesTMDB = 1;
 let totalPaginasPeliculasTMDB = 1;
 let totalPaginasSeriesTMDB = 1;
 let cargandoMasMarvel = false;
+let empresasMarvelTMDB = "420";
+
+async function obtenerEmpresasMarvelTMDB() {
+    try {
+        const datos = await obtenerTMDB(
+            "/search/company?query=Marvel&page=1"
+        );
+
+        const ids = (datos.results || [])
+            .filter(function(empresa) {
+                const nombre = (empresa.name || "").toLowerCase();
+                return nombre.includes("marvel");
+            })
+            .slice(0, 12)
+            .map(function(empresa) {
+                return String(empresa.id);
+            });
+
+        if (ids.indexOf("420") === -1) {
+            ids.unshift("420");
+        }
+
+        empresasMarvelTMDB = Array.from(new Set(ids)).join("|");
+    } catch (error) {
+        console.warn(
+            "No se pudieron ampliar las empresas Marvel. Se usará Marvel Studios.",
+            error
+        );
+        empresasMarvelTMDB = "420";
+    }
+
+    return empresasMarvelTMDB;
+}
 
 async function cargarPaginaMarvel(tipo, pagina) {
     const endpoint = tipo === "movie"
-        ? "/discover/movie?sort_by=popularity.desc&include_adult=false&with_companies=420&page=" + pagina
-        : "/discover/tv?sort_by=popularity.desc&include_adult=false&with_companies=420&page=" + pagina;
+        ? "/discover/movie?sort_by=popularity.desc&include_adult=false&with_companies=" +
+          encodeURIComponent(empresasMarvelTMDB) +
+          "&page=" + pagina
+        : "/discover/tv?sort_by=popularity.desc&include_adult=false&with_companies=" +
+          encodeURIComponent(empresasMarvelTMDB) +
+          "&page=" + pagina;
 
     const datos = await obtenerTMDB(endpoint);
 
@@ -638,6 +675,8 @@ async function cargarMarvelTMDB() {
     totalPaginasSeriesTMDB = 1;
 
     try {
+        await obtenerEmpresasMarvelTMDB();
+
         const respuestas = await Promise.all([
             cargarPaginaMarvel("movie", 1),
             cargarPaginaMarvel("tv", 1)
