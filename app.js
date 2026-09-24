@@ -2385,6 +2385,10 @@ function actualizarPerfilUI() {
     const estado = document.getElementById("perfilEstado");
     const id = document.getElementById("perfilId");
     const resumen = document.getElementById("perfilDatosResumen");
+    const statFavoritos = document.getElementById("perfilStatFavoritos");
+    const statHistorial = document.getElementById("perfilStatHistorial");
+    const statPeliculas = document.getElementById("perfilStatPeliculas");
+    const statSeries = document.getElementById("perfilStatSeries");
 
     if (titulo) titulo.textContent = nombre;
     if (input) input.value = perfil.nombre;
@@ -2401,13 +2405,26 @@ function actualizarPerfilUI() {
 
     if (id) id.textContent = perfil.id;
 
+    const historial = obtenerHistorialMarvel();
+    const peliculas = favoritosMarvel.filter(function(item) {
+        return item.tipo === "movie";
+    }).length;
+    const series = favoritosMarvel.filter(function(item) {
+        return item.tipo === "tv";
+    }).length;
+
     if (resumen) {
         resumen.textContent =
             favoritosMarvel.length +
             " favoritos • " +
-            obtenerHistorialMarvel().length +
+            historial.length +
             " vistos recientemente";
     }
+
+    if (statFavoritos) statFavoritos.textContent = favoritosMarvel.length;
+    if (statHistorial) statHistorial.textContent = historial.length;
+    if (statPeliculas) statPeliculas.textContent = peliculas;
+    if (statSeries) statSeries.textContent = series;
 
     document.querySelectorAll(".perfil-avatar-opcion").forEach(function(boton) {
         boton.classList.toggle(
