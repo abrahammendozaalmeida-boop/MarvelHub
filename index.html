@@ -57,6 +57,19 @@
             </div>
         </div>
 
+        <div class="inicio-quick-panel">
+            <div class="inicio-quick-copy">
+                <span class="mini-etiqueta">MARVEL HUB</span>
+                <strong>Tu actividad, de un vistazo</strong>
+                <small>Favoritos, historial y descubrimientos en un solo espacio.</small>
+            </div>
+            <div class="inicio-quick-stats">
+                <button type="button" onclick="mostrarSeccion('favoritos')"><i data-lucide="heart"></i><span><b id="homeStatFavoritos">0</b><small>Favoritos</small></span></button>
+                <button type="button" onclick="mostrarSeccion('marvel')"><i data-lucide="layout-grid"></i><span><b id="homeStatCatalogo">TMDB</b><small>Catálogo</small></span></button>
+                <button type="button" onclick="mostrarSeccion('perfil')"><i data-lucide="user-round"></i><span><b id="homeStatPerfil">Perfil</b><small>Mi cuenta</small></span></button>
+            </div>
+        </div>
+
         <div class="inicio-estado-barra" aria-label="Estado de Marvel Hub">
             <div class="inicio-estado-item"><span class="inicio-estado-icono"><i data-lucide="database"></i></span><span><strong>TMDB conectado</strong><small>Catálogo en vivo</small></span></div>
             <div class="inicio-estado-item"><span class="inicio-estado-icono"><i data-lucide="cloud"></i></span><span><strong>Nube activa</strong><small>Tu cuenta sincronizada</small></span></div>
