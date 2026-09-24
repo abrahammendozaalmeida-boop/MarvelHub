@@ -459,20 +459,35 @@ async function cargarMarvelTMDB() {
     catalogo.innerHTML = "<p>Cargando Marvel desde TMDB...</p>";
 
     try {
-        const peliculas = await obtenerTMDB(
-            "/discover/movie?sort_by=popularity.desc&include_adult=false&with_companies=420&page=1"
+        const respuestas = await Promise.all([
+            obtenerTMDB(
+                "/discover/movie?sort_by=popularity.desc&include_adult=false&with_companies=420&page=1"
+            ),
+            obtenerTMDB(
+                "/discover/movie?sort_by=popularity.desc&include_adult=false&with_companies=420&page=2"
+            ),
+            obtenerTMDB(
+                "/discover/tv?sort_by=popularity.desc&include_adult=false&with_companies=420&page=1"
+            ),
+            obtenerTMDB(
+                "/discover/tv?sort_by=popularity.desc&include_adult=false&with_companies=420&page=2"
+            )
+        ]);
+
+        const peliculas = (respuestas[0].results || []).concat(
+            respuestas[1].results || []
         );
 
-        const series = await obtenerTMDB(
-            "/discover/tv?sort_by=popularity.desc&include_adult=false&with_companies=420&page=1"
+        const series = (respuestas[2].results || []).concat(
+            respuestas[3].results || []
         );
 
-        peliculasTMDB = peliculas.results.map(function(item) {
+        peliculasTMDB = peliculas.map(function(item) {
             item.tipo = "movie";
             return item;
         });
 
-        seriesTMDB = series.results.map(function(item) {
+        seriesTMDB = series.map(function(item) {
             item.tipo = "tv";
             return item;
         });
@@ -481,6 +496,7 @@ async function cargarMarvelTMDB() {
         renderizarFilasInicio();
         renderizarPersonalizadoInicio();
         actualizarInicioPersonalizado();
+        actualizarWidgetResumen();
     } catch (error) {
         console.error("Error cargando Marvel:", error);
         catalogo.innerHTML =
