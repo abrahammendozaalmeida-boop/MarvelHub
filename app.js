@@ -1485,6 +1485,17 @@ function mostrarRecomendacion(item) {
     const descripcionElemento = document.getElementById("descripcion");
     const poster = document.getElementById("recomendacionPoster");
     const hero = document.querySelector(".hero");
+    const portada = document.querySelector(".inicio-portada");
+
+    if (portada) {
+        if (item.backdrop_path) {
+            portada.style.setProperty("--portada-imagen", "url(https://image.tmdb.org/t/p/w1280" + item.backdrop_path + ")");
+            portada.classList.add("portada-con-imagen");
+        } else {
+            portada.style.removeProperty("--portada-imagen");
+            portada.classList.remove("portada-con-imagen");
+        }
+    }
 
     if (recomendacion) {
         recomendacion.textContent = titulo;
