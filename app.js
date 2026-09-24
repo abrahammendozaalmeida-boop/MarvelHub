@@ -106,6 +106,37 @@ function guardarVistoRecientemente(item) {
         "historialMarvel",
         JSON.stringify(historial)
     );
+
+    sincronizarHistorialConNubeActual();
+}
+
+async function sincronizarHistorialConNubeActual() {
+    if (!supabaseClient) return;
+
+    const user = await obtenerUsuarioSupabase();
+    if (!user) return;
+
+    const historial = obtenerHistorialMarvel();
+
+    if (historial.length === 0) {
+        await sincronizarHistorialVacio();
+        return;
+    }
+
+    const resultado = await supabaseClient
+        .from("history")
+        .upsert(
+            historial.map(function(item) {
+                return convertirHistorialANube(item, user.id);
+            }),
+            {
+                onConflict: "user_id,media_id,media_type"
+            }
+        );
+
+    if (resultado.error) {
+        console.error("No se pudo sincronizar el historial:", resultado.error);
+    }
 }
 
 function obtenerHistorialMarvel() {
@@ -123,6 +154,7 @@ function obtenerHistorialMarvel() {
 function limpiarHistorialMarvel() {
     localStorage.removeItem("historialMarvel");
     renderizarHistorialInicio();
+    sincronizarHistorialVacio();
 }
 
 function renderizarHistorialInicio() {
@@ -382,6 +414,8 @@ function alternarFavorito(id, tipo, itemProporcionado) {
     if (document.getElementById("favoritos").classList.contains("activa")) {
         mostrarFavoritos();
     }
+
+    sincronizarFavoritoActual(id, tipo);
 }
 
 function obtenerListaOrdenada(lista) {
@@ -514,6 +548,7 @@ function vaciarFavoritos() {
     renderizarPersonalizadoInicio();
     renderizarFilasFavoritosInicio();
     mostrarFavoritos();
+    sincronizarFavoritosVacios();
 }
 
 function actualizarResumenFavoritos() {
@@ -1586,9 +1621,20 @@ async function cargarProximosEstrenos() {
     }
 }
 
+
 const SUPABASE_URL = window.MARVEL_HUB_SUPABASE_URL || "";
 const SUPABASE_PUBLISHABLE_KEY = window.MARVEL_HUB_SUPABASE_PUBLISHABLE_KEY || "";
 let supabaseClient = null;
+let sincronizacionEnCurso = false;
+
+function actualizarEstadoSincronizacion(mensaje, error) {
+    const estado = document.getElementById("cuentaSincronizacion");
+
+    if (!estado) return;
+
+    estado.textContent = mensaje || "";
+    estado.classList.toggle("cuenta-mensaje-error", Boolean(error));
+}
 
 function configurarClienteSupabase() {
     if (
@@ -1617,6 +1663,387 @@ function configurarClienteSupabase() {
         console.error("No se pudo iniciar Supabase:", error);
         supabaseClient = null;
         return false;
+    }
+}
+
+async function obtenerUsuarioSupabase() {
+    if (!supabaseClient) return null;
+
+    const resultado = await supabaseClient.auth.getUser();
+
+    if (resultado.error) {
+        return null;
+    }
+
+    return resultado.data.user || null;
+}
+
+function convertirFavoritoANube(item, userId) {
+    return {
+        user_id: userId,
+        media_id: Number(item.id),
+        media_type: item.tipo === "tv" ? "tv" : "movie",
+        title: item.titulo || "",
+        poster_path: item.poster_path || "",
+        backdrop_path: item.backdrop_path || "",
+        overview: item.overview || "",
+        release_date: item.fecha || "",
+        vote_average: Number(item.vote_average || 0),
+        saved_at: new Date(Number(item.guardadoEn || Date.now())).toISOString()
+    };
+}
+
+function convertirHistorialANube(item, userId) {
+    return {
+        user_id: userId,
+        media_id: Number(item.id),
+        media_type: item.tipo === "tv" ? "tv" : "movie",
+        title: item.titulo || "",
+        poster_path: item.poster_path || "",
+        backdrop_path: item.backdrop_path || "",
+        overview: item.overview || "",
+        release_date: item.fecha || "",
+        vote_average: Number(item.vote_average || 0),
+        viewed_at: new Date(Number(item.vistoEn || Date.now())).toISOString()
+    };
+}
+
+function convertirFavoritoDesdeNube(item) {
+    return {
+        id: Number(item.media_id),
+        tipo: item.media_type,
+        titulo: item.title || "Sin título",
+        poster_path: item.poster_path || "",
+        backdrop_path: item.backdrop_path || "",
+        overview: item.overview || "",
+        fecha: item.release_date || "",
+        vote_average: Number(item.vote_average || 0),
+        guardadoEn: new Date(item.saved_at || Date.now()).getTime()
+    };
+}
+
+function convertirHistorialDesdeNube(item) {
+    return {
+        id: Number(item.media_id),
+        tipo: item.media_type,
+        titulo: item.title || "Sin título",
+        poster_path: item.poster_path || "",
+        backdrop_path: item.backdrop_path || "",
+        overview: item.overview || "",
+        fecha: item.release_date || "",
+        vote_average: Number(item.vote_average || 0),
+        vistoEn: new Date(item.viewed_at || Date.now()).getTime()
+    };
+}
+
+async function sincronizarPerfilConNube(userId) {
+    const local = obtenerPerfilLocal();
+
+    const resultado = await supabaseClient
+        .from("profiles")
+        .select("id, display_name, avatar, created_at, updated_at")
+        .eq("id", userId)
+        .maybeSingle();
+
+    if (resultado.error) {
+        throw resultado.error;
+    }
+
+    const remoto = resultado.data;
+
+    if (!remoto) {
+        await supabaseClient.from("profiles").upsert({
+            id: userId,
+            display_name: local.nombre || "",
+            avatar: local.avatar || "🦸",
+            created_at: local.creadoEn || new Date().toISOString(),
+            updated_at: local.actualizadoEn || new Date().toISOString()
+        });
+        return;
+    }
+
+    const localEsBase =
+        !local.nombre &&
+        (local.avatar || "🦸") === "🦸";
+
+    const fechaLocal = new Date(local.actualizadoEn || 0).getTime();
+    const fechaRemota = new Date(remoto.updated_at || 0).getTime();
+
+    if (localEsBase || fechaRemota > fechaLocal) {
+        guardarPerfilLocal({
+            id: local.id,
+            nombre: remoto.display_name || "",
+            avatar: remoto.avatar || "🦸"
+        });
+        return;
+    }
+
+    await supabaseClient.from("profiles").upsert({
+        id: userId,
+        display_name: local.nombre || "",
+        avatar: local.avatar || "🦸",
+        created_at: remoto.created_at || local.creadoEn || new Date().toISOString(),
+        updated_at: local.actualizadoEn || new Date().toISOString()
+    });
+}
+
+async function sincronizarFavoritosConNube(userId) {
+    const resultado = await supabaseClient
+        .from("favorites")
+        .select("*")
+        .eq("user_id", userId);
+
+    if (resultado.error) {
+        throw resultado.error;
+    }
+
+    const mapa = new Map();
+
+    favoritosMarvel.forEach(function(item) {
+        mapa.set(item.tipo + ":" + item.id, item);
+    });
+
+    (resultado.data || []).forEach(function(item) {
+        const remoto = convertirFavoritoDesdeNube(item);
+        const clave = remoto.tipo + ":" + remoto.id;
+        const local = mapa.get(clave);
+
+        if (!local || remoto.guardadoEn > Number(local.guardadoEn || 0)) {
+            mapa.set(clave, remoto);
+        }
+    });
+
+    favoritosMarvel = Array.from(mapa.values());
+    favoritosMarvel.sort(function(a, b) {
+        return Number(b.guardadoEn || 0) - Number(a.guardadoEn || 0);
+    });
+
+    guardarFavoritos();
+
+    const filas = favoritosMarvel.map(function(item) {
+        return convertirFavoritoANube(item, userId);
+    });
+
+    if (filas.length > 0) {
+        const subida = await supabaseClient
+            .from("favorites")
+            .upsert(filas, {
+                onConflict: "user_id,media_id,media_type"
+            });
+
+        if (subida.error) {
+            throw subida.error;
+        }
+    }
+}
+
+async function sincronizarHistorialConNube(userId) {
+    const resultado = await supabaseClient
+        .from("history")
+        .select("*")
+        .eq("user_id", userId);
+
+    if (resultado.error) {
+        throw resultado.error;
+    }
+
+    const mapa = new Map();
+
+    obtenerHistorialMarvel().forEach(function(item) {
+        mapa.set(item.tipo + ":" + item.id, item);
+    });
+
+    (resultado.data || []).forEach(function(item) {
+        const remoto = convertirHistorialDesdeNube(item);
+        const clave = remoto.tipo + ":" + remoto.id;
+        const local = mapa.get(clave);
+
+        if (!local || remoto.vistoEn > Number(local.vistoEn || 0)) {
+            mapa.set(clave, remoto);
+        }
+    });
+
+    const combinado = Array.from(mapa.values());
+
+    combinado.sort(function(a, b) {
+        return Number(b.vistoEn || 0) - Number(a.vistoEn || 0);
+    });
+
+    const historialLocal = combinado.slice(0, 12);
+
+    localStorage.setItem(
+        "historialMarvel",
+        JSON.stringify(historialLocal)
+    );
+
+    const filas = combinado.map(function(item) {
+        return convertirHistorialANube(item, userId);
+    });
+
+    if (filas.length > 0) {
+        const subida = await supabaseClient
+            .from("history")
+            .upsert(filas, {
+                onConflict: "user_id,media_id,media_type"
+            });
+
+        if (subida.error) {
+            throw subida.error;
+        }
+    }
+}
+
+async function sincronizarCuentaConNube(user) {
+    if (!supabaseClient || !user || sincronizacionEnCurso) return;
+
+    sincronizacionEnCurso = true;
+    actualizarEstadoSincronizacion("☁️ Sincronizando perfil, favoritos e historial...");
+
+    try {
+        await sincronizarPerfilConNube(user.id);
+        await sincronizarFavoritosConNube(user.id);
+        await sincronizarHistorialConNube(user.id);
+
+        actualizarPerfilUI();
+        actualizarCuentaUI(user);
+        actualizarInicioPersonalizado();
+        actualizarResumenAjustes();
+        renderizarFilasFavoritosInicio();
+        renderizarPersonalizadoInicio();
+        renderizarHistorialInicio();
+
+        actualizarEstadoSincronizacion(
+            "☁️ Sincronización activa. Tus datos se guardan en tu cuenta."
+        );
+    } catch (error) {
+        console.error("Error de sincronización:", error);
+        actualizarEstadoSincronizacion(
+            "⚠️ La cuenta funciona, pero la sincronización necesita revisar la configuración de Supabase.",
+            true
+        );
+    } finally {
+        sincronizacionEnCurso = false;
+    }
+}
+
+async function sincronizarCuentaConNubeActual() {
+    if (!supabaseClient) {
+        actualizarEstadoSincronizacion(
+            "Primero configura Supabase en supabase-config.js.",
+            true
+        );
+        return;
+    }
+
+    const user = await obtenerUsuarioSupabase();
+
+    if (!user) {
+        actualizarEstadoSincronizacion(
+            "Inicia sesión para sincronizar tus datos.",
+            true
+        );
+        return;
+    }
+
+    await sincronizarCuentaConNube(user);
+}
+
+async function sincronizarFavoritoActual(id, tipo) {
+    if (!supabaseClient) return;
+
+    const user = await obtenerUsuarioSupabase();
+    if (!user) return;
+
+    const favorito = favoritosMarvel.find(function(item) {
+        return item.id === id && item.tipo === tipo;
+    });
+
+    try {
+        if (favorito) {
+            const resultado = await supabaseClient
+                .from("favorites")
+                .upsert(
+                    convertirFavoritoANube(favorito, user.id),
+                    {
+                        onConflict: "user_id,media_id,media_type"
+                    }
+                );
+
+            if (resultado.error) throw resultado.error;
+        } else {
+            const resultado = await supabaseClient
+                .from("favorites")
+                .delete()
+                .eq("user_id", user.id)
+                .eq("media_id", Number(id))
+                .eq("media_type", tipo === "tv" ? "tv" : "movie");
+
+            if (resultado.error) throw resultado.error;
+        }
+    } catch (error) {
+        console.error("No se pudo sincronizar el favorito:", error);
+    }
+}
+
+async function sincronizarFavoritosVacios() {
+    if (!supabaseClient) return;
+
+    const user = await obtenerUsuarioSupabase();
+    if (!user) return;
+
+    const resultado = await supabaseClient
+        .from("favorites")
+        .delete()
+        .eq("user_id", user.id);
+
+    if (resultado.error) {
+        console.error("No se pudieron limpiar los favoritos en la nube:", resultado.error);
+    }
+}
+
+async function sincronizarHistorialVacio() {
+    if (!supabaseClient) return;
+
+    const user = await obtenerUsuarioSupabase();
+    if (!user) return;
+
+    const resultado = await supabaseClient
+        .from("history")
+        .delete()
+        .eq("user_id", user.id);
+
+    if (resultado.error) {
+        console.error("No se pudo limpiar el historial en la nube:", resultado.error);
+    }
+}
+
+async function sincronizarPerfilLocalActual() {
+    if (!supabaseClient) return;
+
+    const user = await obtenerUsuarioSupabase();
+    if (!user) return;
+
+    try {
+        const perfil = obtenerPerfilLocal();
+
+        const resultado = await supabaseClient
+            .from("profiles")
+            .upsert({
+                id: user.id,
+                display_name: perfil.nombre || "",
+                avatar: perfil.avatar || "🦸",
+                updated_at: perfil.actualizadoEn || new Date().toISOString()
+            });
+
+        if (resultado.error) throw resultado.error;
+
+        actualizarEstadoSincronizacion("☁️ Perfil actualizado en tu cuenta.");
+    } catch (error) {
+        console.error("No se pudo sincronizar el perfil:", error);
+        actualizarEstadoSincronizacion(
+            "No se pudo actualizar el perfil en la nube.",
+            true
+        );
     }
 }
 
@@ -1808,7 +2235,14 @@ async function configurarCuenta() {
     }
 
     supabaseClient.auth.onAuthStateChange(function(event, session) {
-        actualizarCuentaUI(session ? session.user : null);
+        const usuario = session ? session.user : null;
+        actualizarCuentaUI(usuario);
+
+        if (usuario && event !== "SIGNED_OUT") {
+            sincronizarCuentaConNube(usuario);
+        } else if (event === "SIGNED_OUT") {
+            actualizarEstadoSincronizacion("Sesión cerrada. Los datos locales siguen disponibles.");
+        }
     });
 
     const resultado = await supabaseClient.auth.getSession();
@@ -1819,9 +2253,15 @@ async function configurarCuenta() {
         return;
     }
 
-    actualizarCuentaUI(
-        resultado.data.session ? resultado.data.session.user : null
-    );
+    const usuario = resultado.data.session
+        ? resultado.data.session.user
+        : null;
+
+    actualizarCuentaUI(usuario);
+
+    if (usuario) {
+        await sincronizarCuentaConNube(usuario);
+    }
 }
 
 const PERFIL_LOCAL_KEY = "perfilMarvel";
@@ -1933,6 +2373,7 @@ function guardarPerfilDesdeUI() {
         estado.textContent = "Perfil guardado correctamente en este dispositivo.";
     }
 
+    sincronizarPerfilLocalActual();
     return guardado;
 }
 
@@ -2035,6 +2476,7 @@ function guardarNombre() {
     const perfil = obtenerPerfilLocal();
     perfil.nombre = nombre;
     guardarPerfilLocal(perfil);
+    sincronizarPerfilLocalActual();
 
     actualizarSaludoInicio();
     actualizarInicioPersonalizado();
