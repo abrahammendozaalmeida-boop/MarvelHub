@@ -960,8 +960,10 @@ function renderizarFilaInicio(id, lista, cantidad) {
 
 function renderizarFilaFavoritosInicio() {
     const contenedor = document.getElementById("homeFavoritos");
+    const stat = document.getElementById("homeStatFavoritos");
 
     if (!contenedor) return;
+    if (stat) stat.textContent = String(obtenerFavoritosMarvel().length);
 
     contenedor.innerHTML = "";
 
