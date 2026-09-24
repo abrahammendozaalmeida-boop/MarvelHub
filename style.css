@@ -3390,3 +3390,7 @@ body.tema-claro .portada-contenido>p{color:#666}
 body.tema-claro .inicio-estado-item{border-color:#ddd;background:#fff}
 @media(max-width:800px){.portada-contenido{padding:46px 30px}.inicio-portada{min-height:350px}}
 @media(max-width:600px){.inicio-estado-barra{grid-template-columns:1fr;margin-bottom:22px}.inicio-estado-item{padding:11px 12px}.portada-contenido{padding:38px 22px}.portada-contenido h2{font-size:36px}.portada-botones{flex-direction:column}.portada-botones button{width:100%}}
+
+.inicio-portada.portada-con-imagen::before{background-image:linear-gradient(90deg,rgba(8,8,12,.98) 0%,rgba(8,8,12,.88) 42%,rgba(8,8,12,.55) 72%,rgba(8,8,12,.30) 100%),var(--portada-imagen);background-size:cover;background-position:center;filter:saturate(1.08)}
+.inicio-portada.portada-con-imagen::after{content:"ABRAHAM G4";color:rgba(255,255,255,.035)}
+body.tema-claro .inicio-portada.portada-con-imagen::before{background-image:linear-gradient(90deg,rgba(255,255,255,.97) 0%,rgba(255,255,255,.88) 42%,rgba(255,255,255,.55) 72%,rgba(255,255,255,.28) 100%),var(--portada-imagen)}
