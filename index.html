@@ -20,12 +20,12 @@
     </div>
 
     <nav>
-        <button onclick="mostrarSeccion('inicio')">Inicio</button>
-        <button onclick="mostrarSeccion('marvel')">Marvel</button>
-        <button onclick="mostrarSeccion('favoritos')">❤️ Favoritos</button>
-        <button onclick="mostrarSeccion('editor')">Editor</button>
-        <button onclick="mostrarSeccion('widgets')">Widgets</button>
-        <button onclick="mostrarSeccion('ajustes')">Ajustes</button>
+        <button class="nav-boton activo-nav" data-seccion="inicio" onclick="mostrarSeccion('inicio')">Inicio</button>
+        <button class="nav-boton" data-seccion="marvel" onclick="mostrarSeccion('marvel')">Marvel</button>
+        <button class="nav-boton" data-seccion="favoritos" onclick="mostrarSeccion('favoritos')">❤️ Favoritos</button>
+        <button class="nav-boton" data-seccion="editor" onclick="mostrarSeccion('editor')">Editor</button>
+        <button class="nav-boton" data-seccion="widgets" onclick="mostrarSeccion('widgets')">Widgets</button>
+        <button class="nav-boton" data-seccion="ajustes" onclick="mostrarSeccion('ajustes')">Ajustes</button>
         <button id="botonInstalar" class="boton-instalar" hidden>📲 Instalar</button>
     </nav>
 </header>
