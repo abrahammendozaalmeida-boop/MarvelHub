@@ -187,6 +187,20 @@ function mostrarSeccion(seccion) {
         actualizarPerfilUI();
     }
 
+    if (seccion === "cuenta") {
+        if (supabaseClient) {
+            supabaseClient.auth.getSession().then(function(resultado) {
+                actualizarCuentaUI(
+                    resultado.data && resultado.data.session
+                        ? resultado.data.session.user
+                        : null
+                );
+            });
+        } else {
+            actualizarCuentaUI(null);
+        }
+    }
+
     if (seccion === "inicio") {
         renderizarFilaFavoritosInicio();
         renderizarDescubreInicio();
@@ -1572,6 +1586,244 @@ async function cargarProximosEstrenos() {
     }
 }
 
+const SUPABASE_URL = window.MARVEL_HUB_SUPABASE_URL || "";
+const SUPABASE_PUBLISHABLE_KEY = window.MARVEL_HUB_SUPABASE_PUBLISHABLE_KEY || "";
+let supabaseClient = null;
+
+function configurarClienteSupabase() {
+    if (
+        typeof window.supabase === "undefined" ||
+        !SUPABASE_URL ||
+        !SUPABASE_PUBLISHABLE_KEY
+    ) {
+        supabaseClient = null;
+        return false;
+    }
+
+    try {
+        supabaseClient = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY,
+            {
+                auth: {
+                    persistSession: true,
+                    autoRefreshToken: true,
+                    detectSessionInUrl: true
+                }
+            }
+        );
+        return true;
+    } catch (error) {
+        console.error("No se pudo iniciar Supabase:", error);
+        supabaseClient = null;
+        return false;
+    }
+}
+
+function actualizarCuentaUI(usuario) {
+    const estado = document.getElementById("cuentaEstado");
+    const formularios = document.getElementById("cuentaFormularios");
+    const usuarioPanel = document.getElementById("cuentaUsuario");
+    const email = document.getElementById("cuentaEmail");
+    const uid = document.getElementById("cuentaUid");
+    const avatar = document.getElementById("cuentaAvatar");
+
+    if (!estado || !formularios || !usuarioPanel) return;
+
+    if (!supabaseClient) {
+        estado.textContent = "⚙️ Falta configurar Supabase. La cuenta real está preparada, pero aún no está conectada.";
+        formularios.hidden = false;
+        usuarioPanel.hidden = true;
+        return;
+    }
+
+    if (usuario) {
+        estado.textContent = "✅ Sesión iniciada.";
+        formularios.hidden = true;
+        usuarioPanel.hidden = false;
+
+        if (email) email.textContent = usuario.email || "Usuario";
+        if (uid) uid.textContent = "ID: " + usuario.id;
+
+        const perfil = obtenerPerfilLocal();
+        if (avatar) avatar.textContent = perfil.avatar || "🦸";
+    } else {
+        estado.textContent = "Inicia sesión o crea una cuenta para preparar la sincronización.";
+        formularios.hidden = false;
+        usuarioPanel.hidden = true;
+    }
+}
+
+function mostrarMensajeCuenta(mensaje, error) {
+    const elemento = document.getElementById("cuentaMensaje");
+    if (!elemento) return;
+
+    elemento.textContent = mensaje || "";
+    elemento.classList.toggle("cuenta-mensaje-error", Boolean(error));
+}
+
+async function iniciarSesionCuenta() {
+    if (!supabaseClient) {
+        mostrarMensajeCuenta("Primero configura Supabase en supabase-config.js.", true);
+        return;
+    }
+
+    const email = document.getElementById("loginEmail");
+    const password = document.getElementById("loginPassword");
+
+    if (!email || !password) return;
+
+    mostrarMensajeCuenta("⏳ Iniciando sesión...");
+
+    const resultado = await supabaseClient.auth.signInWithPassword({
+        email: email.value.trim(),
+        password: password.value
+    });
+
+    if (resultado.error) {
+        console.error(resultado.error);
+        mostrarMensajeCuenta("No se pudo iniciar sesión. Revisa tus datos.", true);
+        return;
+    }
+
+    password.value = "";
+    mostrarMensajeCuenta("✅ Sesión iniciada correctamente.");
+}
+
+async function registrarCuenta() {
+    if (!supabaseClient) {
+        mostrarMensajeCuenta("Primero configura Supabase en supabase-config.js.", true);
+        return;
+    }
+
+    const email = document.getElementById("registroEmail");
+    const password = document.getElementById("registroPassword");
+
+    if (!email || !password) return;
+
+    mostrarMensajeCuenta("⏳ Creando cuenta...");
+
+    const resultado = await supabaseClient.auth.signUp({
+        email: email.value.trim(),
+        password: password.value,
+        options: {
+            data: {
+                nombre: obtenerPerfilLocal().nombre || "ABRAHAM G4"
+            }
+        }
+    });
+
+    if (resultado.error) {
+        console.error(resultado.error);
+        mostrarMensajeCuenta("No se pudo crear la cuenta. Revisa el correo y la contraseña.", true);
+        return;
+    }
+
+    password.value = "";
+
+    if (resultado.data.session) {
+        mostrarMensajeCuenta("✅ Cuenta creada y sesión iniciada.");
+    } else {
+        mostrarMensajeCuenta("📩 Cuenta creada. Revisa tu correo para confirmar la cuenta.");
+    }
+}
+
+async function recuperarCuenta() {
+    if (!supabaseClient) {
+        mostrarMensajeCuenta("Primero configura Supabase en supabase-config.js.", true);
+        return;
+    }
+
+    const email = document.getElementById("loginEmail");
+
+    if (!email || !email.value.trim()) {
+        mostrarMensajeCuenta("Escribe primero tu correo para recuperar la contraseña.", true);
+        return;
+    }
+
+    mostrarMensajeCuenta("⏳ Enviando instrucciones...");
+
+    const resultado = await supabaseClient.auth.resetPasswordForEmail(
+        email.value.trim(),
+        {
+            redirectTo: window.location.origin + window.location.pathname
+        }
+    );
+
+    if (resultado.error) {
+        console.error(resultado.error);
+        mostrarMensajeCuenta("No se pudo enviar el correo de recuperación.", true);
+        return;
+    }
+
+    mostrarMensajeCuenta("📩 Revisa tu correo para continuar con la recuperación.");
+}
+
+async function cerrarSesionCuenta() {
+    if (!supabaseClient) return;
+
+    const resultado = await supabaseClient.auth.signOut();
+
+    if (resultado.error) {
+        console.error(resultado.error);
+        mostrarMensajeCuenta("No se pudo cerrar la sesión.", true);
+        return;
+    }
+
+    mostrarMensajeCuenta("Sesión cerrada.");
+}
+
+async function configurarCuenta() {
+    const conectado = configurarClienteSupabase();
+    const formLogin = document.getElementById("formLogin");
+    const formRegistro = document.getElementById("formRegistro");
+    const recuperar = document.getElementById("botonRecuperar");
+    const cerrar = document.getElementById("botonCerrarSesion");
+
+    if (formLogin) {
+        formLogin.addEventListener("submit", function(event) {
+            event.preventDefault();
+            iniciarSesionCuenta();
+        });
+    }
+
+    if (formRegistro) {
+        formRegistro.addEventListener("submit", function(event) {
+            event.preventDefault();
+            registrarCuenta();
+        });
+    }
+
+    if (recuperar) {
+        recuperar.addEventListener("click", recuperarCuenta);
+    }
+
+    if (cerrar) {
+        cerrar.addEventListener("click", cerrarSesionCuenta);
+    }
+
+    if (!conectado) {
+        actualizarCuentaUI(null);
+        return;
+    }
+
+    supabaseClient.auth.onAuthStateChange(function(event, session) {
+        actualizarCuentaUI(session ? session.user : null);
+    });
+
+    const resultado = await supabaseClient.auth.getSession();
+
+    if (resultado.error) {
+        console.error(resultado.error);
+        actualizarCuentaUI(null);
+        return;
+    }
+
+    actualizarCuentaUI(
+        resultado.data.session ? resultado.data.session.user : null
+    );
+}
+
 const PERFIL_LOCAL_KEY = "perfilMarvel";
 
 function obtenerPerfilLocal() {
@@ -2716,6 +2968,7 @@ function inicializarMarvelHub() {
     configurarVideo();
     configurarWidgets();
     configurarPerfil();
+    configurarCuenta();
     activarBuscador();
     configurarBusquedaGlobal();
 
