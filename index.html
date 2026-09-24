@@ -229,11 +229,23 @@
             <div>
                 <strong id="contadorFavoritos">0 favoritos</strong>
                 <span id="textoFavoritos">Tu biblioteca personal de Marvel.</span>
+                <small id="detalleFavoritos">0 películas · 0 series</small>
             </div>
-            <div class="favoritos-filtros">
-                <button type="button" class="filtro-favoritos activo-filtro" data-filtro-favoritos="todos">❤️ Todos</button>
-                <button type="button" class="filtro-favoritos" data-filtro-favoritos="movie">🎬 Películas</button>
-                <button type="button" class="filtro-favoritos" data-filtro-favoritos="tv">📺 Series</button>
+            <div class="favoritos-acciones">
+                <div class="favoritos-filtros">
+                    <button type="button" class="filtro-favoritos activo-filtro" data-filtro-favoritos="todos">❤️ Todos</button>
+                    <button type="button" class="filtro-favoritos" data-filtro-favoritos="movie">🎬 Películas</button>
+                    <button type="button" class="filtro-favoritos" data-filtro-favoritos="tv">📺 Series</button>
+                </div>
+                <div class="favoritos-orden">
+                    <label for="ordenFavoritos">Ordenar</label>
+                    <select id="ordenFavoritos">
+                        <option value="recientes">🕘 Más recientes</option>
+                        <option value="puntuacion">⭐ Mejor puntuadas</option>
+                        <option value="alfabetico">🔤 A-Z</option>
+                    </select>
+                    <button type="button" class="boton-vaciar-favoritos" onclick="vaciarFavoritos()">🗑 Vaciar</button>
+                </div>
             </div>
         </div>
 
