@@ -204,6 +204,23 @@
             </select>
         </div>
 
+        <div class="busqueda-global">
+            <div class="busqueda-global-cabecera">
+                <div>
+                    <span class="mini-etiqueta">BÚSQUEDA GLOBAL</span>
+                    <h3>🔎 Encuentra cualquier Marvel</h3>
+                    <p>Busca directamente en TMDB, incluso si todavía no aparece en tu catálogo.</p>
+                </div>
+            </div>
+            <div class="busqueda-global-form">
+                <input type="search" id="busquedaGlobalMarvel" placeholder="Ej. Spider-Man, Loki, Deadpool..." maxlength="80" autocomplete="off">
+                <button id="botonBusquedaGlobal" type="button">🔎 Buscar</button>
+            </div>
+            <div id="estadoBusquedaGlobal" class="busqueda-global-estado" aria-live="polite"></div>
+        </div>
+
+        <div id="resultadosBusquedaGlobal" class="catalogo"></div>
+
         <div class="catalogo-info">
             <span id="contadorCatalogo">Cargando contenido...</span>
             <button id="limpiarBusqueda" type="button" hidden>✕ Limpiar</button>
