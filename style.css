@@ -3233,3 +3233,109 @@ body.tema-claro .perfil-estadistica b {
 .biblioteca-buscador input:focus{border-color:rgba(230,36,41,.65);box-shadow:0 0 0 3px rgba(230,36,41,.10)}
 body.tema-claro .biblioteca-buscador label{color:#555}
 body.tema-claro .biblioteca-buscador input{background:#fff;color:#111;border-color:rgba(0,0,0,.12)}
+
+
+/* ================================
+   SISTEMA DE ICONOS — ABRAHAM G4
+   ================================ */
+
+.nav-boton,
+.boton-principal,
+.boton-secundario,
+.filtro,
+#botonBusquedaGlobal,
+#cargarMasMarvel,
+.atajo-card,
+h2,
+h3,
+.titulo-seccion h2 {
+    --icon-size: 17px;
+}
+
+.nav-boton,
+.boton-principal,
+.boton-secundario,
+.filtro,
+#botonBusquedaGlobal,
+#cargarMasMarvel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.nav-boton svg,
+.boton-principal svg,
+.boton-secundario svg,
+.filtro svg,
+#botonBusquedaGlobal svg,
+#cargarMasMarvel svg,
+.titulo-seccion h2 svg,
+h3 svg,
+.atajo-icono svg {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    flex: 0 0 auto;
+    stroke-width: 2;
+}
+
+.nav-boton svg {
+    width: 16px;
+    height: 16px;
+}
+
+.titulo-seccion h2 {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.titulo-seccion h2 svg {
+    color: #e62429;
+    width: 22px;
+    height: 22px;
+}
+
+h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.atajo-icono {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 42px;
+    border: 1px solid rgba(230,36,41,.28);
+    border-radius: 13px;
+    background: rgba(230,36,41,.08);
+    color: #e62429;
+}
+
+.atajo-icono svg {
+    width: 20px;
+    height: 20px;
+}
+
+.nav-boton.activo-nav svg {
+    filter: drop-shadow(0 0 7px rgba(230,36,41,.32));
+}
+
+@media (max-width: 700px) {
+    .nav-boton span {
+        display: none;
+    }
+
+    .nav-boton {
+        min-width: 42px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .nav-boton svg {
+        width: 18px;
+        height: 18px;
+    }
+}
