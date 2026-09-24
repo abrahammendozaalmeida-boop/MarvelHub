@@ -1752,13 +1752,18 @@ async function sincronizarPerfilConNube(userId) {
     const remoto = resultado.data;
 
     if (!remoto) {
-        await supabaseClient.from("profiles").upsert({
+        const subidaPerfil = await supabaseClient.from("profiles").upsert({
             id: userId,
             display_name: local.nombre || "",
             avatar: local.avatar || "🦸",
             created_at: local.creadoEn || new Date().toISOString(),
             updated_at: local.actualizadoEn || new Date().toISOString()
         });
+
+        if (subidaPerfil.error) {
+            throw subidaPerfil.error;
+        }
+
         return;
     }
 
@@ -1778,13 +1783,17 @@ async function sincronizarPerfilConNube(userId) {
         return;
     }
 
-    await supabaseClient.from("profiles").upsert({
+    const subidaPerfil = await supabaseClient.from("profiles").upsert({
         id: userId,
         display_name: local.nombre || "",
         avatar: local.avatar || "🦸",
         created_at: remoto.created_at || local.creadoEn || new Date().toISOString(),
         updated_at: local.actualizadoEn || new Date().toISOString()
     });
+
+    if (subidaPerfil.error) {
+        throw subidaPerfil.error;
+    }
 }
 
 async function sincronizarFavoritosConNube(userId) {
@@ -1917,8 +1926,12 @@ async function sincronizarCuentaConNube(user) {
         );
     } catch (error) {
         console.error("Error de sincronización:", error);
+        const mensaje = error && error.message
+            ? error.message
+            : "Error desconocido de Supabase.";
+
         actualizarEstadoSincronizacion(
-            "⚠️ La cuenta funciona, pero la sincronización necesita revisar la configuración de Supabase.",
+            "⚠️ Error de sincronización: " + mensaje,
             true
         );
     } finally {
@@ -2242,7 +2255,7 @@ async function cerrarSesionCuenta() {
     mostrarMensajeCuenta("Sesión cerrada.");
 }
 
-async function configurarCuenta() {
+async async function configurarCuenta() {
     const conectado = configurarClienteSupabase();
     const formLogin = document.getElementById("formLogin");
     const formRegistro = document.getElementById("formRegistro");
