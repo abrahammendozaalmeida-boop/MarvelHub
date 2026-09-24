@@ -3402,3 +3402,31 @@ body.tema-claro .inicio-portada.portada-con-imagen::before{background-image:line
 body.tema-claro .portada-meta span{border-color:#ddd;background:rgba(255,255,255,.62);color:#666}
 body.tema-claro .portada-contenido h2[data-calificacion]::after{background:#eee;color:#666}
 @media(max-width:600px){.portada-meta{gap:6px}.portada-meta span{font-size:9px;padding:6px 8px}}
+
+.perfil-avatar{position:relative;overflow:hidden}
+.perfil-avatar::before{content:"🦾";display:grid;place-items:center;width:100%;height:100%;font-size:40px;line-height:1}
+.perfil-avatar[data-avatar="ironman"]::before{content:"🦾"}
+.perfil-avatar[data-avatar="capitan"]::before{content:"🛡️"}
+.perfil-avatar[data-avatar="thor"]::before{content:"⚡"}
+.perfil-avatar[data-avatar="hulk"]::before{content:"💚"}
+.perfil-avatar[data-avatar="spiderman"]::before{content:"🕷️"}
+.perfil-avatar[data-avatar="hawkeye"]::before{content:"🏹"}
+.perfil-avatar[data-avatar="ironman"]{background:linear-gradient(145deg,#8d1f24,#241218)}
+.perfil-avatar[data-avatar="capitan"]{background:linear-gradient(145deg,#173b78,#101725)}
+.perfil-avatar[data-avatar="thor"]{background:linear-gradient(145deg,#513b87,#171326)}
+.perfil-avatar[data-avatar="hulk"]{background:linear-gradient(145deg,#315d39,#121b16)}
+.perfil-avatar[data-avatar="spiderman"]{background:linear-gradient(145deg,#8d2025,#211217)}
+.perfil-avatar[data-avatar="hawkeye"]{background:linear-gradient(145deg,#4b315d,#17131d)}
+.perfil-avatar-opcion{width:70px;height:70px;padding:7px 4px 5px;display:flex;flex-direction:column;justify-content:center;gap:3px;border:1px solid #35353f;border-radius:15px;background:#24242c;color:#fff;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.perfil-avatar-opcion span{width:36px;height:36px;margin:auto;display:grid;place-items:center;border-radius:50%;background:linear-gradient(145deg,#343440,#17171e);font-size:22px}
+.perfil-avatar-opcion small{display:block;font-size:8px;line-height:1;color:#8f8f99;white-space:nowrap}
+.perfil-avatar-opcion:hover,.perfil-avatar-opcion.activo-perfil-avatar{border-color:#e62429;box-shadow:0 8px 20px rgba(230,36,41,.18),0 0 0 2px rgba(230,36,41,.12);transform:translateY(-3px) scale(1.02)}
+.perfil-avatar-opcion[data-avatar="ironman"] span{background:#7c2227}
+.perfil-avatar-opcion[data-avatar="capitan"] span{background:#1e467e}
+.perfil-avatar-opcion[data-avatar="thor"] span{background:#4c3979}
+.perfil-avatar-opcion[data-avatar="hulk"] span{background:#315b38}
+.perfil-avatar-opcion[data-avatar="spiderman"] span{background:#8b2429}
+.perfil-avatar-opcion[data-avatar="hawkeye"] span{background:#4d345d}
+body.tema-claro .perfil-avatar-opcion{background:#f1f1f4;border-color:#d7d7dc;color:#222}
+body.tema-claro .perfil-avatar-opcion small{color:#666}
+@media(max-width:600px){.perfil-avatar-opcion{width:64px;height:64px}.perfil-avatar-opcion small{font-size:7px}}
