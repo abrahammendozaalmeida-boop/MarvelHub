@@ -21,6 +21,11 @@ function mostrarSeccion(seccion) {
     if (seccion === "favoritos") {
         mostrarFavoritos();
     }
+
+    if (seccion === "inicio") {
+        renderizarFilaFavoritosInicio();
+        renderizarDescubreInicio();
+    }
 }
 
 async function obtenerTMDB(endpoint) {
@@ -378,6 +383,49 @@ function renderizarFilaInicio(id, lista, cantidad) {
     });
 }
 
+function renderizarFilaFavoritosInicio() {
+    const contenedor = document.getElementById("homeFavoritos");
+
+    if (!contenedor) return;
+
+    contenedor.innerHTML = "";
+
+    if (favoritosMarvel.length === 0) {
+        contenedor.innerHTML =
+            "<p>❤️ Todavía no tienes favoritos. Guarda películas o series para verlas aquí.</p>";
+        return;
+    }
+
+    favoritosMarvel.slice(0, 10).forEach(function(item) {
+        contenedor.appendChild(crearTarjetaInicio(item));
+    });
+}
+
+function renderizarDescubreInicio() {
+    const contenedor = document.getElementById("homeDescubre");
+
+    if (!contenedor) return;
+
+    const peliculas = peliculasTMDB.slice();
+    const series = seriesTMDB.slice();
+
+    const combinadas = peliculas.concat(series);
+
+    combinadas.sort(function(a, b) {
+        return (b.vote_average || 0) - (a.vote_average || 0);
+    });
+
+    const favoritosIds = favoritosMarvel.map(function(item) {
+        return item.id + "-" + item.tipo;
+    });
+
+    const descubrimiento = combinadas.filter(function(item) {
+        return favoritosIds.indexOf(item.id + "-" + item.tipo) === -1;
+    });
+
+    renderizarFilaInicio("homeDescubre", descubrimiento, 10);
+}
+
 function renderizarFilasInicio() {
     const populares = peliculasTMDB
         .slice()
@@ -393,6 +441,8 @@ function renderizarFilasInicio() {
 
     renderizarFilaInicio("homePopulares", populares, 10);
     renderizarFilaInicio("homeSeries", series, 10);
+    renderizarFilaFavoritosInicio();
+    renderizarDescubreInicio();
 }
 
 function mostrarTipoMarvel(tipo) {
@@ -804,8 +854,26 @@ function guardarNombre() {
 
     if (!input) return;
 
-    localStorage.setItem("nombre", input.value.trim());
+    const nombre = input.value.trim();
+
+    localStorage.setItem("nombre", nombre);
+
+    actualizarSaludoInicio();
     alert("Nombre guardado correctamente 👍");
+}
+
+function actualizarSaludoInicio() {
+    const saludo = document.getElementById("saludoInicio");
+
+    if (!saludo) return;
+
+    const nombre = localStorage.getItem("nombre");
+
+    if (nombre) {
+        saludo.textContent = "MARVEL HUB • PARA " + nombre.toUpperCase();
+    } else {
+        saludo.textContent = "MARVEL HUB • ABRAHAM G4";
+    }
 }
 
 function cargarNombre() {
@@ -815,6 +883,8 @@ function cargarNombre() {
     if (input && nombre) {
         input.value = nombre;
     }
+
+    actualizarSaludoInicio();
 }
 
 function cambiarTema() {
