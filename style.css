@@ -626,3 +626,77 @@ body.tema-claro .filtro {
         height: 360px;
     }
 }
+
+/* APP / PWA */
+.boton-instalar {
+    background: #e62429;
+}
+
+.aviso-app {
+    position: fixed;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    z-index: 2000;
+    max-width: 520px;
+    margin: auto;
+    background: #15151c;
+    border: 1px solid #e62429;
+    border-radius: 14px;
+    padding: 15px 18px;
+    box-shadow: 0 12px 35px rgba(0,0,0,.45);
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding-bottom: 74px;
+    }
+
+    header {
+        position: sticky;
+        top: 0;
+        padding: 12px 15px;
+    }
+
+    nav {
+        position: fixed;
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        z-index: 1500;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        padding: 7px;
+        background: rgba(17, 17, 22, .96);
+        border: 1px solid #292933;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.5);
+        backdrop-filter: blur(10px);
+    }
+
+    nav button {
+        min-height: 43px;
+        padding: 8px 5px;
+        font-size: 12px;
+    }
+
+    nav .boton-instalar {
+        display: none;
+    }
+
+    main {
+        padding: 16px;
+    }
+
+    .recomendacion {
+        padding: 20px 15px;
+    }
+}
+
+@media (min-width: 601px) {
+    .boton-instalar[hidden] {
+        display: none;
+    }
+}
