@@ -7,6 +7,68 @@ let seriesTMDB = [];
 let tipoActual = "peliculas";
 let favoritosMarvel = JSON.parse(localStorage.getItem("favoritosMarvel") || "[]");
 
+function actualizarInicioPersonalizado() {
+    const nombre = localStorage.getItem("nombre") || "";
+    const saludo = document.getElementById("saludoInicio");
+    const texto = document.getElementById("textoPortada");
+    const textoPersonalizado = document.getElementById("textoPersonalizado");
+
+    if (saludo) {
+        saludo.textContent = nombre
+            ? "MARVEL HUB • " + nombre.toUpperCase()
+            : "MARVEL HUB • ABRAHAM G4";
+    }
+
+    if (texto) {
+        texto.textContent = nombre
+            ? "Bienvenido de nuevo, " + nombre + ". Descubre algo para ver hoy."
+            : "Descubre películas, series, próximos estrenos y tus favoritos.";
+    }
+
+    if (textoPersonalizado) {
+        textoPersonalizado.textContent = favoritosMarvel.length > 0
+            ? "Basado en lo que has guardado en tu lista."
+            : "Guarda favoritos para crear una selección más personal.";
+    }
+}
+
+function renderizarPersonalizadoInicio() {
+    const contenedor = document.getElementById("homePersonalizado");
+
+    if (!contenedor) return;
+
+    let candidatos = peliculasTMDB.concat(seriesTMDB);
+    const favoritosIds = favoritosMarvel.map(function(item) {
+        return item.id;
+    });
+
+    candidatos = candidatos.filter(function(item) {
+        return favoritosIds.indexOf(item.id) === -1;
+    });
+
+    if (favoritosMarvel.length > 0) {
+        candidatos.sort(function(a, b) {
+            return Number(b.vote_average || 0) - Number(a.vote_average || 0);
+        });
+    } else {
+        candidatos.sort(function(a, b) {
+            return Number(b.popularity || 0) - Number(a.popularity || 0);
+        });
+    }
+
+    candidatos = candidatos.slice(0, 10);
+    contenedor.innerHTML = "";
+
+    if (candidatos.length === 0) {
+        contenedor.innerHTML = "<p>No hay suficiente contenido para personalizar todavía.</p>";
+        return;
+    }
+
+    candidatos.forEach(function(item) {
+        contenedor.appendChild(crearTarjetaInicio(item));
+    });
+}
+
 function mostrarSeccion(seccion) {
     document.querySelectorAll(".seccion").forEach(function(elemento) {
         elemento.classList.remove("activa");
@@ -32,6 +94,8 @@ function mostrarSeccion(seccion) {
     if (seccion === "inicio") {
         renderizarFilaFavoritosInicio();
         renderizarDescubreInicio();
+        renderizarPersonalizadoInicio();
+        actualizarInicioPersonalizado();
     }
 
     window.scrollTo({
@@ -115,6 +179,9 @@ function alternarFavorito(id, tipo) {
     }
 
     guardarFavoritos();
+    actualizarInicioPersonalizado();
+    actualizarResumenAjustes();
+    renderizarPersonalizadoInicio();
     renderizarCatalogo(tipo === "movie" ? peliculasTMDB : seriesTMDB);
 
     if (document.getElementById("favoritos").classList.contains("activa")) {
@@ -313,6 +380,8 @@ async function cargarMarvelTMDB() {
 
         mostrarTipoMarvel("peliculas");
         renderizarFilasInicio();
+        renderizarPersonalizadoInicio();
+        actualizarInicioPersonalizado();
     } catch (error) {
         console.error("Error cargando Marvel:", error);
         catalogo.innerHTML =
@@ -872,6 +941,8 @@ function guardarNombre() {
     localStorage.setItem("nombre", nombre);
 
     actualizarSaludoInicio();
+    actualizarInicioPersonalizado();
+    actualizarResumenAjustes();
     alert("Nombre guardado correctamente 👍");
 }
 
