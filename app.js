@@ -1710,6 +1710,23 @@ document.addEventListener("DOMContentLoaded", function() {
 
 let instalacionPendiente = null;
 
+function actualizarEstadoInstalacion() {
+    const aviso = document.getElementById("avisoApp");
+    const boton = document.getElementById("botonInstalar");
+
+    if (!aviso && !boton) return;
+
+    if (window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true) {
+        if (aviso) aviso.hidden = true;
+        if (boton) boton.hidden = true;
+        return;
+    }
+
+    if (aviso) {
+        aviso.hidden = false;
+    }
+}
+
 function configurarPWA() {
     const botonInstalar = document.getElementById("botonInstalar");
 
@@ -1731,6 +1748,7 @@ function configurarPWA() {
 
         if (botonInstalar) {
             botonInstalar.hidden = false;
+            actualizarEstadoInstalacion();
         }
     });
 
@@ -1759,9 +1777,11 @@ function configurarPWA() {
         }
 
         console.log("ABRAHAM G4 — MARVEL HUB instalado.");
+        actualizarEstadoInstalacion();
     });
 }
 
 document.addEventListener("DOMContentLoaded", function() {
     configurarPWA();
+    actualizarEstadoInstalacion();
 });
