@@ -593,46 +593,59 @@
         </div>
 
         <div class="cuenta-panel">
+            <div class="cuenta-hero">
+                <div class="cuenta-hero-icon"><i data-lucide="shield-check"></i></div>
+                <div>
+                    <span class="mini-etiqueta">MARVEL HUB ID</span>
+                    <h3>Tu centro de cuenta</h3>
+                    <p>Sesión, perfil y biblioteca sincronizados desde un solo lugar.</p>
+                </div>
+                <span id="cuentaPuntoEstado" class="cuenta-punto estado-esperando" aria-label="Estado de cuenta"></span>
+            </div>
             <div id="cuentaEstado" class="cuenta-estado">Comprobando conexión...</div>
 
+            <div class="cuenta-modos" role="tablist" aria-label="Acceso a cuenta">
+                <button id="modoLoginCuenta" class="cuenta-modo activo" type="button" role="tab" aria-selected="true"><i data-lucide="log-in"></i><span>Entrar</span></button>
+                <button id="modoRegistroCuenta" class="cuenta-modo" type="button" role="tab" aria-selected="false"><i data-lucide="user-plus"></i><span>Crear cuenta</span></button>
+            </div>
             <div id="cuentaFormularios">
-                <form id="formRegistro" class="cuenta-formulario">
-                    <h3>Crear cuenta</h3>
+                <form id="formRegistro" class="cuenta-formulario" hidden>
+                    <h3><i data-lucide="user-plus"></i> Crear cuenta</h3>
                     <input id="registroEmail" type="email" placeholder="Correo electrónico" autocomplete="email" required>
                     <input id="registroPassword" type="password" placeholder="Contraseña" autocomplete="new-password" minlength="6" required>
-                    <button type="submit" class="boton-principal">🚀 Crear cuenta</button>
+                    <button type="submit" class="boton-principal"><i data-lucide="user-plus"></i><span>Crear cuenta</span></button>
                 </form>
 
                 <form id="formLogin" class="cuenta-formulario">
-                    <h3>Iniciar sesión</h3>
+                    <h3><i data-lucide="log-in"></i> Iniciar sesión</h3>
                     <input id="loginEmail" type="email" placeholder="Correo electrónico" autocomplete="email" required>
                     <input id="loginPassword" type="password" placeholder="Contraseña" autocomplete="current-password" required>
-                    <button type="submit" class="boton-principal">🔑 Entrar</button>
-                    <button id="botonRecuperar" type="button" class="boton-secundario">📩 Recuperar contraseña</button>
+                    <button type="submit" class="boton-principal"><i data-lucide="log-in"></i><span>Entrar</span></button>
+                    <button id="botonRecuperar" type="button" class="boton-secundario"><i data-lucide="key-round"></i><span>Recuperar contraseña</span></button>
                 </form>
             </div>
 
             <div id="cuentaUsuario" class="cuenta-usuario" hidden>
-                <div class="cuenta-avatar" id="cuentaAvatar">🦸</div>
+                <div class="cuenta-avatar" id="cuentaAvatar"><i data-lucide="user-round"></i></div>
                 <div>
                     <span class="mini-etiqueta">SESIÓN ACTIVA</span>
                     <h3 id="cuentaEmail">Usuario</h3>
                     <p id="cuentaUid">UID</p>
                 </div>
-                <button id="botonCerrarSesion" type="button" class="boton-secundario">🚪 Cerrar sesión</button>
+                <button id="botonCerrarSesion" type="button" class="boton-secundario"><i data-lucide="log-out"></i><span>Cerrar sesión</span></button>
             </div>
 
             <div class="cuenta-sincronizacion">
-                <strong>☁️ Sincronización</strong>
+                <div class="cuenta-sync-titulo"><i data-lucide="cloud"></i><strong>Sincronización</strong><span id="cuentaUltimaSync">Sin sincronizar</span></div>
                 <span id="cuentaSincronizacion" class="cuenta-mensaje" aria-live="polite">Configura Supabase para activar la nube.</span>
-                <button id="botonSincronizarCuenta" type="button" class="boton-secundario">🔄 Sincronizar ahora</button>
+                <button id="botonSincronizarCuenta" type="button" class="boton-secundario"><i data-lucide="refresh-cw"></i><span>Sincronizar ahora</span></button>
             </div>
 
             <p id="cuentaMensaje" class="cuenta-mensaje" aria-live="polite"></p>
         </div>
 
         <div class="cuenta-nota">
-            <strong>🔒 Seguridad</strong>
+            <strong><i data-lucide="shield"></i> Seguridad</strong>
             <p>La contraseña se procesa mediante el sistema de autenticación. Marvel Hub no la guarda en localStorage ni la muestra.</p>
         </div>
     </section>
