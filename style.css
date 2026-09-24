@@ -1923,3 +1923,101 @@ body.tema-claro .catalogo-busqueda select {
         margin-bottom: 10px;
     }
 }
+
+
+/* ================================
+   TARJETAS MARVEL — ESTILO STREAMING
+   ================================ */
+
+.card-media {
+    position: relative;
+    width: 100%;
+    height: 310px;
+    overflow: hidden;
+    background: #202027;
+}
+
+.card-media > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .35s ease, filter .35s ease;
+}
+
+.tarjeta-pelicula:hover .card-media > img {
+    transform: scale(1.05);
+    filter: brightness(.72);
+}
+
+.card-media::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 38%;
+    background: linear-gradient(transparent, rgba(0,0,0,.82));
+    pointer-events: none;
+}
+
+.card-badge,
+.card-rating {
+    position: absolute;
+    top: 10px;
+    z-index: 2;
+    padding: 6px 9px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.card-badge {
+    left: 10px;
+    background: rgba(12,12,16,.82);
+    color: #fff;
+}
+
+.card-rating {
+    right: 10px;
+    background: rgba(12,12,16,.82);
+    color: #ffd43b;
+}
+
+.tarjeta-pelicula:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 16px 32px rgba(0,0,0,.28);
+}
+
+.card-content {
+    position: relative;
+    z-index: 3;
+}
+
+.card-content h3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 47px;
+}
+
+.card-content .tipo-contenido {
+    margin-bottom: 8px;
+}
+
+@media (max-width: 600px) {
+    .card-media {
+        height: 280px;
+    }
+
+    .tarjeta-pelicula:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .tarjeta-pelicula:hover .card-media > img {
+        transform: none;
+        filter: none;
+    }
+}
