@@ -383,16 +383,76 @@
     </section>
 
     <section id="ajustes" class="seccion">
-        <h2>⚙️ Ajustes</h2>
-
-        <div class="ajuste">
-            <label for="nombre">Tu nombre:</label>
-            <input type="text" id="nombre" placeholder="Escribe tu nombre">
-            <button onclick="guardarNombre()">💾 Guardar</button>
+        <div class="titulo-seccion">
+            <span class="mini-etiqueta">APP</span>
+            <h2>⚙️ Ajustes</h2>
+            <p>Personaliza tu Marvel Hub y conserva tus preferencias.</p>
         </div>
 
-        <div class="ajuste">
-            <button onclick="cambiarTema()">🌗 Cambiar tema</button>
+        <div class="ajustes-grid">
+            <div class="ajuste ajuste-principal">
+                <span class="ajuste-icono">👤</span>
+                <div class="ajuste-contenido">
+                    <strong>Perfil</strong>
+                    <label for="nombre">Nombre que aparecerá en Inicio</label>
+                    <div class="ajuste-fila">
+                        <input type="text" id="nombre" placeholder="Escribe tu nombre" maxlength="30">
+                        <button onclick="guardarNombre()">💾 Guardar</button>
+                    </div>
+                    <small id="estadoNombre" class="ajuste-ayuda">Tu nombre se guarda solo en este dispositivo.</small>
+                </div>
+            </div>
+
+            <div class="ajuste">
+                <span class="ajuste-icono">🌗</span>
+                <div class="ajuste-contenido">
+                    <strong>Apariencia</strong>
+                    <p>Alterna entre el tema oscuro y claro.</p>
+                    <button id="botonTema" onclick="cambiarTema()">🌗 Cambiar tema</button>
+                </div>
+            </div>
+
+            <div class="ajuste">
+                <span class="ajuste-icono">🧩</span>
+                <div class="ajuste-contenido">
+                    <strong>Widgets</strong>
+                    <p>Configura qué elementos aparecen en tu Inicio.</p>
+                    <button onclick="mostrarSeccion('widgets')">🧩 Configurar widgets</button>
+                </div>
+            </div>
+
+            <div class="ajuste">
+                <span class="ajuste-icono">❤️</span>
+                <div class="ajuste-contenido">
+                    <strong>Favoritos</strong>
+                    <p id="ajusteFavoritosResumen">Cargando favoritos...</p>
+                    <button onclick="mostrarSeccion('favoritos')">❤️ Ver mi lista</button>
+                </div>
+            </div>
+
+            <div class="ajuste">
+                <span class="ajuste-icono">📲</span>
+                <div class="ajuste-contenido">
+                    <strong>Aplicación</strong>
+                    <p>Instala Marvel Hub como una app cuando tu navegador lo permita.</p>
+                    <button id="botonInstalarAjustes" type="button">📲 Instalar Marvel Hub</button>
+                    <small id="estadoPWA" class="ajuste-ayuda">Comprobando instalación...</small>
+                </div>
+            </div>
+
+            <div class="ajuste">
+                <span class="ajuste-icono">🧹</span>
+                <div class="ajuste-contenido">
+                    <strong>Restablecer preferencias</strong>
+                    <p>Elimina nombre, tema y preferencias de widgets guardadas localmente.</p>
+                    <button id="restablecerPreferencias" type="button" class="boton-peligro">🧹 Restablecer</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="ajuste-version">
+            <strong>ABRAHAM G4 — MARVEL HUB</strong>
+            <span>Versión web app • 2026</span>
         </div>
     </section>
 
