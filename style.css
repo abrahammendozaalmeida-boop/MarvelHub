@@ -3193,3 +3193,35 @@ body.tema-claro .cuenta-sincronizacion {
         width: 100%;
     }
 }
+
+/* ================================
+   PERFIL 2.0 — ESTADÍSTICAS
+   ================================ */
+
+.perfil-estadistica {
+    min-height: 86px;
+}
+
+.perfil-estadistica b {
+    display: block;
+    margin: 3px 0;
+    font-size: 25px;
+    line-height: 1;
+    color: #fff;
+}
+
+.perfil-estadistica p {
+    margin: 0;
+    color: #888894;
+    font-size: 11px;
+}
+
+body.tema-claro .perfil-estadistica b {
+    color: #111;
+}
+
+@media (max-width: 700px) {
+    .perfil-estadistica {
+        min-height: 0;
+    }
+}
