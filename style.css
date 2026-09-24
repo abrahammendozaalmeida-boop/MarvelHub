@@ -1085,3 +1085,35 @@ body.tema-claro .atajo-card {
         margin-top: 40px;
     }
 }
+
+
+/* EXPERIENCIA DE STREAMING */
+.home-rail {
+    position: relative;
+}
+
+.home-rail .titulo-seccion {
+    position: relative;
+}
+
+.home-rail .titulo-seccion h2 {
+    font-size: clamp(24px, 3vw, 32px);
+}
+
+.home-rail .catalogo-horizontal {
+    scroll-padding-left: 2px;
+}
+
+.home-rail .catalogo-horizontal::-webkit-scrollbar {
+    height: 6px;
+}
+
+.home-rail .catalogo-horizontal::-webkit-scrollbar-thumb {
+    background: #3a3a44;
+    border-radius: 20px;
+}
+
+.nombre-usuario-home {
+    color: #ffffff;
+}
+
