@@ -2319,3 +2319,45 @@ body.tema-claro .card-meta span {
         min-height: 0;
     }
 }
+
+
+/* ================================
+   PAGINACIÓN DEL CATÁLOGO
+   ================================ */
+
+.catalogo-cargar-mas {
+    display: flex;
+    justify-content: center;
+    margin: 28px 0 10px;
+}
+
+#cargarMasMarvel {
+    min-width: 190px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    background: #e62429;
+    color: #fff;
+    font-weight: 800;
+    transition: transform .2s ease, opacity .2s ease, background .2s ease;
+}
+
+#cargarMasMarvel:hover {
+    background: #c91f24;
+    transform: translateY(-2px);
+}
+
+#cargarMasMarvel:disabled {
+    opacity: .7;
+    cursor: wait;
+    transform: none;
+}
+
+@media (max-width: 600px) {
+    .catalogo-cargar-mas {
+        margin-top: 22px;
+    }
+
+    #cargarMasMarvel {
+        width: 100%;
+    }
+}
