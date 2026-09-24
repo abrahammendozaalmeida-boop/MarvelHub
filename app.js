@@ -1265,6 +1265,257 @@ function configurarVideo() {
     configurarVelocidadEditor(videoPreview);
     configurarFormatosEditor();
     actualizarFiltroEditor();
+
+    const botonExportar = document.getElementById("exportarEditor");
+
+    if (botonExportar) {
+        botonExportar.addEventListener("click", exportarVideoEditor);
+    }
+}
+
+async function exportarVideoEditor() {
+    const video = document.getElementById("videoPreview");
+    const boton = document.getElementById("exportarEditor");
+    const estado = document.getElementById("estadoExportacion");
+    const inicio = document.getElementById("recorteInicio");
+    const fin = document.getElementById("recorteFin");
+
+    if (!video || !video.src) {
+        if (estado) {
+            estado.textContent = "Primero selecciona un video.";
+        }
+        return;
+    }
+
+    if (!video.captureStream || typeof MediaRecorder === "undefined") {
+        if (estado) {
+            estado.textContent =
+                "Tu navegador no permite exportar este video directamente. Prueba con Chrome o Edge actualizado.";
+        }
+        return;
+    }
+
+    if (!Number.isFinite(video.duration) || video.duration <= 0) {
+        if (estado) {
+            estado.textContent = "Espera a que el video termine de cargar.";
+        }
+        return;
+    }
+
+    const inicioValor = inicio
+        ? Math.max(0, Number(inicio.value) || 0)
+        : 0;
+
+    const finValor = fin
+        ? Math.min(video.duration, Number(fin.value) || video.duration)
+        : video.duration;
+
+    if (finValor <= inicioValor) {
+        if (estado) {
+            estado.textContent = "El rango de recorte no es válido.";
+        }
+        return;
+    }
+
+    const canvas = document.createElement("canvas");
+    const formato = document.getElementById("formatoActual");
+    const formatoTexto = formato ? formato.textContent : "16:9";
+
+    if (formatoTexto === "9:16") {
+        canvas.width = 720;
+        canvas.height = 1280;
+    } else if (formatoTexto === "1:1") {
+        canvas.width = 1080;
+        canvas.height = 1080;
+    } else {
+        canvas.width = 1280;
+        canvas.height = 720;
+    }
+
+    const contexto = canvas.getContext("2d");
+
+    if (!contexto) {
+        if (estado) estado.textContent = "No se pudo preparar la exportación.";
+        return;
+    }
+
+    const streamVideo = canvas.captureStream(30);
+    const streamOriginal = video.captureStream();
+
+    streamOriginal.getAudioTracks().forEach(function(track) {
+        streamVideo.addTrack(track);
+    });
+
+    const tipos = [
+        "video/webm;codecs=vp9,opus",
+        "video/webm;codecs=vp8,opus",
+        "video/webm"
+    ];
+
+    let tipoGrabacion = "";
+
+    for (let i = 0; i < tipos.length; i++) {
+        if (MediaRecorder.isTypeSupported(tipos[i])) {
+            tipoGrabacion = tipos[i];
+            break;
+        }
+    }
+
+    if (!tipoGrabacion) {
+        if (estado) {
+            estado.textContent = "Tu navegador no admite el formato de exportación.";
+        }
+        return;
+    }
+
+    const partes = [];
+    let grabador;
+
+    try {
+        grabador = new MediaRecorder(streamVideo, {
+            mimeType: tipoGrabacion
+        });
+    } catch (error) {
+        console.error("Editor: error creando MediaRecorder.", error);
+        if (estado) {
+            estado.textContent = "No se pudo iniciar la exportación.";
+        }
+        return;
+    }
+
+    const tiempoAnterior = video.currentTime;
+    const velocidadAnterior = video.playbackRate;
+    const estabaSilenciado = video.muted;
+
+    if (boton) {
+        boton.disabled = true;
+        boton.textContent = "⏳ Exportando...";
+    }
+
+    if (estado) {
+        estado.textContent = "Exportando... no cierres esta pestaña.";
+    }
+
+    grabador.ondataavailable = function(event) {
+        if (event.data && event.data.size > 0) {
+            partes.push(event.data);
+        }
+    };
+
+    grabador.onerror = function(event) {
+        console.error("Editor: error durante la grabación.", event.error);
+    };
+
+    const terminarExportacion = function() {
+        if (grabador.state !== "inactive") {
+            grabador.stop();
+        }
+    };
+
+    grabador.onstop = function() {
+        const blob = new Blob(partes, { type: tipoGrabacion });
+        const url = URL.createObjectURL(blob);
+        const enlace = document.createElement("a");
+
+        enlace.href = url;
+        enlace.download = "marvel-hub-video.webm";
+        document.body.appendChild(enlace);
+        enlace.click();
+        enlace.remove();
+
+        setTimeout(function() {
+            URL.revokeObjectURL(url);
+        }, 1000);
+
+        video.playbackRate = velocidadAnterior;
+        video.muted = estabaSilenciado;
+        video.currentTime = Math.min(tiempoAnterior, video.duration);
+
+        if (boton) {
+            boton.disabled = false;
+            boton.textContent = "⬇️ Exportar video";
+        }
+
+        if (estado) {
+            estado.textContent =
+                "Exportación terminada. Se guardó como marvel-hub-video.webm.";
+        }
+
+        streamVideo.getTracks().forEach(function(track) {
+            track.stop();
+        });
+    };
+
+    const dibujar = function() {
+        if (video.currentTime >= finValor || video.ended) {
+            terminarExportacion();
+            return;
+        }
+
+        const anchoVideo = video.videoWidth || canvas.width;
+        const altoVideo = video.videoHeight || canvas.height;
+        const escala = Math.max(
+            canvas.width / anchoVideo,
+            canvas.height / altoVideo
+        );
+
+        const ancho = anchoVideo * escala;
+        const alto = altoVideo * escala;
+        const x = (canvas.width - ancho) / 2;
+        const y = (canvas.height - alto) / 2;
+
+        contexto.clearRect(0, 0, canvas.width, canvas.height);
+        contexto.filter = video.style.filter || "none";
+        contexto.drawImage(video, x, y, ancho, alto);
+        contexto.filter = "none";
+
+        requestAnimationFrame(dibujar);
+    };
+
+    try {
+        video.pause();
+        video.currentTime = inicioValor;
+
+        await new Promise(function(resolve) {
+            const esperar = function() {
+                if (Math.abs(video.currentTime - inicioValor) < 0.1) {
+                    resolve();
+                    return;
+                }
+
+                requestAnimationFrame(esperar);
+            };
+
+            video.addEventListener("seeked", function() {
+                resolve();
+            }, { once: true });
+        });
+
+        video.playbackRate = 1;
+        video.muted = false;
+
+        grabador.start(250);
+
+        await video.play();
+
+        requestAnimationFrame(dibujar);
+    } catch (error) {
+        console.error("Editor: error al exportar.", error);
+
+        if (grabador.state !== "inactive") {
+            grabador.stop();
+        }
+
+        if (boton) {
+            boton.disabled = false;
+            boton.textContent = "⬇️ Exportar video";
+        }
+
+        if (estado) {
+            estado.textContent =
+                "No se pudo exportar el video. Revisa los permisos del navegador.";
+        }
+    }
 }
 
 function cambiarFormato(formato) {
@@ -1433,6 +1684,7 @@ window.cerrarDetalles = cerrarDetalles;
 window.guardarNombre = guardarNombre;
 window.cambiarTema = cambiarTema;
 window.cambiarFormato = cambiarFormato;
+window.exportarVideoEditor = exportarVideoEditor;
 
 document.addEventListener("DOMContentLoaded", function() {
     cargarTema();
