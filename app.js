@@ -69,6 +69,97 @@ function renderizarPersonalizadoInicio() {
     });
 }
 
+function guardarVistoRecientemente(item) {
+    if (!item || !item.id) return;
+
+    let historial = [];
+
+    try {
+        historial = JSON.parse(
+            localStorage.getItem("historialMarvel") || "[]"
+        );
+    } catch (error) {
+        historial = [];
+    }
+
+    const registro = {
+        id: item.id,
+        tipo: item.tipo || "movie",
+        titulo: item.title || item.name || "Sin título",
+        poster_path: item.poster_path || "",
+        backdrop_path: item.backdrop_path || "",
+        overview: item.overview || "",
+        fecha: item.release_date || item.first_air_date || "",
+        vote_average: item.vote_average || 0,
+        vistoEn: Date.now()
+    };
+
+    historial = historial.filter(function(elemento) {
+        return !(elemento.id === registro.id && elemento.tipo === registro.tipo);
+    });
+
+    historial.unshift(registro);
+    historial = historial.slice(0, 12);
+
+    localStorage.setItem(
+        "historialMarvel",
+        JSON.stringify(historial)
+    );
+}
+
+function obtenerHistorialMarvel() {
+    try {
+        const historial = JSON.parse(
+            localStorage.getItem("historialMarvel") || "[]"
+        );
+
+        return Array.isArray(historial) ? historial : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+function limpiarHistorialMarvel() {
+    localStorage.removeItem("historialMarvel");
+    renderizarHistorialInicio();
+}
+
+function renderizarHistorialInicio() {
+    const contenedor = document.getElementById("homeHistorial");
+    const texto = document.getElementById("textoHistorial");
+
+    if (!contenedor) return;
+
+    const historial = obtenerHistorialMarvel();
+
+    contenedor.innerHTML = "";
+
+    if (historial.length === 0) {
+        contenedor.innerHTML =
+            "<p>Aquí aparecerá lo último que consultes.</p>";
+
+        if (texto) {
+            texto.textContent =
+                "Abre los detalles de cualquier título para empezar.";
+        }
+
+        return;
+    }
+
+    if (texto) {
+        texto.textContent =
+            "Tus últimos títulos consultados en este dispositivo.";
+    }
+
+    historial.slice(0, 6).forEach(function(item) {
+        contenedor.appendChild(
+            crearTarjetaMarvel(item, {
+                actualizarInicio: true
+            })
+        );
+    });
+}
+
 function mostrarSeccion(seccion) {
     document.querySelectorAll(".seccion").forEach(function(elemento) {
         elemento.classList.remove("activa");
@@ -96,6 +187,7 @@ function mostrarSeccion(seccion) {
         renderizarDescubreInicio();
         renderizarPersonalizadoInicio();
         actualizarInicioPersonalizado();
+        renderizarHistorialInicio();
     }
 
     window.scrollTo({
@@ -786,6 +878,10 @@ async function verDetallesTMDB(id, tipo) {
 
     try {
         const datos = await obtenerTMDB(endpoint);
+        datos.tipo = tipo;
+        guardarVistoRecientemente(datos);
+        renderizarHistorialInicio();
+
 
         const titulo = escaparHTML(
             datos.title ||
@@ -1233,6 +1329,7 @@ function restablecerPreferencias() {
     localStorage.removeItem("nombre");
     localStorage.removeItem("tema");
     localStorage.removeItem("widgetsMarvel");
+    localStorage.removeItem("historialMarvel");
 
     const nombre = document.getElementById("nombre");
     if (nombre) nombre.value = "";
