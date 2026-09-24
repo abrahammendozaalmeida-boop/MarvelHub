@@ -24,6 +24,7 @@
         <button class="nav-boton activo-nav" data-seccion="inicio" onclick="mostrarSeccion('inicio')">Inicio</button>
         <button class="nav-boton" data-seccion="marvel" onclick="mostrarSeccion('marvel')">Marvel</button>
         <button class="nav-boton" data-seccion="favoritos" onclick="mostrarSeccion('favoritos')">❤️ Favoritos</button>
+        <button class="nav-boton" data-seccion="perfil" onclick="mostrarSeccion('perfil')">👤 Perfil</button>
         <button class="nav-boton" data-seccion="editor" onclick="mostrarSeccion('editor')">Editor</button>
         <button class="nav-boton" data-seccion="widgets" onclick="mostrarSeccion('widgets')">Widgets</button>
         <button class="nav-boton" data-seccion="ajustes" onclick="mostrarSeccion('ajustes')">Ajustes</button>
@@ -464,6 +465,81 @@
             <div class="widget-enlaces">
                 <a href="https://www.youtube.com/results?search_query=Marvel+soundtrack" target="_blank" rel="noopener noreferrer">▶️ YouTube</a>
                 <a href="https://open.spotify.com/search/Marvel%20soundtrack" target="_blank" rel="noopener noreferrer">🎧 Spotify</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="perfil" class="seccion">
+        <div class="titulo-seccion">
+            <span class="mini-etiqueta">CUENTA</span>
+            <h2>👤 Mi perfil</h2>
+            <p>Tu identidad del Hub queda organizada para una futura cuenta con sincronización.</p>
+        </div>
+
+        <div class="perfil-panel">
+            <div class="perfil-cabecera">
+                <div id="perfilAvatar" class="perfil-avatar" aria-label="Avatar del perfil">🦸</div>
+                <div class="perfil-identidad">
+                    <span class="mini-etiqueta">PERFIL LOCAL</span>
+                    <h3 id="perfilNombre">ABRAHAM G4</h3>
+                    <p id="perfilEstado">Este perfil funciona solo en este dispositivo.</p>
+                </div>
+            </div>
+
+            <div class="perfil-formulario">
+                <label>
+                    Nombre visible
+                    <input type="text" id="perfilNombreInput" maxlength="30" placeholder="Ej. Abraham">
+                </label>
+
+                <div>
+                    <span class="perfil-label">Avatar</span>
+                    <div class="perfil-avatares" role="group" aria-label="Elegir avatar">
+                        <button type="button" class="perfil-avatar-opcion" data-avatar="🦸">🦸</button>
+                        <button type="button" class="perfil-avatar-opcion" data-avatar="🕷️">🕷️</button>
+                        <button type="button" class="perfil-avatar-opcion" data-avatar="⚡">⚡</button>
+                        <button type="button" class="perfil-avatar-opcion" data-avatar="🛡️">🛡️</button>
+                        <button type="button" class="perfil-avatar-opcion" data-avatar="🦾">🦾</button>
+                        <button type="button" class="perfil-avatar-opcion" data-avatar="🔥">🔥</button>
+                    </div>
+                </div>
+
+                <div class="perfil-acciones">
+                    <button id="guardarPerfil" type="button" class="boton-principal">💾 Guardar perfil</button>
+                    <button id="restablecerPerfil" type="button" class="boton-secundario">↺ Restablecer perfil</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="perfil-info-grid">
+            <div class="perfil-info-card">
+                <span>🔐</span>
+                <div>
+                    <strong>Modo local</strong>
+                    <p>No se guardan contraseñas ni credenciales en el navegador.</p>
+                </div>
+            </div>
+            <div class="perfil-info-card">
+                <span>☁️</span>
+                <div>
+                    <strong>Preparado para sincronización</strong>
+                    <p>Favoritos, historial y preferencias seguirán separados del perfil hasta conectar un sistema de cuenta real.</p>
+                </div>
+            </div>
+            <div class="perfil-info-card">
+                <span>🆔</span>
+                <div>
+                    <strong>ID del perfil</strong>
+                    <code id="perfilId">Generando...</code>
+                </div>
+            </div>
+            <div class="perfil-info-card">
+                <span>📦</span>
+                <div>
+                    <strong>Datos del Hub</strong>
+                    <p id="perfilDatosResumen">Calculando...</p>
+                    <button id="exportarDatosPerfil" type="button">⬇️ Exportar mis datos</button>
+                </div>
             </div>
         </div>
     </section>
