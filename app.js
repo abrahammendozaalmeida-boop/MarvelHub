@@ -981,6 +981,109 @@ function activarBuscador() {
     }
 }
 
+function renderizarResultadosBusquedaGlobal(resultados) {
+    const contenedor = document.getElementById("resultadosBusquedaGlobal");
+    if (!contenedor) return;
+
+    contenedor.innerHTML = "";
+
+    if (!resultados || resultados.length === 0) {
+        contenedor.innerHTML = "<p>🔎 No encontramos resultados para esa búsqueda.</p>";
+        return;
+    }
+
+    resultados.forEach(function(item) {
+        if (item.media_type === "person") {
+            const tarjeta = document.createElement("article");
+            tarjeta.className = "tarjeta-pelicula";
+            tarjeta.innerHTML =
+                "<div class='card-media'>" +
+                crearPoster(
+                    item.profile_path
+                        ? TMDB_IMAGE_URL + item.profile_path
+                        : "",
+                    escaparHTML(item.name || "Sin nombre"),
+                    ""
+                ) +
+                "<span class='card-badge'>👤 Persona</span>" +
+                "</div>" +
+                "<div class='card-content'>" +
+                "<h3>" + escaparHTML(item.name || "Sin nombre") + "</h3>" +
+                "<p class='descripcion-pelicula'>Persona relacionada con Marvel encontrada en TMDB.</p>" +
+                "</div>";
+            contenedor.appendChild(tarjeta);
+            return;
+        }
+
+        item.tipo = item.media_type === "tv" ? "tv" : "movie";
+        contenedor.appendChild(crearTarjetaMarvel(item));
+    });
+}
+
+async function buscarMarvelGlobal() {
+    const input = document.getElementById("busquedaGlobalMarvel");
+    const estado = document.getElementById("estadoBusquedaGlobal");
+    const contenedor = document.getElementById("resultadosBusquedaGlobal");
+
+    if (!input || !estado || !contenedor) return;
+
+    const consulta = input.value.trim();
+
+    if (!consulta) {
+        estado.textContent = "Escribe un título, personaje o palabra para buscar.";
+        contenedor.innerHTML = "";
+        return;
+    }
+
+    estado.textContent = "⏳ Buscando en TMDB...";
+    contenedor.innerHTML = "";
+
+    try {
+        const datos = await obtenerTMDB(
+            "/search/multi?query=" +
+            encodeURIComponent(consulta) +
+            "&include_adult=false&language=es-MX&page=1"
+        );
+
+        const resultados = (datos.results || [])
+            .filter(function(item) {
+                return item.media_type === "movie" ||
+                    item.media_type === "tv" ||
+                    item.media_type === "person";
+            })
+            .slice(0, 20);
+
+        estado.textContent =
+            resultados.length +
+            (resultados.length === 1
+                ? " resultado encontrado."
+                : " resultados encontrados.");
+
+        renderizarResultadosBusquedaGlobal(resultados);
+    } catch (error) {
+        console.error("Error en búsqueda global:", error);
+        estado.textContent = "No se pudo realizar la búsqueda. Revisa tu conexión o clave de TMDB.";
+        contenedor.innerHTML = "";
+    }
+}
+
+function configurarBusquedaGlobal() {
+    const input = document.getElementById("busquedaGlobalMarvel");
+    const boton = document.getElementById("botonBusquedaGlobal");
+
+    if (boton) {
+        boton.addEventListener("click", buscarMarvelGlobal);
+    }
+
+    if (input) {
+        input.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                buscarMarvelGlobal();
+            }
+        });
+    }
+}
+
 function escaparHTML(valor) {
     return String(valor || "")
         .replace(/&/g, "&amp;")
@@ -2402,6 +2505,7 @@ function inicializarMarvelHub() {
     configurarVideo();
     configurarWidgets();
     activarBuscador();
+    configurarBusquedaGlobal();
 
     const botonInstalar = document.getElementById("botonInstalar");
     const botonInstalarAjustes = document.getElementById("botonInstalarAjustes");
