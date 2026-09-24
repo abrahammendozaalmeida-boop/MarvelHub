@@ -844,3 +844,65 @@ document.addEventListener("DOMContentLoaded", function() {
     cargarMarvelTMDB();
     cargarProximosEstrenos();
 });
+
+/* ================================
+   PWA / APP
+   ================================ */
+
+let instalacionPendiente = null;
+
+function configurarPWA() {
+    const botonInstalar = document.getElementById("botonInstalar");
+
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function() {
+            navigator.serviceWorker.register("./sw.js")
+                .then(function() {
+                    console.log("PWA: Service Worker activo.");
+                })
+                .catch(function(error) {
+                    console.error("PWA: error al registrar Service Worker:", error);
+                });
+        });
+    }
+
+    window.addEventListener("beforeinstallprompt", function(event) {
+        event.preventDefault();
+        instalacionPendiente = event;
+
+        if (botonInstalar) {
+            botonInstalar.hidden = false;
+        }
+    });
+
+    if (botonInstalar) {
+        botonInstalar.addEventListener("click", async function() {
+            if (!instalacionPendiente) return;
+
+            instalacionPendiente.prompt();
+
+            try {
+                await instalacionPendiente.userChoice;
+            } catch (error) {
+                console.error("PWA: instalación cancelada o no disponible.", error);
+            }
+
+            instalacionPendiente = null;
+            botonInstalar.hidden = true;
+        });
+    }
+
+    window.addEventListener("appinstalled", function() {
+        instalacionPendiente = null;
+
+        if (botonInstalar) {
+            botonInstalar.hidden = true;
+        }
+
+        console.log("ABRAHAM G4 — MARVEL HUB instalado.");
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    configurarPWA();
+});
