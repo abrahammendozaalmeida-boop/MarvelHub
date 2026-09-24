@@ -2098,23 +2098,45 @@ async function iniciarSesionCuenta() {
     const email = document.getElementById("loginEmail");
     const password = document.getElementById("loginPassword");
 
-    if (!email || !password) return;
-
-    mostrarMensajeCuenta("⏳ Iniciando sesión...");
-
-    const resultado = await supabaseClient.auth.signInWithPassword({
-        email: email.value.trim(),
-        password: password.value
-    });
-
-    if (resultado.error) {
-        console.error(resultado.error);
-        mostrarMensajeCuenta("No se pudo iniciar sesión. Revisa tus datos.", true);
+    if (!email || !password) {
+        mostrarMensajeCuenta("No se encontraron los campos de inicio de sesión.", true);
         return;
     }
 
-    password.value = "";
-    mostrarMensajeCuenta("✅ Sesión iniciada correctamente.");
+    const correo = email.value.trim();
+
+    if (!correo || !password.value) {
+        mostrarMensajeCuenta("Escribe tu correo y contraseña.", true);
+        return;
+    }
+
+    mostrarMensajeCuenta("⏳ Iniciando sesión...");
+
+    try {
+        const resultado = await supabaseClient.auth.signInWithPassword({
+            email: correo,
+            password: password.value
+        });
+
+        if (resultado.error) {
+            console.error("Supabase signIn:", resultado.error);
+            const mensaje = resultado.error.message || "";
+            if (mensaje.toLowerCase().includes("email not confirmed")) {
+                mostrarMensajeCuenta("📩 Primero confirma tu correo electrónico desde el mensaje que te envió Supabase.", true);
+            } else if (mensaje.toLowerCase().includes("invalid login credentials")) {
+                mostrarMensajeCuenta("❌ Correo o contraseña incorrectos.", true);
+            } else {
+                mostrarMensajeCuenta("❌ Supabase: " + mensaje, true);
+            }
+            return;
+        }
+
+        password.value = "";
+        mostrarMensajeCuenta("✅ Sesión iniciada correctamente.");
+    } catch (error) {
+        console.error("Error de inicio de sesión:", error);
+        mostrarMensajeCuenta("❌ No se pudo conectar con Supabase. Revisa la consola del navegador.", true);
+    }
 }
 
 async function registrarCuenta() {
@@ -2126,32 +2148,52 @@ async function registrarCuenta() {
     const email = document.getElementById("registroEmail");
     const password = document.getElementById("registroPassword");
 
-    if (!email || !password) return;
-
-    mostrarMensajeCuenta("⏳ Creando cuenta...");
-
-    const resultado = await supabaseClient.auth.signUp({
-        email: email.value.trim(),
-        password: password.value,
-        options: {
-            data: {
-                nombre: obtenerPerfilLocal().nombre || "ABRAHAM G4"
-            }
-        }
-    });
-
-    if (resultado.error) {
-        console.error(resultado.error);
-        mostrarMensajeCuenta("No se pudo crear la cuenta. Revisa el correo y la contraseña.", true);
+    if (!email || !password) {
+        mostrarMensajeCuenta("No se encontraron los campos de registro.", true);
         return;
     }
 
-    password.value = "";
+    const correo = email.value.trim();
 
-    if (resultado.data.session) {
-        mostrarMensajeCuenta("✅ Cuenta creada y sesión iniciada.");
-    } else {
-        mostrarMensajeCuenta("📩 Cuenta creada. Revisa tu correo para confirmar la cuenta.");
+    if (!correo || !password.value) {
+        mostrarMensajeCuenta("Escribe un correo y una contraseña.", true);
+        return;
+    }
+
+    mostrarMensajeCuenta("⏳ Creando cuenta...");
+
+    try {
+        const resultado = await supabaseClient.auth.signUp({
+            email: correo,
+            password: password.value,
+            options: {
+                data: {
+                    nombre: obtenerPerfilLocal().nombre || "ABRAHAM G4"
+                }
+            }
+        });
+
+        if (resultado.error) {
+            console.error("Supabase signUp:", resultado.error);
+            const mensaje = resultado.error.message || "";
+            if (mensaje.toLowerCase().includes("user already registered")) {
+                mostrarMensajeCuenta("ℹ️ Ese correo ya tiene una cuenta. Usa Iniciar sesión.", true);
+            } else {
+                mostrarMensajeCuenta("❌ Supabase: " + mensaje, true);
+            }
+            return;
+        }
+
+        password.value = "";
+
+        if (resultado.data.session) {
+            mostrarMensajeCuenta("✅ Cuenta creada y sesión iniciada.");
+        } else {
+            mostrarMensajeCuenta("📩 Cuenta creada. Revisa tu correo para confirmar la cuenta.");
+        }
+    } catch (error) {
+        console.error("Error al crear cuenta:", error);
+        mostrarMensajeCuenta("❌ No se pudo conectar con Supabase. Revisa la consola del navegador.", true);
     }
 }
 
