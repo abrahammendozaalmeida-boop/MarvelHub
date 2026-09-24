@@ -268,14 +268,25 @@ function renderizarCatalogo(lista) {
         );
 
         tarjeta.innerHTML =
+            "<div class='card-media'>" +
             poster +
+            "<span class='card-badge'>" +
+            tipoTexto +
+            "</span>" +
+            "<span class='card-rating'>⭐ " +
+            puntuacion +
+            "</span>" +
+            "</div>" +
             "<div class='card-content'>" +
             "<h3>" +
             titulo +
             "</h3>" +
-            "<p class='tipo-contenido'>" +
-            tipoTexto +
+            "<p class='tipo-contenido'>📅 " +
+            fecha +
             "</p>" +
+            "<p>⭐ " +
+            puntuacion +
+            "/10</p>" +
             "<p>📅 " +
             fecha +
             "</p>" +
@@ -347,6 +358,7 @@ function renderizarFavoritos() {
         const descripcion = item.overview || "Sin descripción disponible.";
 
         tarjeta.innerHTML =
+            "<div class='card-media'>" +
             crearPoster(
                 item.poster_path
                     ? TMDB_IMAGE_URL + item.poster_path
@@ -354,13 +366,23 @@ function renderizarFavoritos() {
                 titulo,
                 ""
             ) +
+            "<span class='card-badge'>" +
+            tipoTexto +
+            "</span>" +
+            "<span class='card-rating'>⭐ " +
+            puntuacion +
+            "</span>" +
+            "</div>" +
             "<div class='card-content'>" +
             "<h3>" +
             titulo +
             "</h3>" +
-            "<p class='tipo-contenido'>" +
-            tipoTexto +
+            "<p class='tipo-contenido'>📅 " +
+            fecha +
             "</p>" +
+            "<p>⭐ " +
+            puntuacion +
+            "/10</p>" +
             "<p>📅 " +
             fecha +
             "</p>" +
