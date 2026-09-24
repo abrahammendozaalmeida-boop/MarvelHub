@@ -2022,7 +2022,8 @@ document.addEventListener("DOMContentLoaded", function() {    const buscadorCata
 
         const filtrada = base.filter(function(item) {
             const titulo = (item.title || item.name || "").toLowerCase();
-            return titulo.includes(texto);
+            const descripcion = (item.overview || "").toLowerCase();
+            return titulo.includes(texto) || descripcion.includes(texto);
         });
 
         renderizarCatalogo(filtrada);
@@ -2050,7 +2051,6 @@ document.addEventListener("DOMContentLoaded", function() {    const buscadorCata
     cargarNombre();
     configurarVideo();
     configurarWidgets();
-    activarBuscador();
     configurarModal();
     configurarTeclado();
 
