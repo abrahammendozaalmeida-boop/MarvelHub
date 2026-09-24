@@ -183,6 +183,10 @@ function mostrarSeccion(seccion) {
         mostrarFavoritos();
     }
 
+    if (seccion === "perfil") {
+        actualizarPerfilUI();
+    }
+
     if (seccion === "inicio") {
         renderizarFilaFavoritosInicio();
         renderizarDescubreInicio();
@@ -1568,6 +1572,207 @@ async function cargarProximosEstrenos() {
     }
 }
 
+const PERFIL_LOCAL_KEY = "perfilMarvel";
+
+function obtenerPerfilLocal() {
+    let perfil = null;
+
+    try {
+        perfil = JSON.parse(localStorage.getItem(PERFIL_LOCAL_KEY) || "null");
+    } catch (error) {
+        perfil = null;
+    }
+
+    if (!perfil || typeof perfil !== "object") {
+        perfil = {
+            id: window.crypto && typeof window.crypto.randomUUID === "function"
+                ? window.crypto.randomUUID()
+                : "perfil-" + Date.now() + "-" + Math.random().toString(36).slice(2, 10),
+            nombre: localStorage.getItem("nombre") || "",
+            avatar: "🦸",
+            creadoEn: new Date().toISOString(),
+            actualizadoEn: new Date().toISOString(),
+            version: 1
+        };
+
+        localStorage.setItem(PERFIL_LOCAL_KEY, JSON.stringify(perfil));
+    }
+
+    return perfil;
+}
+
+function guardarPerfilLocal(perfil) {
+    const base = obtenerPerfilLocal();
+
+    const datos = {
+        id: perfil.id || base.id,
+        nombre: String(perfil.nombre || "").trim().slice(0, 30),
+        avatar: perfil.avatar || base.avatar || "🦸",
+        creadoEn: base.creadoEn || new Date().toISOString(),
+        actualizadoEn: new Date().toISOString(),
+        version: 1
+    };
+
+    localStorage.setItem(PERFIL_LOCAL_KEY, JSON.stringify(datos));
+    localStorage.setItem("nombre", datos.nombre);
+    return datos;
+}
+
+function actualizarPerfilUI() {
+    const perfil = obtenerPerfilLocal();
+    const nombre = perfil.nombre || "ABRAHAM G4";
+    const avatar = perfil.avatar || "🦸";
+
+    const titulo = document.getElementById("perfilNombre");
+    const input = document.getElementById("perfilNombreInput");
+    const avatarElemento = document.getElementById("perfilAvatar");
+    const estado = document.getElementById("perfilEstado");
+    const id = document.getElementById("perfilId");
+    const resumen = document.getElementById("perfilDatosResumen");
+
+    if (titulo) titulo.textContent = nombre;
+    if (input) input.value = perfil.nombre;
+    if (avatarElemento) {
+        avatarElemento.textContent = avatar;
+        avatarElemento.setAttribute("aria-label", "Avatar de " + nombre);
+    }
+
+    if (estado) {
+        estado.textContent = perfil.nombre
+            ? "Perfil local activo en este dispositivo."
+            : "Usando el perfil base del Hub en este dispositivo.";
+    }
+
+    if (id) id.textContent = perfil.id;
+
+    if (resumen) {
+        resumen.textContent =
+            favoritosMarvel.length +
+            " favoritos • " +
+            obtenerHistorialMarvel().length +
+            " vistos recientemente";
+    }
+
+    document.querySelectorAll(".perfil-avatar-opcion").forEach(function(boton) {
+        boton.classList.toggle(
+            "activo-perfil-avatar",
+            boton.dataset.avatar === avatar
+        );
+    });
+}
+
+function guardarPerfilDesdeUI() {
+    const input = document.getElementById("perfilNombreInput");
+    const seleccionado = document.querySelector(".perfil-avatar-opcion.activo-perfil-avatar");
+    const perfil = obtenerPerfilLocal();
+
+    perfil.nombre = input ? input.value.trim() : perfil.nombre;
+    perfil.avatar = seleccionado ? seleccionado.dataset.avatar : perfil.avatar;
+
+    const guardado = guardarPerfilLocal(perfil);
+
+    actualizarPerfilUI();
+    actualizarSaludoInicio();
+    actualizarInicioPersonalizado();
+    actualizarResumenAjustes();
+
+    const estado = document.getElementById("perfilEstado");
+    if (estado) {
+        estado.textContent = "Perfil guardado correctamente en este dispositivo.";
+    }
+
+    return guardado;
+}
+
+function restablecerPerfilLocal() {
+    const confirmar = window.confirm(
+        "¿Quieres restablecer tu perfil local? Se borrará el nombre y volverá el avatar predeterminado."
+    );
+
+    if (!confirmar) return;
+
+    const perfil = obtenerPerfilLocal();
+    perfil.nombre = "";
+    perfil.avatar = "🦸";
+
+    guardarPerfilLocal(perfil);
+    actualizarPerfilUI();
+    actualizarSaludoInicio();
+    actualizarInicioPersonalizado();
+    actualizarResumenAjustes();
+}
+
+function configurarPerfil() {
+    obtenerPerfilLocal();
+    actualizarPerfilUI();
+
+    const guardar = document.getElementById("guardarPerfil");
+    const restablecer = document.getElementById("restablecerPerfil");
+    const input = document.getElementById("perfilNombreInput");
+    const exportar = document.getElementById("exportarDatosPerfil");
+
+    document.querySelectorAll(".perfil-avatar-opcion").forEach(function(boton) {
+        boton.addEventListener("click", function() {
+            document.querySelectorAll(".perfil-avatar-opcion").forEach(function(opcion) {
+                opcion.classList.remove("activo-perfil-avatar");
+            });
+
+            this.classList.add("activo-perfil-avatar");
+            const avatar = document.getElementById("perfilAvatar");
+            if (avatar) avatar.textContent = this.dataset.avatar;
+        });
+    });
+
+    if (guardar) {
+        guardar.addEventListener("click", function() {
+            guardarPerfilDesdeUI();
+        });
+    }
+
+    if (input) {
+        input.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                guardarPerfilDesdeUI();
+            }
+        });
+    }
+
+    if (restablecer) {
+        restablecer.addEventListener("click", restablecerPerfilLocal);
+    }
+
+    if (exportar) {
+        exportar.addEventListener("click", function() {
+            const perfil = obtenerPerfilLocal();
+            const datos = {
+                exportadoEn: new Date().toISOString(),
+                perfil: perfil,
+                favoritos: favoritosMarvel,
+                historial: obtenerHistorialMarvel(),
+                tema: localStorage.getItem("tema") || "oscuro",
+                widgets: JSON.parse(localStorage.getItem("widgetsMarvel") || "{}")
+            };
+
+            const blob = new Blob(
+                [JSON.stringify(datos, null, 2)],
+                { type: "application/json" }
+            );
+            const url = URL.createObjectURL(blob);
+            const enlace = document.createElement("a");
+
+            enlace.href = url;
+            enlace.download = "abraham-g4-marvel-hub-datos.json";
+            document.body.appendChild(enlace);
+            enlace.click();
+            enlace.remove();
+
+            setTimeout(function() {
+                URL.revokeObjectURL(url);
+            }, 1000);
+        });
+    }
+}
+
 function guardarNombre() {
     const input = document.getElementById("nombre");
 
@@ -1575,7 +1780,9 @@ function guardarNombre() {
 
     const nombre = input.value.trim();
 
-    localStorage.setItem("nombre", nombre);
+    const perfil = obtenerPerfilLocal();
+    perfil.nombre = nombre;
+    guardarPerfilLocal(perfil);
 
     actualizarSaludoInicio();
     actualizarInicioPersonalizado();
@@ -1644,6 +1851,7 @@ function restablecerPreferencias() {
     if (!confirmar) return;
 
     localStorage.removeItem("nombre");
+    localStorage.removeItem(PERFIL_LOCAL_KEY);
     localStorage.removeItem("tema");
     localStorage.removeItem("widgetsMarvel");
     localStorage.removeItem("historialMarvel");
@@ -1698,13 +1906,16 @@ function actualizarSaludoInicio() {
     }
 }
 
-function cargarNombre() {    const nombre = localStorage.getItem("nombre");
+function cargarNombre() {
+    const perfil = obtenerPerfilLocal();
+    const nombre = perfil.nombre || "";
     const input = document.getElementById("nombre");
 
-    if (input && nombre) {
+    if (input) {
         input.value = nombre;
     }
 
+    actualizarPerfilUI();
     actualizarSaludoInicio();
 }
 
@@ -2504,8 +2715,14 @@ function inicializarMarvelHub() {
     configurarTeclado();
     configurarVideo();
     configurarWidgets();
+    configurarPerfil();
     activarBuscador();
     configurarBusquedaGlobal();
+
+    const botonRestablecer = document.getElementById("restablecerPreferencias");
+    if (botonRestablecer) {
+        botonRestablecer.addEventListener("click", restablecerPreferencias);
+    }
 
     const botonInstalar = document.getElementById("botonInstalar");
     const botonInstalarAjustes = document.getElementById("botonInstalarAjustes");
