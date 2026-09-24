@@ -2669,6 +2669,7 @@ function restablecerPreferencias() {
     const nombre = document.getElementById("nombre");
     if (nombre) nombre.value = "";
 
+    actualizarIconosLucide();
     cargarTema();
     cargarNombre();
 
@@ -3515,6 +3516,16 @@ function configurarWidgets() {
         const panel = document.getElementById("widgetMusicaPanel");
         if (panel) panel.hidden = !musica.checked;
     }
+}
+
+function actualizarIconosLucide() {
+    if (typeof window.lucide === "undefined") return;
+
+    window.lucide.createIcons({
+        attrs: {
+            "stroke-width": 2
+        }
+    });
 }
 
 function inicializarMarvelHub() {
