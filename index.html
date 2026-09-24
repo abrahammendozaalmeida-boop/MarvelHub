@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ABRAHAM G4 — MARVEL HUB</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
     <meta name="theme-color" content="#0b0b0f">
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
@@ -25,6 +27,7 @@
         <button class="nav-boton" data-seccion="marvel" onclick="mostrarSeccion('marvel')">Marvel</button>
         <button class="nav-boton" data-seccion="favoritos" onclick="mostrarSeccion('favoritos')">❤️ Favoritos</button>
         <button class="nav-boton" data-seccion="perfil" onclick="mostrarSeccion('perfil')">👤 Perfil</button>
+        <button class="nav-boton" data-seccion="cuenta" onclick="mostrarSeccion('cuenta')">🔐 Cuenta</button>
         <button class="nav-boton" data-seccion="editor" onclick="mostrarSeccion('editor')">Editor</button>
         <button class="nav-boton" data-seccion="widgets" onclick="mostrarSeccion('widgets')">Widgets</button>
         <button class="nav-boton" data-seccion="ajustes" onclick="mostrarSeccion('ajustes')">Ajustes</button>
@@ -541,6 +544,52 @@
                     <button id="exportarDatosPerfil" type="button">⬇️ Exportar mis datos</button>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <section id="cuenta" class="seccion">
+        <div class="titulo-seccion">
+            <span class="mini-etiqueta">CUENTA</span>
+            <h2>🔐 Iniciar sesión</h2>
+            <p>Cuenta real para preparar la sincronización de tu perfil, favoritos e historial.</p>
+        </div>
+
+        <div class="cuenta-panel">
+            <div id="cuentaEstado" class="cuenta-estado">Comprobando conexión...</div>
+
+            <div id="cuentaFormularios">
+                <form id="formRegistro" class="cuenta-formulario">
+                    <h3>Crear cuenta</h3>
+                    <input id="registroEmail" type="email" placeholder="Correo electrónico" autocomplete="email" required>
+                    <input id="registroPassword" type="password" placeholder="Contraseña" autocomplete="new-password" minlength="6" required>
+                    <button type="submit" class="boton-principal">🚀 Crear cuenta</button>
+                </form>
+
+                <form id="formLogin" class="cuenta-formulario">
+                    <h3>Iniciar sesión</h3>
+                    <input id="loginEmail" type="email" placeholder="Correo electrónico" autocomplete="email" required>
+                    <input id="loginPassword" type="password" placeholder="Contraseña" autocomplete="current-password" required>
+                    <button type="submit" class="boton-principal">🔑 Entrar</button>
+                    <button id="botonRecuperar" type="button" class="boton-secundario">📩 Recuperar contraseña</button>
+                </form>
+            </div>
+
+            <div id="cuentaUsuario" class="cuenta-usuario" hidden>
+                <div class="cuenta-avatar" id="cuentaAvatar">🦸</div>
+                <div>
+                    <span class="mini-etiqueta">SESIÓN ACTIVA</span>
+                    <h3 id="cuentaEmail">Usuario</h3>
+                    <p id="cuentaUid">UID</p>
+                </div>
+                <button id="botonCerrarSesion" type="button" class="boton-secundario">🚪 Cerrar sesión</button>
+            </div>
+
+            <p id="cuentaMensaje" class="cuenta-mensaje" aria-live="polite"></p>
+        </div>
+
+        <div class="cuenta-nota">
+            <strong>🔒 Seguridad</strong>
+            <p>La contraseña se procesa mediante el sistema de autenticación. Marvel Hub no la guarda en localStorage ni la muestra.</p>
         </div>
     </section>
 
