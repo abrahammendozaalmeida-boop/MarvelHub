@@ -1,0 +1,78 @@
+const VIDEO_AI_RENDER_SERVER = "http://127.0.0.1:8766";
+
+function setRenderEstado(texto, clase = "") {
+    const el = document.getElementById("videoAIRenderEstado");
+    if (!el) return;
+    el.textContent = texto;
+    el.className = "video-ai-render-chip" + (clase ? " " + clase : "");
+}
+
+async function renderizarVideoAI() {
+    const proyecto = typeof obtenerProyectoVideoAI === "function" ? obtenerProyectoVideoAI() : null;
+    const boton = document.getElementById("videoAIRenderizar");
+    const ayuda = document.getElementById("videoAIRenderAyuda");
+    const descarga = document.getElementById("videoAIDescargarMP4");
+
+    if (!proyecto) {
+        setRenderEstado("Crea un proyecto primero", "error");
+        return;
+    }
+
+    if (boton) boton.disabled = true;
+    setRenderEstado("Renderizando...", "ok");
+    if (ayuda) ayuda.textContent = "Preparando escenas y enviándolas al renderizador local...";
+
+    try {
+        const health = await fetch(VIDEO_AI_RENDER_SERVER + "/health");
+        if (!health.ok) throw new Error("El renderizador local no responde.");
+
+        const response = await fetch(VIDEO_AI_RENDER_SERVER + "/render", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(proyecto)
+        });
+
+        const data = await response.json();
+        if (!response.ok || !data.ok) throw new Error(data.error || "No se pudo generar el MP4.");
+
+        const blob = base64ToBlob(data.result.data, data.result.mime || "video/mp4");
+        const url = URL.createObjectURL(blob);
+
+        if (descarga) {
+            descarga.href = url;
+            descarga.download = data.result.filename || "ABRAHAM_G4_MarvelHub.mp4";
+            descarga.hidden = false;
+        }
+
+        proyecto.render = {
+            estado: "listo",
+            formato: "mp4",
+            resolucion: "1080x1920",
+            generado_en: new Date().toISOString()
+        };
+        if (typeof guardarProyectoVideoAI === "function") guardarProyectoVideoAI(proyecto);
+
+        setRenderEstado("MP4 listo", "ok");
+        if (ayuda) ayuda.textContent = "¡Listo! El MP4 fue generado en tu PC. Usa el botón de descarga.";
+    } catch (error) {
+        console.error(error);
+        setRenderEstado("Error", "error");
+        if (ayuda) ayuda.textContent = error.message + " Revisa que FFmpeg esté instalado y que tools/render-server.py esté ejecutándose.";
+    } finally {
+        if (boton) {
+            boton.disabled = false;
+            boton.textContent = "🎬 Generar MP4";
+        }
+    }
+}
+
+function base64ToBlob(base64, mime) {
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new Blob([bytes], { type: mime });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("videoAIRenderizar")?.addEventListener("click", renderizarVideoAI);
+});
