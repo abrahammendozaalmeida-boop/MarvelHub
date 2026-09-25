@@ -67,7 +67,7 @@ function frecuenciaAudio(tipo, paso) {
 }
 
 function reproducirAudioPreview() {
-    const proyecto = typeof obtenerProyectoVideoAI === "function" ? obtenerProyectoGuardado() : null;
+    const proyecto = (() => { try { return JSON.parse(localStorage.getItem("abrahamG4VideoProject") || "null"); } catch (_) { return null; } })();
     if (!proyecto) {
         setAudioEstado("Crea un proyecto primero", "error");
         return;
