@@ -4555,3 +4555,12 @@ body.tema-claro .video-ai-recursos{background:#f7f7f7;border-color:#ddd}
 body.tema-claro .video-ai-recurso{background:#fff;border-color:#ddd}
 @media(max-width:700px){.video-ai-recursos-cabecera{flex-direction:column}.video-ai-recursos-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:430px){.video-ai-recursos-grid{grid-template-columns:1fr}}
+
+
+/* VIDEO AI — FASE 4: SUBTITULOS */
+.video-ai-subtitulos{margin-top:18px;padding:20px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:rgba(255,255,255,.025)}
+.video-ai-subtitulos-cabecera{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.video-ai-subtitulos-cabecera strong{display:block;margin:5px 0;font-size:1.05rem}.video-ai-subtitulos-cabecera small{display:block;opacity:.7;line-height:1.45}
+.video-ai-subtitulos-opciones{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.video-ai-subtitulos-opciones label{display:grid;gap:6px}.video-ai-subtitulos-opciones label span{font-size:.78rem;opacity:.7}.video-ai-subtitulos-opciones select{width:100%;padding:11px;border-radius:11px;border:1px solid rgba(255,255,255,.1);background:inherit;color:inherit}
+.video-ai-subtitulos-acciones{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.video-ai-subtitulos-preview{display:grid;gap:8px;margin-top:15px;max-height:340px;overflow:auto;padding-right:3px}.video-ai-subtitulo-item{display:grid;grid-template-columns:auto auto 1fr;gap:10px;align-items:center;padding:11px 12px;border-radius:12px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.06)}.video-ai-subtitulo-tiempo{font:600 .72rem ui-monospace,monospace;opacity:.7}.video-ai-subtitulo-item strong{font-size:.78rem}.video-ai-subtitulo-item p{margin:0;grid-column:1/-1;line-height:1.4}.video-ai-subtitulos-vacio{opacity:.65;padding:15px;text-align:center}
+@media(max-width:700px){.video-ai-subtitulos-opciones{grid-template-columns:1fr}.video-ai-subtitulos-cabecera{flex-direction:column}.video-ai-subtitulo-item{grid-template-columns:1fr}.video-ai-subtitulo-item p{grid-column:auto}}
