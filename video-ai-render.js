@@ -8,7 +8,7 @@ function setRenderEstado(texto, clase = "") {
 }
 
 async function renderizarVideoAI() {
-    const proyecto = typeof obtenerProyectoVideoAI === "function" ? obtenerProyectoVideoAI() : null;
+    const proyecto = (() => { try { return JSON.parse(localStorage.getItem("abrahamG4VideoProject") || "null"); } catch (_) { return null; } })();
     const boton = document.getElementById("videoAIRenderizar");
     const ayuda = document.getElementById("videoAIRenderAyuda");
     const descarga = document.getElementById("videoAIDescargarMP4");
@@ -50,7 +50,7 @@ async function renderizarVideoAI() {
             resolucion: "1080x1920",
             generado_en: new Date().toISOString()
         };
-        if (typeof guardarProyectoVideoAI === "function") guardarProyectoVideoAI(proyecto);
+        localStorage.setItem("abrahamG4VideoProject", JSON.stringify(proyecto));
 
         setRenderEstado("MP4 listo", "ok");
         if (ayuda) ayuda.textContent = "¡Listo! El MP4 fue generado en tu PC. Usa el botón de descarga.";
