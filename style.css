@@ -4432,3 +4432,83 @@ body.tema-claro .video-ai-escena p {
         height: 38px;
     }
 }
+
+
+/* VIDEO AI — FASE 2: VOZ */
+.video-ai-voz{
+    margin-top:18px;
+    padding:18px;
+    border:1px solid #292933;
+    border-radius:15px;
+    background:#101017;
+}
+.video-ai-voz-cabecera{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    align-items:flex-start;
+}
+.video-ai-voz-cabecera strong,
+.video-ai-voz-cabecera small{display:block}
+.video-ai-voz-cabecera strong{margin-top:4px;font-size:15px}
+.video-ai-voz-cabecera small{margin-top:5px;color:#858590;line-height:1.4}
+.video-ai-voz-chip{
+    flex:0 0 auto;
+    padding:6px 9px;
+    border:1px solid #353540;
+    border-radius:999px;
+    color:#9999a3;
+    font-size:10px;
+    font-weight:800;
+}
+.video-ai-voz-chip.activo{color:#ffd9da;border-color:rgba(230,36,41,.45);background:rgba(230,36,41,.1)}
+.video-ai-voz-chip.ok{color:#b9f2c4;border-color:rgba(72,187,102,.35);background:rgba(72,187,102,.08)}
+.video-ai-voz-chip.error{color:#ffb4b6;border-color:rgba(230,36,41,.4);background:rgba(230,36,41,.08)}
+.video-ai-voz-opciones{
+    display:grid;
+    grid-template-columns:1.2fr 1.4fr .8fr;
+    gap:10px;
+    margin-top:14px;
+}
+.video-ai-voz-opciones label{display:flex;flex-direction:column;gap:6px;color:#bdbdc6;font-size:11px;font-weight:800}
+.video-ai-voz-opciones select{
+    min-height:40px;
+    padding:8px 10px;
+    border:1px solid #353540;
+    border-radius:10px;
+    background:#0e0e13;
+    color:#fff;
+    outline:0;
+}
+.video-ai-voz-acciones{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
+.video-ai-generar-secundario,
+.video-ai-boton-secundario{
+    min-height:40px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    padding:0 12px;
+    border:1px solid #3a3a45;
+    border-radius:10px;
+    background:#181820;
+    color:#fff;
+    text-decoration:none;
+    font-size:12px;
+    font-weight:800;
+}
+.video-ai-generar-secundario{background:rgba(230,36,41,.13);border-color:rgba(230,36,41,.35)}
+.video-ai-generar-secundario:disabled{opacity:.6;cursor:wait}
+.video-ai-generar-secundario svg,
+.video-ai-boton-secundario svg{width:15px;height:15px}
+.video-ai-audio{width:100%;margin-top:12px}
+.video-ai-voz-ayuda{margin:10px 0 0;color:#777783;font-size:10px;line-height:1.5}
+body.tema-claro .video-ai-voz{background:#f7f7f7;border-color:#ddd}
+body.tema-claro .video-ai-voz-opciones select,
+body.tema-claro .video-ai-boton-secundario,
+body.tema-claro .video-ai-generar-secundario{background:#fff;color:#222;border-color:#ddd}
+@media(max-width:700px){
+    .video-ai-voz-cabecera{flex-direction:column}
+    .video-ai-voz-opciones{grid-template-columns:1fr}
+    .video-ai-voz-acciones>*{flex:1}
+}
