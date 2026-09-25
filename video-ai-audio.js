@@ -15,8 +15,10 @@ function setAudioEstado(texto, clase = "") {
     el.className = "video-ai-audio-chip" + (clase ? " " + clase : "");
 }
 
-function guardarProyectoVideoAI(proyecto) { localStorage.setItem("abrahamG4VideoProject", JSON.stringify(proyecto)); return proyecto; }\n\nfunction guardarAudioProyecto() {
-    const proyecto = typeof obtenerProyectoVideoAI === "function" ? obtenerProyectoGuardado() : null;
+function guardarProyectoVideoAI(proyecto) { localStorage.setItem("abrahamG4VideoProject", JSON.stringify(proyecto)); return proyecto; }
+
+function guardarAudioProyecto() {
+    const proyecto = typeof obtenerProyectoGuardado === "function" ? obtenerProyectoGuardado() : null;
     if (!proyecto) return null;
     const musica = document.getElementById("videoAIMusica");
     const volumen = document.getElementById("videoAIMusicaVolumen");
@@ -27,7 +29,7 @@ function guardarProyectoVideoAI(proyecto) { localStorage.setItem("abrahamG4Video
         sfx: (sfx?.value || "si") === "si",
         estado: "configurado"
     };
-    if (typeof guardarProyectoVideoAI === "function") guardarProyectoVideoAI(proyecto);
+    guardarProyectoVideoAI(proyecto);
     setAudioEstado("Configurado", "ok");
     return proyecto;
 }
