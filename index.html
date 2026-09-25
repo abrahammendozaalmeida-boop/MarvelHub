@@ -389,6 +389,28 @@
                     <div id="videoAIRecursosGrid" class="video-ai-recursos-grid"></div>
                 </div>
 
+
+                <div class="video-ai-subtitulos">
+                    <div class="video-ai-subtitulos-cabecera">
+                        <div>
+                            <span class="mini-etiqueta">💬 SUBTÍTULOS • FASE 4</span>
+                            <strong>Subtítulos automáticos sincronizados</strong>
+                            <small>Genera tiempos por escena y descarga el archivo SRT para usarlo en cualquier editor.</small>
+                        </div>
+                        <span id="videoAISubtitulosEstado" class="video-ai-voz-chip">No generados</span>
+                    </div>
+                    <div class="video-ai-subtitulos-opciones">
+                        <label><span>Estilo</span><select id="videoAISubtitulosEstilo"><option value="simple" selected>Simple</option><option value="bold">Negrita</option><option value="impacto">Impacto</option></select></label>
+                        <label><span>Posición</span><select id="videoAISubtitulosPosicion"><option value="abajo" selected>Abajo</option><option value="centro">Centro</option><option value="arriba">Arriba</option></select></label>
+                        <label><span>Tamaño</span><select id="videoAISubtitulosTamano"><option value="mediano" selected>Mediano</option><option value="grande">Grande</option><option value="extra">Extra grande</option></select></label>
+                    </div>
+                    <div class="video-ai-subtitulos-acciones">
+                        <button id="videoAIGenerarSubtitulos" type="button" class="video-ai-generar-secundario"><i data-lucide="captions"></i><span>Generar subtítulos</span></button>
+                        <button id="videoAIDescargarSRT" type="button" class="video-ai-boton-secundario" hidden><i data-lucide="download"></i><span>Descargar .SRT</span></button>
+                    </div>
+                    <p id="videoAISubtitulosAyuda" class="video-ai-voz-ayuda">Los subtítulos se calculan con la duración de cada escena. En la siguiente fase se integrarán directamente al MP4.</p>
+                    <div id="videoAISubtitulosPreview" class="video-ai-subtitulos-preview"></div>
+                </div>
                 <button id="videoAIGenerar" type="button" class="video-ai-generar">
                     <i data-lucide="rocket"></i><span>Crear proyecto de video</span>
                 </button>
