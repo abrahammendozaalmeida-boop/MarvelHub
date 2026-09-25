@@ -557,6 +557,10 @@
             const subtitulosPreview = document.getElementById("videoAISubtitulosPreview");
             if (subtitulosPreview) subtitulosPreview.innerHTML = "";
             const descargarSRTBtn = document.getElementById("videoAIDescargarSRT");
+        const tmdbInput = document.getElementById("videoAITMDBApiKey");
+        const tmdbGuardarBtn = document.getElementById("videoAITMDBGuardar");
+        const tmdbBorrarBtn = document.getElementById("videoAITMDBBorrar");
+        const tmdbEstado = document.getElementById("videoAITMDBEstado");
             if (descargarSRTBtn) descargarSRTBtn.hidden = true;
             setSubtitulosEstado("No generados", "");
             const audio = document.getElementById("videoAIAudio");
@@ -588,6 +592,35 @@
         const descargarSRTBtn = document.getElementById("videoAIDescargarSRT");
 
         if (!boton || !tema) return;
+
+        function actualizarTMDBConfigUI() {
+            const clave = localStorage.getItem("marvelHubTMDBApiKey") || "";
+            if (tmdbInput) tmdbInput.value = clave;
+            if (tmdbEstado) {
+                tmdbEstado.textContent = clave
+                    ? "TMDB configurado en este navegador. Ya puedes buscar imágenes."
+                    : "TMDB no configurado en este navegador.";
+            }
+        }
+
+        if (tmdbGuardarBtn) tmdbGuardarBtn.addEventListener("click", function() {
+            const clave = limpiarTexto(tmdbInput ? tmdbInput.value : "");
+            if (!clave) {
+                if (tmdbEstado) tmdbEstado.textContent = "Pega una API Key de TMDB primero.";
+                return;
+            }
+            localStorage.setItem("marvelHubTMDBApiKey", clave);
+            actualizarTMDBConfigUI();
+            setRecursosEstado("Listo para buscar", "ok");
+        });
+
+        if (tmdbBorrarBtn) tmdbBorrarBtn.addEventListener("click", function() {
+            localStorage.removeItem("marvelHubTMDBApiKey");
+            actualizarTMDBConfigUI();
+            setRecursosEstado("No buscados", "");
+        });
+
+        actualizarTMDBConfigUI();
 
         boton.addEventListener("click", generarProyecto);
         tema.addEventListener("keydown", function(event) {
