@@ -297,8 +297,12 @@
     }
 
 
+    function obtenerClaveTMDBVideoAI() {
+        return localStorage.getItem("marvelHubTMDBApiKey") || ((typeof TMDB_API_KEY !== "undefined") ? TMDB_API_KEY : "");
+    }
+
     function obtenerTMDBVideoAI(endpoint) {
-        const apiKey = (typeof TMDB_API_KEY !== "undefined") ? TMDB_API_KEY : "";
+        const apiKey = obtenerClaveTMDBVideoAI();
         const base = (typeof TMDB_BASE_URL !== "undefined") ? TMDB_BASE_URL : "https://api.themoviedb.org/3";
         if (!apiKey || apiKey === "TU_CLAVE_API") {
             throw new Error("Falta la clave de TMDB.");
