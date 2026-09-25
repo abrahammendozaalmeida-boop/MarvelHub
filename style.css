@@ -4512,3 +4512,46 @@ body.tema-claro .video-ai-generar-secundario{background:#fff;color:#222;border-c
     .video-ai-voz-opciones{grid-template-columns:1fr}
     .video-ai-voz-acciones>*{flex:1}
 }
+
+
+/* VIDEO AI — FASE 3: RECURSOS */
+.video-ai-recursos{
+    margin-top:18px;
+    padding:18px;
+    border:1px solid #292933;
+    border-radius:15px;
+    background:#101017;
+}
+.video-ai-recursos-cabecera{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}
+.video-ai-recursos-cabecera strong,.video-ai-recursos-cabecera small{display:block}
+.video-ai-recursos-cabecera strong{margin-top:4px;font-size:15px}
+.video-ai-recursos-cabecera small{margin-top:5px;color:#858590;line-height:1.4}
+.video-ai-recursos-acciones{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.video-ai-recursos-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:10px;
+    margin-top:12px;
+}
+.video-ai-recurso{
+    overflow:hidden;
+    border:1px solid #292933;
+    border-radius:12px;
+    background:#0d0d13;
+}
+.video-ai-recurso-media{position:relative;aspect-ratio:16/10;background:#17171f;overflow:hidden}
+.video-ai-recurso-media img{width:100%;height:100%;display:block;object-fit:cover}
+.video-ai-recurso-media span{
+    position:absolute;left:7px;bottom:7px;padding:4px 6px;border-radius:6px;
+    background:rgba(0,0,0,.72);font-size:8px;font-weight:900;letter-spacing:.08em
+}
+.video-ai-recurso-info{padding:9px}
+.video-ai-recurso-info strong,.video-ai-recurso-info small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.video-ai-recurso-info strong{font-size:10px}
+.video-ai-recurso-info small{margin-top:3px;color:#777783;font-size:9px}
+.video-ai-recurso-vacio{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:8px;min-height:100px;color:#858590;border:1px dashed #353540;border-radius:12px}
+.video-ai-recurso-vacio svg{width:18px;height:18px}
+body.tema-claro .video-ai-recursos{background:#f7f7f7;border-color:#ddd}
+body.tema-claro .video-ai-recurso{background:#fff;border-color:#ddd}
+@media(max-width:700px){.video-ai-recursos-cabecera{flex-direction:column}.video-ai-recursos-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:430px){.video-ai-recursos-grid{grid-template-columns:1fr}}
