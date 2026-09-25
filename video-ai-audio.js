@@ -15,8 +15,8 @@ function setAudioEstado(texto, clase = "") {
     el.className = "video-ai-audio-chip" + (clase ? " " + clase : "");
 }
 
-function guardarAudioProyecto() {
-    const proyecto = typeof obtenerProyectoVideoAI === "function" ? obtenerProyectoVideoAI() : null;
+function guardarProyectoVideoAI(proyecto) { localStorage.setItem("abrahamG4VideoProject", JSON.stringify(proyecto)); return proyecto; }\n\nfunction guardarAudioProyecto() {
+    const proyecto = typeof obtenerProyectoVideoAI === "function" ? obtenerProyectoGuardado() : null;
     if (!proyecto) return null;
     const musica = document.getElementById("videoAIMusica");
     const volumen = document.getElementById("videoAIMusicaVolumen");
@@ -65,7 +65,7 @@ function frecuenciaAudio(tipo, paso) {
 }
 
 function reproducirAudioPreview() {
-    const proyecto = typeof obtenerProyectoVideoAI === "function" ? obtenerProyectoVideoAI() : null;
+    const proyecto = typeof obtenerProyectoVideoAI === "function" ? obtenerProyectoGuardado() : null;
     if (!proyecto) {
         setAudioEstado("Crea un proyecto primero", "error");
         return;
@@ -150,7 +150,7 @@ function inicializarAudioVideoAI() {
     const sfx = document.getElementById("videoAISFX");
     if (!musica || !volumen || !sfx) return;
 
-    const proyecto = typeof obtenerProyectoVideoAI === "function" ? obtenerProyectoVideoAI() : null;
+    const proyecto = typeof obtenerProyectoVideoAI === "function" ? obtenerProyectoGuardado() : null;
     if (proyecto) cargarAudioUI(proyecto);
 
     volumen.addEventListener("input", () => {
