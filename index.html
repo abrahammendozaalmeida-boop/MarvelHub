@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="supabase-config.js"></script>
+    <script src="video-ai.js"></script>
     <meta name="theme-color" content="#0b0b0f">
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
@@ -30,6 +31,7 @@
         <button class="nav-boton" data-seccion="perfil" onclick="mostrarSeccion('perfil')"><i data-lucide="user-round"></i><span>Perfil</span></button>
         <button class="nav-boton" data-seccion="cuenta" onclick="mostrarSeccion('cuenta')"><i data-lucide="lock-keyhole"></i><span>Cuenta</span></button>
         <button class="nav-boton" data-seccion="editor" onclick="mostrarSeccion('editor')"><i data-lucide="scissors"></i><span>Editor</span></button>
+        <button class="nav-boton" data-seccion="video-ai" onclick="mostrarSeccion('video-ai')"><i data-lucide="wand-sparkles"></i><span>Video AI</span></button>
         <button class="nav-boton" data-seccion="widgets" onclick="mostrarSeccion('widgets')"><i data-lucide="layout-grid"></i><span>Widgets</span></button>
         <button class="nav-boton" data-seccion="ajustes" onclick="mostrarSeccion('ajustes')"><i data-lucide="settings"></i><span>Ajustes</span></button>
         <button id="botonInstalar" class="boton-instalar" hidden><i data-lucide="download"></i><span>Instalar</span></button>
@@ -321,6 +323,90 @@
 
         <div id="catalogoFavoritos" class="catalogo">
             <p>No tienes favoritos todavía.</p>
+        </div>
+    </section>
+
+    <section id="video-ai" class="seccion">
+        <div class="titulo-seccion video-ai-titulo">
+            <span class="mini-etiqueta">ABRAHAM G4 • VIDEO AI</span>
+            <h2><i data-lucide="wand-sparkles"></i> Generador automático de videos</h2>
+            <p>Escribe un tema y prepara un proyecto vertical listo para voz, recursos, subtítulos y renderizado.</p>
+        </div>
+
+        <div class="video-ai-hero">
+            <div class="video-ai-formulario">
+                <div class="video-ai-badge"><i data-lucide="sparkles"></i> MOTOR GRATUITO • FASE 1</div>
+                <h3>Convierte una idea en un proyecto de video</h3>
+                <p>Primero construiremos el proyecto. Después conectaremos voz, imágenes, música y renderizado.</p>
+
+                <label class="video-ai-label" for="videoAITema">¿Sobre qué quieres hacer el video?</label>
+                <textarea id="videoAITema" class="video-ai-textarea" maxlength="240" placeholder="Ej. 5 datos curiosos de Spider-Man"></textarea>
+
+                <div class="video-ai-opciones">
+                    <label>
+                        <span>Duración</span>
+                        <select id="videoAIDuracion">
+                            <option value="30">30 segundos</option>
+                            <option value="45" selected>45 segundos</option>
+                            <option value="60">60 segundos</option>
+                            <option value="90">90 segundos</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Estilo</span>
+                        <select id="videoAIEstilo">
+                            <option value="curiosidades" selected>Curiosidades</option>
+                            <option value="top">Top / Ranking</option>
+                            <option value="historia">Historia de personaje</option>
+                            <option value="teoria">Teoría</option>
+                            <option value="noticias">Noticias</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Formato</span>
+                        <select id="videoAIFormato">
+                            <option value="9:16" selected>9:16 • TikTok / Shorts</option>
+                            <option value="1:1">1:1 • Cuadrado</option>
+                            <option value="16:9">16:9 • YouTube</option>
+                        </select>
+                    </label>
+                </div>
+
+                <button id="videoAIGenerar" type="button" class="video-ai-generar">
+                    <i data-lucide="rocket"></i><span>Crear proyecto de video</span>
+                </button>
+                <p id="videoAIEstado" class="video-ai-estado" aria-live="polite">Listo para comenzar.</p>
+            </div>
+
+            <div class="video-ai-flujo">
+                <div class="video-ai-flujo-titulo">
+                    <span class="mini-etiqueta">FLUJO</span>
+                    <strong>Lo que vamos a automatizar</strong>
+                </div>
+                <div class="video-ai-pasos">
+                    <div><span>1</span><i data-lucide="file-text"></i><b>Guion</b><small>estructura automática</small></div>
+                    <div><span>2</span><i data-lucide="mic-2"></i><b>Voz</b><small>voz IA / local</small></div>
+                    <div><span>3</span><i data-lucide="images"></i><b>Recursos</b><small>imágenes y clips</small></div>
+                    <div><span>4</span><i data-lucide="captions"></i><b>Subtítulos</b><small>sincronizados</small></div>
+                    <div><span>5</span><i data-lucide="music-2"></i><b>Audio</b><small>música y SFX</small></div>
+                    <div><span>6</span><i data-lucide="clapperboard"></i><b>MP4</b><small>render final</small></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="videoAIResultado" class="video-ai-resultado" hidden>
+            <div class="video-ai-resultado-cabecera">
+                <div>
+                    <span class="mini-etiqueta">PROYECTO GENERADO</span>
+                    <h3 id="videoAITituloResultado">Tu video</h3>
+                    <p id="videoAIResumenResultado"></p>
+                </div>
+                <div class="video-ai-acciones">
+                    <button id="videoAIDescargarGuion" type="button"><i data-lucide="download"></i><span>Guardar proyecto</span></button>
+                    <button id="videoAILimpiar" type="button"><i data-lucide="rotate-ccw"></i><span>Nuevo</span></button>
+                </div>
+            </div>
+            <div id="videoAIEscenas" class="video-ai-escenas"></div>
         </div>
     </section>
 
