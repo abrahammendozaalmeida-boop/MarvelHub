@@ -487,7 +487,8 @@
         enlace.download = "abraham-g4-subtitulos-" + Date.now() + ".srt";
         document.body.appendChild(enlace); enlace.click(); enlace.remove(); URL.revokeObjectURL(url);
     }
-\n    function generarProyecto() {
+
+    function generarProyecto() {
         const temaInput = document.getElementById("videoAITema");
         const duracionInput = document.getElementById("videoAIDuracion");
         const estiloInput = document.getElementById("videoAIEstilo");
