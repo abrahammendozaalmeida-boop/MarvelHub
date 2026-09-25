@@ -476,6 +476,20 @@
             </div>
         </div>
 
+        <div class="video-ai-audio-panel">
+            <div class="video-ai-audio-cabecera">
+                <div><span class="mini-etiqueta">🎵 AUDIO • FASE 5</span><strong>Música y efectos de sonido</strong><small>Configura una pista de fondo y efectos generados localmente para el futuro MP4.</small></div>
+                <span id="videoAIAudioEstado" class="video-ai-audio-chip">Pendiente</span>
+            </div>
+            <div class="video-ai-audio-opciones">
+                <label><span>Música</span><select id="videoAIMusica"><option value="ninguna">Sin música</option><option value="ambiental">Ambiental</option><option value="energetica" selected>Energética</option><option value="epica">Épica</option><option value="suspenso">Suspenso</option></select></label>
+                <label><span>Volumen</span><input id="videoAIMusicaVolumen" type="range" min="0" max="100" value="25"><output id="videoAIMusicaVolumenValor">25%</output></label>
+                <label><span>Efectos</span><select id="videoAISFX"><option value="si" selected>Activados</option><option value="no">Desactivados</option></select></label>
+            </div>
+            <div class="video-ai-audio-acciones"><button type="button" id="videoAIAudioPreview" class="video-ai-generar-secundario">▶ Probar audio</button><button type="button" id="videoAIAudioDetener" class="video-ai-boton-secundario">■ Detener</button></div>
+            <p class="video-ai-audio-ayuda">El audio de prueba se genera con Web Audio API; no necesita descargar música externa.</p>
+        </div>
+
         <div id="videoAIResultado" class="video-ai-resultado" hidden>
             <div class="video-ai-resultado-cabecera">
                 <div>
