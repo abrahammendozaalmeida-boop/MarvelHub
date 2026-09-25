@@ -335,7 +335,7 @@
 
         <div class="video-ai-hero">
             <div class="video-ai-formulario">
-                <div class="video-ai-badge"><i data-lucide="sparkles"></i> MOTOR GRATUITO • FASE 1</div>
+                <div class="video-ai-badge"><i data-lucide="sparkles"></i> MOTOR GRATUITO • FASE 2</div>
                 <h3>Convierte una idea en un proyecto de video</h3>
                 <p>Primero construiremos el proyecto. Después conectaremos voz, imágenes, música y renderizado.</p>
 
@@ -376,6 +376,49 @@
                     <i data-lucide="rocket"></i><span>Crear proyecto de video</span>
                 </button>
                 <p id="videoAIEstado" class="video-ai-estado" aria-live="polite">Listo para comenzar.</p>
+                <div class="video-ai-voz">
+                    <div class="video-ai-voz-cabecera">
+                        <div>
+                            <span class="mini-etiqueta">🎙️ VOZ</span>
+                            <strong>Narración automática</strong>
+                            <small>Previsualiza gratis en el navegador o genera un WAV con el motor local.</small>
+                        </div>
+                        <span id="videoAIVozEstado" class="video-ai-voz-chip">No generada</span>
+                    </div>
+                    <div class="video-ai-voz-opciones">
+                        <label>
+                            <span>Motor</span>
+                            <select id="videoAIVozMotor">
+                                <option value="browser" selected>Gratis • navegador</option>
+                                <option value="local">Gratis • local (WAV)</option>
+                            </select>
+                        </label>
+                        <label>
+                            <span>Voz</span>
+                            <select id="videoAIVoz">
+                                <option value="auto" selected>Automática</option>
+                            </select>
+                        </label>
+                        <label>
+                            <span>Velocidad</span>
+                            <select id="videoAIVozVelocidad">
+                                <option value="0.85">0.85x</option>
+                                <option value="1" selected>1.0x</option>
+                                <option value="1.1">1.1x</option>
+                                <option value="1.2">1.2x</option>
+                                <option value="1.35">1.35x</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="video-ai-voz-acciones">
+                        <button id="videoAIGenerarVoz" type="button" class="video-ai-generar-secundario"><i data-lucide="volume-2"></i><span>Generar / escuchar voz</span></button>
+                        <button id="videoAIDetenerVoz" type="button" class="video-ai-boton-secundario"><i data-lucide="square"></i><span>Detener</span></button>
+                        <a id="videoAIVozDescargar" class="video-ai-boton-secundario" hidden download><i data-lucide="download"></i><span>Descargar WAV</span></a>
+                    </div>
+                    <audio id="videoAIAudio" class="video-ai-audio" controls hidden></audio>
+                    <p id="videoAIVozAyuda" class="video-ai-voz-ayuda">El modo navegador es inmediato y no usa API. Para WAV real, instala y ejecuta el servidor local gratuito.</p>
+                </div>
+
             </div>
 
             <div class="video-ai-flujo">
