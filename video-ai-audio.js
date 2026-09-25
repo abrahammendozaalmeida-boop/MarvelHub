@@ -18,7 +18,7 @@ function setAudioEstado(texto, clase = "") {
 function guardarProyectoVideoAI(proyecto) { localStorage.setItem("abrahamG4VideoProject", JSON.stringify(proyecto)); return proyecto; }
 
 function guardarAudioProyecto() {
-    const proyecto = typeof obtenerProyectoGuardado === "function" ? obtenerProyectoGuardado() : null;
+    const proyecto = (() => { try { return JSON.parse(localStorage.getItem("abrahamG4VideoProject") || "null"); } catch (_) { return null; } })();
     if (!proyecto) return null;
     const musica = document.getElementById("videoAIMusica");
     const volumen = document.getElementById("videoAIMusicaVolumen");
