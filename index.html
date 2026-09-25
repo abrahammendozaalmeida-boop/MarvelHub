@@ -492,6 +492,23 @@
             <p class="video-ai-audio-ayuda">El audio de prueba se genera con Web Audio API; no necesita descargar música externa.</p>
         </div>
 
+        <div class="video-ai-render-panel">
+            <div class="video-ai-render-cabecera">
+                <div>
+                    <span class="mini-etiqueta">🎬 MP4 • FASE 6</span>
+                    <strong>Renderizador final</strong>
+                    <small>Genera un MP4 vertical 9:16 usando FFmpeg en tu PC.</small>
+                </div>
+                <span id="videoAIRenderEstado" class="video-ai-render-chip">Pendiente</span>
+            </div>
+            <div class="video-ai-render-info">
+                <span>📱 1080 × 1920</span><span>🎞️ 30 FPS</span><span>🖼️ Escenas automáticas</span><span>💻 Local y gratuito</span>
+            </div>
+            <button type="button" id="videoAIRenderizar" class="video-ai-generar">🎬 Generar MP4</button>
+            <a id="videoAIDescargarMP4" class="video-ai-render-descarga" hidden download>⬇️ Descargar MP4</a>
+            <p id="videoAIRenderAyuda" class="video-ai-render-ayuda">Primero ejecuta <b>tools/render-server.py</b> con FFmpeg instalado.</p>
+        </div>
+
         <div id="videoAIResultado" class="video-ai-resultado" hidden>
             <div class="video-ai-resultado-cabecera">
                 <div>
