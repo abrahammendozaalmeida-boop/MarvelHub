@@ -4564,3 +4564,41 @@ body.tema-claro .video-ai-recurso{background:#fff;border-color:#ddd}
 .video-ai-subtitulos-opciones{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.video-ai-subtitulos-opciones label{display:grid;gap:6px}.video-ai-subtitulos-opciones label span{font-size:.78rem;opacity:.7}.video-ai-subtitulos-opciones select{width:100%;padding:11px;border-radius:11px;border:1px solid rgba(255,255,255,.1);background:inherit;color:inherit}
 .video-ai-subtitulos-acciones{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.video-ai-subtitulos-preview{display:grid;gap:8px;margin-top:15px;max-height:340px;overflow:auto;padding-right:3px}.video-ai-subtitulo-item{display:grid;grid-template-columns:auto auto 1fr;gap:10px;align-items:center;padding:11px 12px;border-radius:12px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.06)}.video-ai-subtitulo-tiempo{font:600 .72rem ui-monospace,monospace;opacity:.7}.video-ai-subtitulo-item strong{font-size:.78rem}.video-ai-subtitulo-item p{margin:0;grid-column:1/-1;line-height:1.4}.video-ai-subtitulos-vacio{opacity:.65;padding:15px;text-align:center}
 @media(max-width:700px){.video-ai-subtitulos-opciones{grid-template-columns:1fr}.video-ai-subtitulos-cabecera{flex-direction:column}.video-ai-subtitulo-item{grid-template-columns:1fr}.video-ai-subtitulo-item p{grid-column:auto}}
+
+/* TMDB local para Video AI */
+.video-ai-tmdb-config {
+    margin: 18px 0;
+    padding: 18px;
+    background: #111116;
+    border: 1px solid #292933;
+    border-radius: 14px;
+}
+.video-ai-tmdb-config > div:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.video-ai-tmdb-config small,
+.video-ai-tmdb-config p {
+    color: #999999;
+    line-height: 1.5;
+}
+.video-ai-tmdb-form {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+.video-ai-tmdb-form input {
+    flex: 1 1 320px;
+    min-width: 0;
+    padding: 11px 12px;
+    background: #0b0b0f;
+    color: #ffffff;
+    border: 1px solid #303038;
+    border-radius: 8px;
+    outline: none;
+}
+.video-ai-tmdb-form input:focus {
+    border-color: #e62429;
+}
