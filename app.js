@@ -1,4 +1,4 @@
-const TMDB_API_KEY = "TU_CLAVE_API";
+const TMDB_API_KEY = localStorage.getItem("marvelHubTMDBApiKey") || "TU_CLAVE_API";
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const TMDB_IMAGE_URL = "https://image.tmdb.org/t/p/w500";
 
