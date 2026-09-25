@@ -399,7 +399,95 @@
         }
     }
 
-    function generarProyecto() {
+
+    function segundosATiempoSRT(segundos) {
+        const totalMs = Math.max(0, Math.round(Number(segundos || 0) * 1000));
+        const horas = Math.floor(totalMs / 3600000);
+        const minutos = Math.floor((totalMs % 3600000) / 60000);
+        const secs = Math.floor((totalMs % 60000) / 1000);
+        const ms = totalMs % 1000;
+        return String(horas).padStart(2,"0") + ":" + String(minutos).padStart(2,"0") + ":" + String(secs).padStart(2,"0") + "," + String(ms).padStart(3,"0");
+    }
+
+    function escaparSRT(texto) {
+        return String(texto || "").replace(/\\r?\\n/g, " ").trim();
+    }
+
+    function crearSubtitulosProyecto(proyecto) {
+        let cursor = 0;
+        const subtitulos = (proyecto.escenas || []).map(function(escena, index) {
+            const inicio = cursor;
+            const duracion = Number(escena.duracion || 0);
+            const fin = cursor + duracion;
+            cursor = fin;
+            return { numero: index + 1, escena: escena.numero || index + 1, inicio: inicio, fin: fin, texto: escaparSRT(escena.subtitulo || escena.narracion) };
+        });
+        return subtitulos;
+    }
+
+    function generarTextoSRT(subtitulos) {
+        return subtitulos.map(function(item, index) {
+            return (index + 1) + "\\n" + segundosATiempoSRT(item.inicio) + " --> " + segundosATiempoSRT(item.fin) + "\\n" + item.texto + "\\n";
+        }).join("\\n");
+    }
+
+    function setSubtitulosEstado(texto, tipo) {
+        const estado = document.getElementById("videoAISubtitulosEstado");
+        if (!estado) return;
+        estado.textContent = texto;
+        estado.className = "video-ai-voz-chip" + (tipo ? " " + tipo : "");
+    }
+
+    function renderizarSubtitulos(subtitulos) {
+        const preview = document.getElementById("videoAISubtitulosPreview");
+        if (!preview) return;
+        if (!subtitulos.length) {
+            preview.innerHTML = '<div class="video-ai-subtitulos-vacio">No hay escenas para subtitular.</div>';
+            return;
+        }
+        preview.innerHTML = subtitulos.map(function(item) {
+            return '<article class="video-ai-subtitulo-item">' +
+                '<span class="video-ai-subtitulo-tiempo">' + segundosATiempoSRT(item.inicio).slice(0,8) + ' → ' + segundosATiempoSRT(item.fin).slice(0,8) + '</span>' +
+                '<strong>Escena ' + item.escena + '</strong>' +
+                '<p>' + item.texto.replace(/</g,"&lt;").replace(/>/g,"&gt;") + '</p>' +
+                '</article>';
+        }).join("");
+    }
+
+    function actualizarProyectoSubtitulos(cambios) {
+        const proyecto = obtenerProyectoGuardado();
+        if (!proyecto) return null;
+        proyecto.subtitulos = Object.assign({}, proyecto.subtitulos || {}, cambios);
+        localStorage.setItem("abrahamG4VideoProject", JSON.stringify(proyecto));
+        return proyecto;
+    }
+
+    function generarSubtitulos() {
+        const proyecto = obtenerProyectoGuardado();
+        if (!proyecto) { setSubtitulosEstado("Primero crea el guion", "error"); return; }
+        const subtitulos = crearSubtitulosProyecto(proyecto);
+        const estilo = document.getElementById("videoAISubtitulosEstilo")?.value || "simple";
+        const posicion = document.getElementById("videoAISubtitulosPosicion")?.value || "abajo";
+        const tamano = document.getElementById("videoAISubtitulosTamano")?.value || "mediano";
+        actualizarProyectoSubtitulos({ items: subtitulos, estilo: estilo, posicion: posicion, tamano: tamano, estado: "listos", generado_en: new Date().toISOString() });
+        renderizarSubtitulos(subtitulos);
+        const descarga = document.getElementById("videoAIDescargarSRT");
+        if (descarga) descarga.hidden = false;
+        setSubtitulosEstado(subtitulos.length + " subtítulos", "ok");
+    }
+
+    function descargarSRT() {
+        const proyecto = obtenerProyectoGuardado();
+        const items = proyecto && proyecto.subtitulos && Array.isArray(proyecto.subtitulos.items) ? proyecto.subtitulos.items : [];
+        if (!items.length) { setSubtitulosEstado("Genera primero", "error"); return; }
+        const blob = new Blob([generarTextoSRT(items)], { type: "application/x-subrip;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const enlace = document.createElement("a");
+        enlace.href = url;
+        enlace.download = "abraham-g4-subtitulos-" + Date.now() + ".srt";
+        document.body.appendChild(enlace); enlace.click(); enlace.remove(); URL.revokeObjectURL(url);
+    }
+\n    function generarProyecto() {
         const temaInput = document.getElementById("videoAITema");
         const duracionInput = document.getElementById("videoAIDuracion");
         const estiloInput = document.getElementById("videoAIEstilo");
@@ -439,6 +527,7 @@
             escenas: escenas,
             voz: { motor: "browser", estado: "pendiente", velocidad: 1 },
             recursos: [],
+            subtitulos: { items: [], estado: "pendientes" },
             recursos_estado: "pendientes",
             siguiente_fase: [
                 "obtener recursos visuales",
@@ -460,6 +549,11 @@
             const recursosGrid = document.getElementById("videoAIRecursosGrid");
             if (recursosGrid) recursosGrid.innerHTML = "";
             setRecursosEstado("No buscados", "");
+            const subtitulosPreview = document.getElementById("videoAISubtitulosPreview");
+            if (subtitulosPreview) subtitulosPreview.innerHTML = "";
+            const descargarSRTBtn = document.getElementById("videoAIDescargarSRT");
+            if (descargarSRTBtn) descargarSRTBtn.hidden = true;
+            setSubtitulosEstado("No generados", "");
             const audio = document.getElementById("videoAIAudio");
             const descarga = document.getElementById("videoAIVozDescargar");
             if (audio) { audio.hidden = true; audio.removeAttribute("src"); }
@@ -485,6 +579,8 @@
         const motor = document.getElementById("videoAIVozMotor");
         const buscarRecursosBtn = document.getElementById("videoAIBuscarRecursos");
         const cargarRecursosBtn = document.getElementById("videoAICargarRecursosGuardados");
+        const generarSubtitulosBtn = document.getElementById("videoAIGenerarSubtitulos");
+        const descargarSRTBtn = document.getElementById("videoAIDescargarSRT");
 
         if (!boton || !tema) return;
 
@@ -503,6 +599,8 @@
 
         if (generarVozBtn) generarVozBtn.addEventListener("click", generarVoz);
         if (buscarRecursosBtn) buscarRecursosBtn.addEventListener("click", buscarRecursos);
+        if (generarSubtitulosBtn) generarSubtitulosBtn.addEventListener("click", generarSubtitulos);
+        if (descargarSRTBtn) descargarSRTBtn.addEventListener("click", descargarSRT);
         if (cargarRecursosBtn) cargarRecursosBtn.addEventListener("click", function() {
             const proyecto = obtenerProyectoGuardado();
             if (proyecto && Array.isArray(proyecto.recursos)) {
