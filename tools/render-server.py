@@ -164,15 +164,19 @@ def render(project):
         vf = "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,format=yuv420p,subtitles='" + ffmpeg_filter_path(srt) + "':force_style='FontName=Arial,FontSize=18,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=1,Outline=2,Shadow=1,Alignment=2,MarginV=90'"
         cmd = ["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", concat]
         audio_inputs = []
+        next_input = 1
         if has_voice:
             cmd += ["-i", voice]
-            audio_inputs.append("[0:a]")
+            audio_inputs.append(f"[{next_input}:a]")
+            next_input += 1
         if has_music:
             cmd += ["-i", music]
-            audio_inputs.append(f"[{len(audio_inputs)+1}:a]")
+            audio_inputs.append(f"[{next_input}:a]")
+            next_input += 1
         if has_sfx:
             cmd += ["-i", sfx]
-            audio_inputs.append(f"[{len(audio_inputs)+1}:a]")
+            audio_inputs.append(f"[{next_input}:a]")
+            next_input += 1
 
         if audio_inputs:
             if len(audio_inputs) == 1:
