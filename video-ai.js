@@ -296,6 +296,109 @@
         setVozEstado("Detenida", "");
     }
 
+
+    function obtenerTMDBVideoAI(endpoint) {
+        const apiKey = (typeof TMDB_API_KEY !== "undefined") ? TMDB_API_KEY : "";
+        const base = (typeof TMDB_BASE_URL !== "undefined") ? TMDB_BASE_URL : "https://api.themoviedb.org/3";
+        if (!apiKey || apiKey === "TU_CLAVE_API") {
+            throw new Error("Falta la clave de TMDB.");
+        }
+        return fetch(base + endpoint + (endpoint.includes("?") ? "&" : "?") +
+            "api_key=" + encodeURIComponent(apiKey) + "&language=es-MX")
+            .then(function(res) {
+                if (!res.ok) throw new Error("TMDB respondió " + res.status);
+                return res.json();
+            });
+    }
+
+    function recursoUrl(path, tipo) {
+        if (!path) return "";
+        const base = "https://image.tmdb.org/t/p/";
+        return base + (tipo === "backdrop" ? "w780" : "w500") + path;
+    }
+
+    function consultaRecurso(tema) {
+        const personaje = detectarPersonaje(tema);
+        const termino = personaje !== "este personaje" ? personaje : tema;
+        return encodeURIComponent(termino);
+    }
+
+    function setRecursosEstado(texto, tipo) {
+        const el = document.getElementById("videoAIRecursosEstado");
+        if (!el) return;
+        el.textContent = texto;
+        el.className = "video-ai-voz-chip" + (tipo ? " " + tipo : "");
+    }
+
+    function renderizarRecursos(recursos) {
+        const grid = document.getElementById("videoAIRecursosGrid");
+        if (!grid) return;
+        if (!recursos.length) {
+            grid.innerHTML = '<div class="video-ai-recurso-vacio"><i data-lucide="image-off"></i><span>No se encontraron imágenes para este tema.</span></div>';
+            if (window.lucide) window.lucide.createIcons();
+            return;
+        }
+        grid.innerHTML = recursos.map(function(item, index) {
+            return '<article class="video-ai-recurso">' +
+                '<div class="video-ai-recurso-media">' +
+                    '<img src="' + item.url + '" alt="' + item.titulo.replace(/"/g, "&quot;") + '" loading="lazy">' +
+                    '<span>ESCENA ' + (index + 1) + '</span>' +
+                '</div>' +
+                '<div class="video-ai-recurso-info">' +
+                    '<strong>' + item.titulo + '</strong>' +
+                    '<small>' + (item.tipo === "backdrop" ? "Fondo" : "Póster") + ' • TMDB</small>' +
+                '</div>' +
+            '</article>';
+        }).join("");
+        if (window.lucide) window.lucide.createIcons();
+    }
+
+    async function buscarRecursos() {
+        const proyecto = obtenerProyectoGuardado();
+        if (!proyecto) {
+            setRecursosEstado("Primero crea el guion", "error");
+            return;
+        }
+        const boton = document.getElementById("videoAIBuscarRecursos");
+        if (boton) boton.disabled = true;
+        setRecursosEstado("Buscando…", "activo");
+
+        try {
+            const termino = consultaRecurso(proyecto.tema);
+            const datos = await obtenerTMDBVideoAI("/search/multi?query=" + termino + "&include_adult=false&page=1");
+            const candidatos = (datos.results || []).filter(function(item) {
+                return (item.poster_path || item.backdrop_path) && item.media_type !== "person";
+            }).slice(0, Math.max(6, proyecto.escenas.length));
+
+            const recursos = candidatos.map(function(item, index) {
+                const usarFondo = Boolean(item.backdrop_path) && (index % 2 === 0);
+                return {
+                    id: item.id,
+                    titulo: item.title || item.name || proyecto.tema,
+                    tipo: usarFondo ? "backdrop" : "poster",
+                    url: recursoUrl(usarFondo ? item.backdrop_path : item.poster_path, usarFondo ? "backdrop" : "poster"),
+                    media_type: item.media_type || "movie"
+                };
+            });
+
+            proyecto.recursos = recursos;
+            proyecto.recursos_estado = "listos";
+            proyecto.recursos_generado_en = new Date().toISOString();
+            localStorage.setItem("abrahamG4VideoProject", JSON.stringify(proyecto));
+            renderizarRecursos(recursos);
+            setRecursosEstado(recursos.length + " recursos", "ok");
+            const ayuda = document.getElementById("videoAIRecursosAyuda");
+            if (ayuda) ayuda.textContent = "Recursos encontrados en TMDB. Después los conectaremos al renderizador de escenas.";
+        } catch (error) {
+            console.warn("Video AI: recursos no disponibles.", error);
+            setRecursosEstado("No disponibles", "error");
+            const ayuda = document.getElementById("videoAIRecursosAyuda");
+            if (ayuda) ayuda.textContent = "No se pudieron buscar recursos. Revisa que TMDB esté configurado y que tengas conexión.";
+        } finally {
+            if (boton) boton.disabled = false;
+        }
+    }
+
     function generarProyecto() {
         const temaInput = document.getElementById("videoAITema");
         const duracionInput = document.getElementById("videoAIDuracion");
@@ -335,6 +438,8 @@
             formato: formato,
             escenas: escenas,
             voz: { motor: "browser", estado: "pendiente", velocidad: 1 },
+            recursos: [],
+            recursos_estado: "pendientes",
             siguiente_fase: [
                 "obtener recursos visuales",
                 "crear subtítulos sincronizados",
@@ -352,6 +457,9 @@
             renderizarEscenas(escenas);
             resultado.hidden = false;
             setVozEstado("No generada", "");
+            const recursosGrid = document.getElementById("videoAIRecursosGrid");
+            if (recursosGrid) recursosGrid.innerHTML = "";
+            setRecursosEstado("No buscados", "");
             const audio = document.getElementById("videoAIAudio");
             const descarga = document.getElementById("videoAIVozDescargar");
             if (audio) { audio.hidden = true; audio.removeAttribute("src"); }
@@ -375,6 +483,8 @@
         const generarVozBtn = document.getElementById("videoAIGenerarVoz");
         const detenerVozBtn = document.getElementById("videoAIDetenerVoz");
         const motor = document.getElementById("videoAIVozMotor");
+        const buscarRecursosBtn = document.getElementById("videoAIBuscarRecursos");
+        const cargarRecursosBtn = document.getElementById("videoAICargarRecursosGuardados");
 
         if (!boton || !tema) return;
 
@@ -392,6 +502,16 @@
         }
 
         if (generarVozBtn) generarVozBtn.addEventListener("click", generarVoz);
+        if (buscarRecursosBtn) buscarRecursosBtn.addEventListener("click", buscarRecursos);
+        if (cargarRecursosBtn) cargarRecursosBtn.addEventListener("click", function() {
+            const proyecto = obtenerProyectoGuardado();
+            if (proyecto && Array.isArray(proyecto.recursos)) {
+                renderizarRecursos(proyecto.recursos);
+                setRecursosEstado(proyecto.recursos.length + " recursos", "ok");
+            } else {
+                setRecursosEstado("No hay recursos", "");
+            }
+        });
         if (detenerVozBtn) detenerVozBtn.addEventListener("click", detenerVoz);
         if (motor) motor.addEventListener("change", function() {
             const ayuda = document.getElementById("videoAIVozAyuda");
