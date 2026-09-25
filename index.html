@@ -372,6 +372,23 @@
                     </label>
                 </div>
 
+                <div class="video-ai-recursos">
+                    <div class="video-ai-recursos-cabecera">
+                        <div>
+                            <span class="mini-etiqueta">🖼️ RECURSOS</span>
+                            <strong>Visuales automáticos por escena</strong>
+                            <small>Busca imágenes Marvel desde TMDB y prepara cada escena para el futuro render.</small>
+                        </div>
+                        <span id="videoAIRecursosEstado" class="video-ai-voz-chip">No buscados</span>
+                    </div>
+                    <div class="video-ai-recursos-acciones">
+                        <button id="videoAIBuscarRecursos" type="button" class="video-ai-generar-secundario"><i data-lucide="images"></i><span>Buscar recursos</span></button>
+                        <button id="videoAICargarRecursosGuardados" type="button" class="video-ai-boton-secundario"><i data-lucide="refresh-cw"></i><span>Recargar</span></button>
+                    </div>
+                    <p id="videoAIRecursosAyuda" class="video-ai-voz-ayuda">Se usarán pósters y fondos disponibles en TMDB cuando la clave esté configurada.</p>
+                    <div id="videoAIRecursosGrid" class="video-ai-recursos-grid"></div>
+                </div>
+
                 <button id="videoAIGenerar" type="button" class="video-ai-generar">
                     <i data-lucide="rocket"></i><span>Crear proyecto de video</span>
                 </button>
