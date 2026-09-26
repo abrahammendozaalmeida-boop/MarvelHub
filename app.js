@@ -732,6 +732,37 @@ function mostrarFavoritos() {
     renderizarFavoritos(window.filtroFavoritosActual || "todos");
 }
 
+function configurarModoDevTMDB() {
+    const panel = document.getElementById("tmdbDevPanel");
+    const toggle = document.getElementById("tmdbDevToggle");
+    const estado = document.getElementById("tmdbDevEstado");
+
+    if (!panel || !toggle) return;
+
+    const permitido = new URLSearchParams(window.location.search).get("dev") === "1";
+    panel.hidden = !permitido;
+    if (!permitido) return;
+
+    toggle.checked = localStorage.getItem("marvelHubDevTMDBAll") === "1";
+
+    function actualizarEstado() {
+        const activo = toggle.checked;
+        if (estado) {
+            estado.textContent = activo
+                ? "TMDB completo activo"
+                : "Filtro Marvel activo";
+        }
+    }
+
+    toggle.addEventListener("change", async function() {
+        localStorage.setItem("marvelHubDevTMDBAll", toggle.checked ? "1" : "0");
+        actualizarEstado();
+        await cargarMarvelTMDB();
+    });
+
+    actualizarEstado();
+}
+
 function configurarFavoritos() {
     const botones = document.querySelectorAll("[data-filtro-favoritos]");
     const orden = document.getElementById("ordenFavoritos");
@@ -803,15 +834,16 @@ async function obtenerEmpresasMarvelTMDB() {
 }
 
 async function cargarPaginaMarvel(tipo, pagina) {
-    const endpoint = tipo === "movie"
-        ? "/discover/movie?sort_by=popularity.desc&include_adult=false&with_companies=" +
-          encodeURIComponent(empresasMarvelTMDB) +
-          "&page=" + pagina
-        : "/discover/tv?sort_by=popularity.desc&include_adult=false&with_companies=" +
-          encodeURIComponent(empresasMarvelTMDB) +
-          "&page=" + pagina;
+    const modoTodoTMDB = localStorage.getItem("marvelHubDevTMDBAll") === "1";
+    const endpointBase = tipo === "movie" ? "/discover/movie?" : "/discover/tv?";
+    const filtrosBase = "sort_by=popularity.desc&include_adult=false&page=" + pagina;
+    const filtroMarvel = modoTodoTMDB
+        ? ""
+        : "&with_companies=" + encodeURIComponent(empresasMarvelTMDB);
 
-    const datos = await obtenerTMDB(endpoint);
+    const datos = await obtenerTMDB(
+        endpointBase + filtrosBase + filtroMarvel
+    );
 
     return {
         resultados: (datos.results || []).map(function(item) {
