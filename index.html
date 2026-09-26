@@ -104,86 +104,19 @@
             </div>
         </div>
 
-        <div class="proximos-estrenos">
+        <div class="home-rail home-peliculas-destacadas">
             <div class="titulo-seccion titulo-home">
-                <span class="mini-etiqueta">MUY PRONTO</span>
-                <h2><i data-lucide="calendar-days"></i> Próximos estrenos Marvel</h2>
-                <p>Películas de Marvel Studios que llegarán próximamente.</p>
-            </div>
-
-            <div id="proximosEstrenos" class="catalogo catalogo-horizontal">
-                <p>Cargando próximos estrenos...</p>
-            </div>
-        </div>
-
-        <div class="home-rail">
-            <div class="titulo-seccion titulo-home">
-                <span class="mini-etiqueta">POPULAR</span>
-                <h2><i data-lucide="trending-up"></i> Marvel más popular</h2>
-                <p>Las películas Marvel que están destacando en el catálogo.</p>
-            </div>
-            <div id="homePopulares" class="catalogo catalogo-horizontal">
-                <p>Cargando populares...</p>
-            </div>
-        </div>
-
-        <div class="home-rail">
-            <div class="titulo-seccion titulo-home">
-                <span class="mini-etiqueta">SERIES</span>
-                <h2><i data-lucide="tv"></i> Series Marvel</h2>
-                <p>Una selección para seguir el universo Marvel desde casa.</p>
-            </div>
-            <div id="homeSeries" class="catalogo catalogo-horizontal">
-                <p>Cargando series...</p>
-            </div>
-        </div>
-
-        <div class="home-rail">
-            <div class="titulo-seccion titulo-home">
-                <span class="mini-etiqueta">TU LISTA</span>
-                <h2><i data-lucide="heart"></i> Mis favoritos</h2>
-                <p>Contenido que guardaste para volver a verlo.</p>
-            </div>
-            <div id="homeFavoritos" class="catalogo catalogo-horizontal">
-                <p>Agrega favoritos para verlos aquí.</p>
-            </div>
-        </div>
-
-        <div class="home-rail home-historial">
-            <div class="titulo-seccion titulo-home">
-                <span class="mini-etiqueta">RECENTEMENTE</span>
+                <span class="mini-etiqueta">PELÍCULAS</span>
                 <div class="titulo-fila-home">
                     <div>
-                        <h2><i data-lucide="history"></i> Visto recientemente</h2>
-                        <p id="textoHistorial">Abre los detalles de cualquier título para empezar.</p>
+                        <h2><i data-lucide="clapperboard"></i> Películas destacadas</h2>
+                        <p>4 películas al inicio. Entra a "Ver más" para cargar el catálogo por bloques.</p>
                     </div>
-                    <button type="button" class="boton-limpiar-historial" onclick="limpiarHistorialMarvel()">Limpiar</button>
+                    <button type="button" class="boton-secundario home-ver-mas" onclick="mostrarSeccion('marvel')">Ver más <i data-lucide="arrow-right"></i></button>
                 </div>
             </div>
-            <div id="homeHistorial" class="catalogo catalogo-horizontal">
-                <p>Aquí aparecerá lo último que consultes.</p>
-            </div>
-        </div>
-
-        <div class="home-rail home-personalizado">
-            <div class="titulo-seccion titulo-home">
-                <span class="mini-etiqueta">PARA TI</span>
-                <h2><i data-lucide="sparkles"></i> Tu selección</h2>
-                <p id="textoPersonalizado">Contenido basado en tus favoritos.</p>
-            </div>
-            <div id="homePersonalizado" class="catalogo catalogo-horizontal">
-                <p>Cargando tu selección...</p>
-            </div>
-        </div>
-
-        <div class="home-rail">
-            <div class="titulo-seccion titulo-home">
-                <span class="mini-etiqueta">DESCUBRE</span>
-                <h2><i data-lucide="wand-sparkles"></i> Porque eres fan de Marvel</h2>
-                <p>Una selección diferente para descubrir algo nuevo.</p>
-            </div>
-            <div id="homeDescubre" class="catalogo catalogo-horizontal">
-                <p>Cargando recomendaciones...</p>
+            <div id="homePeliculas" class="catalogo catalogo-horizontal">
+                <p>Cargando películas...</p>
             </div>
         </div>
 
@@ -286,6 +219,7 @@
 
         <div class="catalogo-cargar-mas">
             <button id="cargarMasMarvel" type="button" onclick="cargarMasMarvel()" hidden><i data-lucide="plus"></i><span>Cargar más</span></button>
+            <div id="catalogoSentinela" aria-hidden="true"></div>
         </div>
     </section>
 
@@ -374,20 +308,6 @@
                             <option value="16:9">16:9 • YouTube</option>
                         </select>
                     </label>
-                </div>
-
-                <div class="video-ai-tmdb-config">
-                    <div>
-                        <span class="mini-etiqueta">🔑 TMDB</span>
-                        <strong>Conectar imágenes de TMDB</strong>
-                        <small>La clave se guarda solo en este navegador y no se sube a GitHub.</small>
-                    </div>
-                    <div class="video-ai-tmdb-form">
-                        <input id="videoAITMDBApiKey" type="password" placeholder="Pega aquí tu API Key de TMDB" autocomplete="off">
-                        <button id="videoAITMDBGuardar" type="button" class="video-ai-generar-secundario">💾 Guardar clave</button>
-                        <button id="videoAITMDBBorrar" type="button" class="video-ai-boton-secundario">🗑️ Borrar</button>
-                    </div>
-                    <p id="videoAITMDBEstado" class="video-ai-voz-ayuda">TMDB no configurado en este navegador.</p>
                 </div>
 
                 <div class="video-ai-recursos">
