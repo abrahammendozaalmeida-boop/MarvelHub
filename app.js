@@ -2266,7 +2266,7 @@ async function sincronizarCuentaConNubeActual() {
     await sincronizarCuentaConNube(user);
 }
 
-async async async function sincronizarFavoritoActual(id, tipo) {
+async function sincronizarFavoritoActual(id, tipo) {
     if (!supabaseClient) return;
 
     const user = await obtenerUsuarioSupabase();
@@ -2444,7 +2444,7 @@ async function iniciarSesionCuenta() {
             } else if (mensaje.toLowerCase().includes("invalid login credentials")) {
                 mostrarMensajeCuenta("❌ Correo o contraseña incorrectos.", true);
             } else {
-                mostrarMensajeCuenta("❌ Supabase: " + mensaje, true);
+                mostrarMensajeCuenta("❌ No se pudo iniciar sesión. Revisa tus datos e inténtalo de nuevo.", true);
             }
             return;
         }
@@ -2459,7 +2459,7 @@ async function iniciarSesionCuenta() {
 
 async function registrarCuenta() {
     if (!supabaseClient) {
-        mostrarMensajeCuenta("Primero configura Supabase en supabase-config.js.", true);
+        mostrarMensajeCuenta("La creación de cuentas no está disponible en este momento.", true);
         return;
     }
 
@@ -2497,7 +2497,7 @@ async function registrarCuenta() {
             if (mensaje.toLowerCase().includes("user already registered")) {
                 mostrarMensajeCuenta("ℹ️ Ese correo ya tiene una cuenta. Usa Iniciar sesión.", true);
             } else {
-                mostrarMensajeCuenta("❌ Supabase: " + mensaje, true);
+                mostrarMensajeCuenta("❌ No se pudo crear la cuenta. Revisa los datos e inténtalo de nuevo.", true);
             }
             return;
         }
@@ -2578,7 +2578,7 @@ function cambiarModoCuenta(modo) {
     }
 }
 
-async async function configurarCuenta() {
+async function configurarCuenta() {
     const conectado = configurarClienteSupabase();
     const formLogin = document.getElementById("formLogin");
     const formRegistro = document.getElementById("formRegistro");
@@ -2627,8 +2627,8 @@ async async function configurarCuenta() {
 
     if (!conectado) {
         actualizarEstadoSincronizacion(
-            "Configura Supabase en supabase-config.js para activar la nube.",
-            true
+            "Tu biblioteca está disponible en este dispositivo.",
+            false
         );
         actualizarCuentaUI(null);
         return;
@@ -2911,7 +2911,7 @@ function actualizarResumenAjustes() {
     }
 
     const estado = document.getElementById("estadoNombre");
-    const nombre = localStorage.getItem("nombre") || "";
+    const nombre = obtenerPerfilLocal().nombre || "";
 
     if (estado) {
         estado.textContent = nombre
