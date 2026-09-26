@@ -2266,7 +2266,7 @@ async function sincronizarCuentaConNubeActual() {
     await sincronizarCuentaConNube(user);
 }
 
-async function sincronizarFavoritoActual(id, tipo) {
+async async function sincronizarFavoritoActual(id, tipo) {
     if (!supabaseClient) return;
 
     const user = await obtenerUsuarioSupabase();
