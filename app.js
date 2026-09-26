@@ -913,34 +913,65 @@ function actualizarBotonCargarMas() {
 }
 
 async function cargarColeccionPersonalMarvel() {
+    const cacheKey = "marvelHubColeccionTMDB";
+    try {
+        const guardada = JSON.parse(localStorage.getItem(cacheKey) || "null");
+        if (Array.isArray(guardada) && guardada.length) {
+            peliculasTMDB = peliculasTMDB.concat(
+                guardada.filter(function(item) {
+                    return !peliculasTMDB.some(function(base) { return base.id === item.id; });
+                })
+            );
+            window.coleccionPersonalMarvel = guardada;
+            return guardada;
+        }
+    } catch (error) {}
+
     const resultados = [];
     const vistos = new Set();
+    const lote = 6;
 
-    for (const [tituloOriginal, anio] of coleccionPersonalMarvel) {
-        try {
-            const datos = await obtenerTMDB(
-                "/search/movie?query=" + encodeURIComponent(tituloOriginal) +
-                "&year=" + encodeURIComponent(anio)
-            );
+    for (let inicio = 0; inicio < coleccionPersonalMarvel.length; inicio += lote) {
+        const grupo = coleccionPersonalMarvel.slice(inicio, inicio + lote);
 
-            const coincidencias = (datos.results || []).filter(function(item) {
-                const fecha = item.release_date || "";
-                return fecha.startsWith(String(anio));
-            });
+        const encontrados = await Promise.all(grupo.map(async function(registro) {
+            const tituloOriginal = registro[0];
+            const anio = registro[1];
 
-            const item = coincidencias[0] || (datos.results || [])[0];
-            if (!item || !item.id || vistos.has(item.id)) continue;
+            try {
+                const datos = await obtenerTMDB(
+                    "/search/movie?query=" + encodeURIComponent(tituloOriginal) +
+                    "&year=" + encodeURIComponent(anio)
+                );
 
-            item.tipo = "movie";
-            item.coleccionPersonal = true;
-            item.tituloColeccion = tituloOriginal;
-            item.anioColeccion = anio;
-            vistos.add(item.id);
-            resultados.push(item);
-        } catch (error) {
-            console.warn("No se pudo resolver en TMDB:", tituloOriginal, error);
-        }
+                const coincidencias = (datos.results || []).filter(function(item) {
+                    const fecha = item.release_date || "";
+                    return fecha.startsWith(String(anio));
+                });
+
+                const item = coincidencias[0] || (datos.results || [])[0];
+                if (!item || !item.id || vistos.has(item.id)) return null;
+
+                item.tipo = "movie";
+                item.coleccionPersonal = true;
+                item.tituloColeccion = tituloOriginal;
+                item.anioColeccion = anio;
+                vistos.add(item.id);
+                return item;
+            } catch (error) {
+                console.warn("No se pudo resolver en TMDB:", tituloOriginal, error);
+                return null;
+            }
+        }));
+
+        encontrados.forEach(function(item) {
+            if (item) resultados.push(item);
+        });
     }
+
+    try {
+        localStorage.setItem(cacheKey, JSON.stringify(resultados));
+    } catch (error) {}
 
     const idsBase = new Set(peliculasTMDB.map(function(item) { return item.id; }));
     resultados.forEach(function(item) {
