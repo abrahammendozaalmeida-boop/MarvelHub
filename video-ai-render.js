@@ -21,9 +21,9 @@ async function renderizarVideoAI() {
     }
 
     if (boton) boton.disabled = true;
-    if (editorEstado) editorEstado.textContent = "Preparando...";
+    if (editorEstado) editorEstado.textContent = "Preparando tu video...";
     setRenderEstado("Renderizando...", "ok");
-    if (ayuda) ayuda.textContent = "Preparando escenas y enviándolas al renderizador local...";
+    if (ayuda) ayuda.textContent = "Uniendo imágenes, narración, subtítulos, música y efectos...";
 
     try {
         const health = await fetch(VIDEO_AI_RENDER_SERVER + "/health");
@@ -59,7 +59,7 @@ async function renderizarVideoAI() {
         localStorage.setItem("abrahamG4VideoProject", JSON.stringify(proyecto));
 
         setRenderEstado("MP4 listo", "ok");
-        if (ayuda) ayuda.textContent = "¡Listo! El MP4 fue generado en tu PC. Usa el botón de descarga.";
+        if (ayuda) ayuda.textContent = "¡Listo! Tu video ya reúne imagen, narración, subtítulos, música y efectos.";
     } catch (error) {
         console.error(error);
         setRenderEstado("Error", "error");
