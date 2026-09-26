@@ -545,27 +545,48 @@
 
         localStorage.setItem("abrahamG4VideoProject", JSON.stringify(proyecto));
 
-        setTimeout(function() {
+        setTimeout(async function() {
             if (titulo) titulo.textContent = capitalizar(tema);
             if (resumen) resumen.textContent = duracion + " segundos • " + formato + " • " + escenas.length + " escenas • modo " + estilo;
             renderizarEscenas(escenas);
             resultado.hidden = false;
-            setVozEstado("No generada", "");
+            setVozEstado("Preparando", "activo");
             const recursosGrid = document.getElementById("videoAIRecursosGrid");
             if (recursosGrid) recursosGrid.innerHTML = "";
-            setRecursosEstado("No buscados", "");
+            setRecursosEstado("Buscando recursos", "activo");
             const subtitulosPreview = document.getElementById("videoAISubtitulosPreview");
             if (subtitulosPreview) subtitulosPreview.innerHTML = "";
             if (descargarSRTBtn) descargarSRTBtn.hidden = true;
-            setSubtitulosEstado("No generados", "");
+            setSubtitulosEstado("Preparando", "activo");
             const audio = document.getElementById("videoAIAudio");
             const descarga = document.getElementById("videoAIVozDescargar");
             if (audio) { audio.hidden = true; audio.removeAttribute("src"); }
             if (descarga) { descarga.hidden = true; descarga.removeAttribute("href"); }
-            if (estado) estado.textContent = "Proyecto creado. Ahora puedes generar la narración.";
+
+            generarSubtitulos();
+            try {
+                await buscarRecursos();
+            } catch (error) {
+                console.warn("Video AI: preparación visual automática no disponible.", error);
+            }
+
+            const estadoAudio = obtenerProyectoGuardado();
+            if (estadoAudio && !estadoAudio.audio) {
+                estadoAudio.audio = { ...VIDEO_AI_AUDIO_DEFAULTS, estado: "configurado" };
+                localStorage.setItem("abrahamG4VideoProject", JSON.stringify(estadoAudio));
+                if (typeof cargarAudioUI === "function") cargarAudioUI(estadoAudio);
+            }
+
+            if (estado) estado.textContent = "Proyecto preparado. Generando tu video...";
+            if (typeof window.renderizarVideoAI === "function") {
+                await window.renderizarVideoAI();
+            } else {
+                if (estado) estado.textContent = "Proyecto preparado.";
+            }
+
             if (boton) {
                 boton.disabled = false;
-                boton.innerHTML = '<i data-lucide="rocket"></i><span>Crear proyecto de video</span>';
+                boton.innerHTML = '<i data-lucide="rocket"></i><span>Crear video completo</span>';
                 if (window.lucide) window.lucide.createIcons();
             }
             resultado.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -634,7 +655,7 @@
         });
     }
 
-    window.configurarVideoAI = configurarVideoAI;
+    window.configurarVideoAI = configurarVideoAI;\n    window.obtenerProyectoGuardado = obtenerProyectoGuardado;
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", configurarVideoAI);
     } else {
