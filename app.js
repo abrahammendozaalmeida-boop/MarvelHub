@@ -886,7 +886,10 @@ async function cargarMarvelTMDB() {
 
     if (!catalogo) return;
 
-    catalogo.innerHTML = "<p>Cargando Marvel desde TMDB...</p>";
+    const modoTodoTMDB = localStorage.getItem("marvelHubDevTMDBAll") === "1";
+    catalogo.innerHTML = modoTodoTMDB
+        ? "<p>Cargando TMDB sin filtro...</p>"
+        : "<p>Cargando Marvel desde TMDB...</p>";
 
     paginaPeliculasTMDB = 1;
     paginaSeriesTMDB = 1;
@@ -894,7 +897,9 @@ async function cargarMarvelTMDB() {
     totalPaginasSeriesTMDB = 1;
 
     try {
-        await obtenerEmpresasMarvelTMDB();
+        if (!modoTodoTMDB) {
+            await obtenerEmpresasMarvelTMDB();
+        }
 
         const respuestas = await Promise.all([
             cargarPaginaMarvel("movie", 1),
@@ -3761,6 +3766,7 @@ function inicializarMarvelHub() {
     cargarTema();
     cargarNombre();
     configurarFavoritos();
+    configurarModoDevTMDB();
     configurarModal();
     configurarTeclado();
     configurarVideo();
