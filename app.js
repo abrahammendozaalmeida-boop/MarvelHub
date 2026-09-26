@@ -1119,7 +1119,7 @@ async function verDetallesLocalMarvel(id, tipo) {
         "<div class='detalle-cuerpo'>" +
         "<div class='detalle-seccion'><h3>📖 Sinopsis</h3><p id='detalleSinopsis' class='detalle-sinopsis'>Cargando sinopsis...</p></div>" +
         "<div class='detalle-seccion'><h3>🎞️ Tráiler</h3><div id='detalleTrailer' class='detalle-trailer'><p class='detalle-vacio'>Cargando tráiler...</p></div></div>" +
-        "<div class='detalle-seccion detalle-reproducir-final'><h3>🎬 Ver película</h3><p class='detalle-vacio'>Cuando esté disponible, podrás abrir tu reproducción desde aquí.</p><button id='detalleReproducir' type='button' class='boton-principal'><i data-lucide='play'></i><span>Reproducir</span></button>" +
+        "<div class='detalle-seccion detalle-reproducir-final'><h3>🎬 Ver película</h3><p class='detalle-vacio'>Cuando esté disponible, podrás abrir tu reproducción desde aquí.</p><button id='detalleReproducir' type='button' class='boton-principal'><i data-lucide='play'></i><span>Reproducir</span></button><p class='detalle-nota-reproduccion'>🎬 Al seleccionar Reproducir, serás dirigido a Google Drive para ver la película de forma gratuita. Una vez allí, haz doble clic en el ícono de la película para comenzar a disfrutarla.</p>" +
         "<button id='detalleFavorito' type='button' class='" + (esFavorito ? "boton-quitar-favorito" : "boton-favorito") + "'><i data-lucide='heart'></i><span>" + (esFavorito ? "Quitar de favoritos" : "Añadir a favoritos") + "</span></button>" +
         "<button id='detalleCompartir' type='button' class='boton-secundario'><i data-lucide='share-2'></i><span>Compartir</span></button></div>" +
         "</div>";
