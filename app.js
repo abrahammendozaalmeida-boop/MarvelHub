@@ -524,7 +524,8 @@ function renderizarCatalogo(lista) {
         return;
     }
 
-    listaOrdenada.forEach(function(item) {
+    const limiteInicial = hayBusqueda ? listaOrdenada.length : Math.min(12, listaOrdenada.length);
+    listaOrdenada.slice(0, limiteInicial).forEach(function(item) {
         catalogo.appendChild(crearTarjetaMarvel(item));
     });
 }
@@ -1047,16 +1048,7 @@ function renderizarFilasInicio() {
             return (b.popularity || 0) - (a.popularity || 0);
         });
 
-    const series = seriesTMDB
-        .slice()
-        .sort(function(a, b) {
-            return (b.popularity || 0) - (a.popularity || 0);
-        });
-
-    renderizarFilaInicio("homePopulares", populares, 10);
-    renderizarFilaInicio("homeSeries", series, 10);
-    renderizarFilaFavoritosInicio();
-    renderizarDescubreInicio();
+    renderizarFilaInicio("homePeliculas", populares, 4);
 }
 
 function mostrarTipoMarvel(tipo) {
@@ -3762,11 +3754,34 @@ function actualizarIconosLucide() {
     });
 }
 
+function configurarCargaInfinitaCatalogo() {
+    let ultimaCarga = 0;
+
+    window.addEventListener("scroll", function() {
+        const seccionMarvel = document.getElementById("marvel");
+        if (!seccionMarvel || !seccionMarvel.classList.contains("activa")) return;
+
+        const ahora = Date.now();
+        if (ahora - ultimaCarga < 700) return;
+
+        const distancia = document.documentElement.scrollHeight - (window.scrollY + window.innerHeight);
+        if (distancia > 700) return;
+
+        const buscador = document.getElementById("buscador");
+        if (buscador && buscador.value.trim()) return;
+
+        const boton = document.getElementById("cargarMasMarvel");
+        if (!boton || boton.hidden || cargandoMasMarvel) return;
+
+        ultimaCarga = ahora;
+        cargarMasMarvel();
+    }, { passive: true });
+}
+
 function inicializarMarvelHub() {
     cargarTema();
     cargarNombre();
     configurarFavoritos();
-    configurarModoDevTMDB();
     configurarModal();
     configurarTeclado();
     configurarVideo();
@@ -3774,6 +3789,7 @@ function inicializarMarvelHub() {
     configurarPerfil();
     configurarCuenta();
     activarBuscador();
+    configurarCargaInfinitaCatalogo();
     configurarBusquedaGlobal();
 
     const botonRestablecer = document.getElementById("restablecerPreferencias");
