@@ -31,10 +31,43 @@ async function ask(prompt){
  setStatus("Pensando…","busy");
  try{const r=await fetch(AI_SERVER+"/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:prompt,context:{project:window.obtenerProyectoGuardado?window.obtenerProyectoGuardado():null}})});if(!r.ok)throw new Error("AI "+r.status);const d=await r.json();if(!d.text)throw new Error("Respuesta vacía");return d.text}catch(e){console.warn("ABRAHAM AI local no disponible",e);setStatus("Modo creativo local","local");return localBrain(prompt)}
 }
+async function generarVideoConIA(){
+ const temaEl=el("videoAITema"), durEl=el("videoAIDuracion"), estiloEl=el("videoAIEstilo");
+ const tema=(temaEl&&temaEl.value.trim())||(el("abrahamAIInput")&&el("abrahamAIInput").value.trim());
+ if(!tema){ if(temaEl) temaEl.focus(); setStatus("Escribe un tema primero","error"); return; }
+ const duracion=Number(durEl&&durEl.value||45), estilo=String(estiloEl&&estiloEl.value||"curiosidades");
+ const btn=el("abrahamAIGenerarVideo");
+ if(btn){btn.disabled=true;btn.innerHTML="<i data-lucide='loader-circle'></i> Creando video…";if(window.lucide)window.lucide.createIcons();}
+ setStatus("Creando video con IA…","busy");
+ try{
+  const r=await fetch(AI_SERVER+"/generate-video",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({tema,duracion,estilo})});
+  if(!r.ok)throw new Error("AI "+r.status);
+  const d=await r.json(); if(!d.plan||!Array.isArray(d.plan.scenes))throw new Error("Plan inválido");
+  const escenas=d.plan.scenes.map((s,i)=>({
+   numero:i+1,
+   duracion:Number(s.duration)||Math.max(2,duracion/(d.plan.scenes.length||1)),
+   titulo:i===0?"Hook":(i===d.plan.scenes.length-1?"Cierre":"Escena "+(i+1)),
+   idea:String(s.visual||""),
+   narracion:String(s.narration||""),
+   subtitulo:String(s.subtitle||""),
+   audio:String(s.audio||"")
+  }));
+  const proyecto={version:3,creador:"ABRAHAM G4",tema,duracion,estilo,formato:"9:16",titulo:d.plan.title||tema,hook:d.plan.hook||"",cierre:d.plan.closing||"",escenas,voz:{motor:"browser",estado:"pendiente",velocidad:1},recursos:[],subtitulos:{items:[],estado:"pendientes"},recursos_estado:"pendientes",ai:{origen:"ABRAHAM AI",plan:d.plan},siguiente_fase:["obtener recursos visuales","crear subtítulos sincronizados","añadir música y efectos","renderizar MP4"],creado_en:new Date().toISOString()};
+  localStorage.setItem(PROJECT_KEY,JSON.stringify(proyecto));
+  addMessage("assistant","Video creado con IA: "+(proyecto.titulo||tema)+". Preparando escenas, recursos, subtítulos y render.");
+  if(typeof window.cargarProyectoVideoAI==="function"){await window.cargarProyectoVideoAI(proyecto)}else{setStatus("Plan creado","ok");}
+ }catch(e){
+  console.warn("Generación estructurada no disponible",e);
+  setStatus("Modo creativo local","local");
+  addMessage("assistant","No pude conectar el generador IA. Puedes seguir creando el proyecto con el motor local de Marvel Hub.");
+ }finally{
+  if(btn){btn.disabled=false;btn.innerHTML="<i data-lucide='sparkles'></i> Crear video con IA";if(window.lucide)window.lucide.createIcons();}
+ }
+}
 async function send(){const input=el("abrahamAIInput");if(!input)return;const prompt=input.value.trim();if(!prompt)return;input.value="";addMessage("user",prompt);const h=history();h.push({role:"user",content:prompt});const reply=await ask(prompt);aplicarRespuestaAlProyecto(reply);addMessage("assistant",reply);h.push({role:"assistant",content:reply});saveHistory(h);setStatus("Listo","ok")}
 function clearChat(){localStorage.removeItem(KEY);const box=el("abrahamAIChat");if(box)box.innerHTML="";addMessage("assistant","Listo. Dime qué quieres crear y trabajamos sobre tu idea.");setStatus("Listo","ok")}
 function quick(t){const input=el("abrahamAIInput");if(input){input.value=t;input.focus()}}
-function init(){const sendBtn=el("abrahamAISend"),input=el("abrahamAIInput"),clear=el("abrahamAIClear");if(!sendBtn||!input)return;sendBtn.addEventListener("click",send);clear&&clear.addEventListener("click",clearChat);input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send()}});document.querySelectorAll("[data-ai-prompt]").forEach(b=>b.addEventListener("click",()=>quick(b.dataset.aiPrompt)));history().filter(x=>x.role==="user"||x.role==="assistant").forEach(x=>addMessage(x.role==="user"?"user":"assistant",x.content));if(!history().length)addMessage("assistant","Hola. Soy ABRAHAM AI, el asistente creativo de Marvel Hub. Puedo ayudarte a convertir una idea en guion, escenas, estilo y estructura para tu video.");setStatus("Listo","ok")}
+function init(){const sendBtn=el("abrahamAISend"),input=el("abrahamAIInput"),clear=el("abrahamAIClear");if(!sendBtn||!input)return;sendBtn.addEventListener("click",send);const generateBtn=el("abrahamAIGenerarVideo");generateBtn&&generateBtn.addEventListener("click",generarVideoConIA);clear&&clear.addEventListener("click",clearChat);input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send()}});document.querySelectorAll("[data-ai-prompt]").forEach(b=>b.addEventListener("click",()=>quick(b.dataset.aiPrompt)));history().filter(x=>x.role==="user"||x.role==="assistant").forEach(x=>addMessage(x.role==="user"?"user":"assistant",x.content));if(!history().length)addMessage("assistant","Hola. Soy ABRAHAM AI, el asistente creativo de Marvel Hub. Puedo ayudarte a convertir una idea en guion, escenas, estilo y estructura para tu video.");setStatus("Listo","ok")}
 window.abrahamAI={ask,send,clearChat};
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();
