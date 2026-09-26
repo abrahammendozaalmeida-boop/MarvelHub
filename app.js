@@ -3407,6 +3407,28 @@ function configurarVideo() {
     }
 }
 
+function cargarVideoEnEditorDesdeUrl(url, nombre = "Video generado • Marvel Hub") {
+    const videoPreview = document.getElementById("videoPreview");
+    const nombreArchivo = document.getElementById("editorNombreArchivo");
+    if (!videoPreview || !url) return false;
+
+    if (editorUrlActual) {
+        try { URL.revokeObjectURL(editorUrlActual); } catch (_) {}
+    }
+
+    editorUrlActual = url;
+    videoPreview.src = url;
+    videoPreview.load();
+
+    if (nombreArchivo) nombreArchivo.textContent = nombre;
+    const seccion = document.getElementById("video-ai");
+    const editor = document.querySelector(".video-ai-editor-integrado");
+    if (seccion && editor) {
+        editor.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    return true;
+}
+
 async function exportarVideoEditor() {
     const video = document.getElementById("videoPreview");
     const boton = document.getElementById("exportarEditor");
