@@ -608,6 +608,56 @@
         }, 350);
     }
 
+    async function cargarProyectoVideoAI(proyecto) {
+        if (!proyecto || !Array.isArray(proyecto.escenas)) return;
+        localStorage.setItem("abrahamG4VideoProject", JSON.stringify(proyecto));
+        const titulo = document.getElementById("videoAITituloResultado");
+        const resumen = document.getElementById("videoAIResumenResultado");
+        const resultado = document.getElementById("videoAIResultado");
+        const estado = document.getElementById("videoAIEstado");
+        const temaInput = document.getElementById("videoAITema");
+        const duracionInput = document.getElementById("videoAIDuracion");
+        const estiloInput = document.getElementById("videoAIEstilo");
+        if (temaInput) temaInput.value = proyecto.tema || "";
+        if (duracionInput) duracionInput.value = String(proyecto.duracion || 45);
+        if (estiloInput) estiloInput.value = proyecto.estilo || "curiosidades";
+        if (titulo) titulo.textContent = proyecto.titulo || capitalizar(proyecto.tema || "Tu video");
+        if (resumen) resumen.textContent = (proyecto.duracion || 45) + " segundos • 9:16 • " + proyecto.escenas.length + " escenas • IA";
+        renderizarEscenas(proyecto.escenas);
+        if (resultado) resultado.hidden = false;
+        setVozEstado("Preparando", "activo");
+        const recursosGrid = document.getElementById("videoAIRecursosGrid");
+        if (recursosGrid) recursosGrid.innerHTML = "";
+        setRecursosEstado("Buscando recursos", "activo");
+        const subtitulosPreview = document.getElementById("videoAISubtitulosPreview");
+        if (subtitulosPreview) subtitulosPreview.innerHTML = "";
+        const srtButton = document.getElementById("videoAIDescargarSRT");
+        if (srtButton) srtButton.hidden = true;
+        setSubtitulosEstado("Preparando", "activo");
+        const audio = document.getElementById("videoAIAudio");
+        const descarga = document.getElementById("videoAIVozDescargar");
+        if (audio) { audio.hidden = true; audio.removeAttribute("src"); }
+        if (descarga) { descarga.hidden = true; descarga.removeAttribute("href"); }
+        generarSubtitulos();
+        try {
+            await buscarRecursos();
+        } catch (error) {
+            console.warn("Video AI: preparación visual automática no disponible.", error);
+        }
+        const estadoAudio = obtenerProyectoGuardado();
+        if (estadoAudio && !estadoAudio.audio) {
+            estadoAudio.audio = { ...VIDEO_AI_AUDIO_DEFAULTS, estado: "configurado" };
+            localStorage.setItem("abrahamG4VideoProject", JSON.stringify(estadoAudio));
+            if (typeof cargarAudioUI === "function") cargarAudioUI(estadoAudio);
+        }
+        if (estado) estado.textContent = "Proyecto creado con IA. Generando tu video...";
+        if (typeof window.renderizarVideoAI === "function") {
+            await window.renderizarVideoAI();
+        }
+        if (estado) estado.textContent = "Video preparado.";
+        if (resultado) resultado.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
     function configurarVideoAI() {
         const boton = document.getElementById("videoAIGenerar");
         const tema = document.getElementById("videoAITema");
@@ -671,6 +721,7 @@
     }
 
     window.configurarVideoAI = configurarVideoAI;
+    window.cargarProyectoVideoAI = cargarProyectoVideoAI;
     window.obtenerProyectoGuardado = obtenerProyectoGuardado;
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", configurarVideoAI);
