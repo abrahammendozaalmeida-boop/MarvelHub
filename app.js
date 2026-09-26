@@ -2946,12 +2946,12 @@ function actualizarEstadoPWAEnAjustes() {
     }
 
     if (instalacionPendiente) {
-        estado.textContent = "Lista para instalarse en este dispositivo.";
+        estado.textContent = "Marvel Hub está lista para instalarse.";
         if (boton) boton.hidden = false;
         return;
     }
 
-    estado.textContent = "La instalación depende de las funciones de tu navegador.";
+    estado.textContent = "La instalación estará disponible cuando tu navegador la admita.";
     if (boton) boton.hidden = true;
 }
 
