@@ -6,6 +6,36 @@ let peliculasTMDB = [];
 let seriesTMDB = [];
 let tipoActual = "peliculas";
 let favoritosMarvel = JSON.parse(localStorage.getItem("favoritosMarvel") || "[]");
+const coleccionPersonalMarvel = [
+    ["DEADPOOL", 2016], ["DEADPOOL 2", 2018], ["DEADPOOL & WOLVERINE", 2024],
+    ["SPIDER-MAN", 2002], ["SPIDER-MAN 2", 2004], ["SPIDER-MAN 3", 2007],
+    ["THE AMAZING SPIDER-MAN", 2012], ["THE AMAZING SPIDER-MAN 2", 2014],
+    ["MORBIUS", 2022], ["SHANG-CHI AND THE LEGEND OF THE TEN RINGS", 2021],
+    ["VENOM", 2018], ["VENOM: LET THERE BE CARNAGE", 2021], ["VENOM: THE LAST DANCE", 2024],
+    ["X-MEN", 2000], ["X2", 2003], ["X-MEN: THE LAST STAND", 2006],
+    ["X-MEN: FIRST CLASS", 2011], ["X-MEN: DAYS OF FUTURE PAST", 2014],
+    ["X-MEN: APOCALYPSE", 2016], ["X-MEN: DARK PHOENIX", 2019],
+    ["X-MEN ORIGINS: WOLVERINE", 2009], ["THE WOLVERINE", 2013], ["LOGAN", 2017],
+    ["THE NEW MUTANTS", 2020], ["MADAME WEB", 2024], ["KRAVEN THE HUNTER", 2024],
+    ["FANTASTIC FOUR", 2005], ["FANTASTIC FOUR: RISE OF THE SILVER SURFER", 2007],
+    ["FANT4STIC", 2015], ["IRON MAN", 2008], ["THE INCREDIBLE HULK", 2008],
+    ["IRON MAN 2", 2010], ["CAPTAIN AMERICA: THE FIRST AVENGER", 2011],
+    ["THOR", 2011], ["THE AVENGERS", 2012], ["IRON MAN 3", 2013],
+    ["THOR: THE DARK WORLD", 2013], ["CAPTAIN AMERICA: THE WINTER SOLDIER", 2014],
+    ["GUARDIANS OF THE GALAXY", 2014], ["AVENGERS: AGE OF ULTRON", 2015],
+    ["ANT-MAN", 2015], ["CAPTAIN AMERICA: CIVIL WAR", 2016], ["DOCTOR STRANGE", 2016],
+    ["GUARDIANS OF THE GALAXY VOL. 2", 2017], ["SPIDER-MAN: HOMECOMING", 2017],
+    ["THOR: RAGNAROK", 2017], ["BLACK PANTHER", 2018], ["AVENGERS: INFINITY WAR", 2018],
+    ["ANT-MAN AND THE WASP", 2018], ["CAPTAIN MARVEL", 2019], ["AVENGERS: ENDGAME", 2019],
+    ["SPIDER-MAN: FAR FROM HOME", 2019], ["BLACK WIDOW", 2021], ["ETERNALS", 2021],
+    ["SPIDER-MAN: NO WAY HOME", 2021], ["DOCTOR STRANGE IN THE MULTIVERSE OF MADNESS", 2022],
+    ["THOR: LOVE AND THUNDER", 2022], ["BLACK PANTHER: WAKANDA FOREVER", 2022],
+    ["ANT-MAN AND THE WASP: QUANTUMANIA", 2023], ["GUARDIANS OF THE GALAXY VOL. 3", 2023],
+    ["THE MARVELS", 2023], ["CAPTAIN AMERICA: BRAVE NEW WORLD", 2025],
+    ["THUNDERBOLTS*", 2025], ["THE FANTASTIC FOUR: FIRST STEPS", 2025]
+];
+
+
 let instalacionPendiente = null;
 
 function actualizarInicioPersonalizado() {
@@ -882,6 +912,45 @@ function actualizarBotonCargarMas() {
     }
 }
 
+async function cargarColeccionPersonalMarvel() {
+    const resultados = [];
+    const vistos = new Set();
+
+    for (const [tituloOriginal, anio] of coleccionPersonalMarvel) {
+        try {
+            const datos = await obtenerTMDB(
+                "/search/movie?query=" + encodeURIComponent(tituloOriginal) +
+                "&year=" + encodeURIComponent(anio)
+            );
+
+            const coincidencias = (datos.results || []).filter(function(item) {
+                const fecha = item.release_date || "";
+                return fecha.startsWith(String(anio));
+            });
+
+            const item = coincidencias[0] || (datos.results || [])[0];
+            if (!item || !item.id || vistos.has(item.id)) continue;
+
+            item.tipo = "movie";
+            item.coleccionPersonal = true;
+            item.tituloColeccion = tituloOriginal;
+            item.anioColeccion = anio;
+            vistos.add(item.id);
+            resultados.push(item);
+        } catch (error) {
+            console.warn("No se pudo resolver en TMDB:", tituloOriginal, error);
+        }
+    }
+
+    const idsBase = new Set(peliculasTMDB.map(function(item) { return item.id; }));
+    resultados.forEach(function(item) {
+        if (!idsBase.has(item.id)) peliculasTMDB.push(item);
+    });
+
+    window.coleccionPersonalMarvel = resultados;
+    return resultados;
+}
+
 async function cargarMarvelTMDB() {
     const catalogo = document.getElementById("catalogo");
 
@@ -912,6 +981,8 @@ async function cargarMarvelTMDB() {
 
         totalPaginasPeliculasTMDB = respuestas[0].totalPaginas;
         totalPaginasSeriesTMDB = respuestas[1].totalPaginas;
+
+        await cargarColeccionPersonalMarvel();
 
         mostrarTipoMarvel("peliculas");
         renderizarFilasInicio();
