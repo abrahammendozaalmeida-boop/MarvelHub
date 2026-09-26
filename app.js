@@ -520,6 +520,9 @@ function alternarFavorito(id, tipo, itemProporcionado) {
     guardarFavoritos();
     actualizarInicioPersonalizado();
     actualizarResumenAjustes();
+    actualizarPerfilUI();
+    actualizarResumenFavoritos();
+    renderizarFilaFavoritosInicio();
     renderizarPersonalizadoInicio();
     renderizarCatalogo(tipo === "movie" ? peliculasTMDB : seriesTMDB);
 
@@ -658,6 +661,8 @@ function vaciarFavoritos() {
     guardarFavoritos();
     actualizarInicioPersonalizado();
     actualizarResumenAjustes();
+    actualizarPerfilUI();
+    actualizarResumenFavoritos();
     renderizarPersonalizadoInicio();
     renderizarFilaFavoritosInicio();
     mostrarFavoritos();
@@ -2811,6 +2816,7 @@ function restablecerPerfilLocal() {
     actualizarSaludoInicio();
     actualizarInicioPersonalizado();
     actualizarResumenAjustes();
+    sincronizarPerfilLocalActual();
 }
 
 function configurarPerfil() {
