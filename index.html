@@ -443,7 +443,7 @@
 
         <div class="video-ai-hero">
             <div class="video-ai-formulario">
-                <div class="video-ai-badge"><i data-lucide="sparkles"></i> MOTOR GRATUITO • FASE 2</div>
+                <div class="video-ai-badge"><i data-lucide="sparkles"></i> MOTOR GRATUITO</div>
                 <h3>Convierte una idea en un proyecto de video</h3>
                 <p>Un espacio creativo para transformar una idea en video.</p>
 
@@ -501,7 +501,7 @@
                 <div class="video-ai-subtitulos">
                     <div class="video-ai-subtitulos-cabecera">
                         <div>
-                            <span class="mini-etiqueta">💬 SUBTÍTULOS • FASE 4</span>
+                            <span class="mini-etiqueta">💬 SUBTÍTULOS</span>
                             <strong>Subtítulos automáticos sincronizados</strong>
                             <small>Haz que cada momento se entienda de forma clara y dinámica.</small>
                         </div>
@@ -516,7 +516,7 @@
                         <button id="videoAIGenerarSubtitulos" type="button" class="video-ai-generar-secundario"><i data-lucide="captions"></i><span>Generar subtítulos</span></button>
                         <button id="videoAIDescargarSRT" type="button" class="video-ai-boton-secundario" hidden><i data-lucide="download"></i><span>Descargar .SRT</span></button>
                     </div>
-                    <p id="videoAISubtitulosAyuda" class="video-ai-voz-ayuda">Los subtítulos se calculan con la duración de cada escena. En la siguiente fase se integrarán directamente al MP4.</p>
+                    <p id="videoAISubtitulosAyuda" class="video-ai-voz-ayuda">Los subtítulos se sincronizan con la duración de cada escena y quedan listos para el render final.</p>
                     <div id="videoAISubtitulosPreview" class="video-ai-subtitulos-preview"></div>
                 </div>
                 <button id="videoAIGenerar" type="button" class="video-ai-generar">
@@ -528,7 +528,7 @@
                         <div>
                             <span class="mini-etiqueta">🎙️ VOZ</span>
                             <strong>Narración automática</strong>
-                            <small>Previsualiza gratis en el navegador o genera un WAV con el motor local.</small>
+                            <small>Elige cómo quieres dar voz a tu historia.</small>
                         </div>
                         <span id="videoAIVozEstado" class="video-ai-voz-chip">No generada</span>
                     </div>
@@ -563,7 +563,7 @@
                         <a id="videoAIVozDescargar" class="video-ai-boton-secundario" hidden download><i data-lucide="download"></i><span>Descargar WAV</span></a>
                     </div>
                     <audio id="videoAIAudio" class="video-ai-audio" controls hidden></audio>
-                    <p id="videoAIVozAyuda" class="video-ai-voz-ayuda">El modo navegador es inmediato y no usa API. Para WAV real, instala y ejecuta el servidor local gratuito.</p>
+                    <p id="videoAIVozAyuda" class="video-ai-voz-ayuda">La voz del navegador funciona al instante; el motor local permite generar un WAV.</p>
                 </div>
 
             </div>
@@ -571,7 +571,7 @@
             <div class="video-ai-flujo">
                 <div class="video-ai-flujo-titulo">
                     <span class="mini-etiqueta">FLUJO</span>
-                    <strong>Lo que vamos a automatizar</strong>
+                    <strong>Tu flujo creativo</strong>
                 </div>
                 <div class="video-ai-pasos">
                     <div><span>1</span><i data-lucide="file-text"></i><b>Guion</b><small>estructura automática</small></div>
@@ -586,7 +586,7 @@
 
         <div class="video-ai-audio-panel">
             <div class="video-ai-audio-cabecera">
-                <div><span class="mini-etiqueta">🎵 AUDIO • FASE 5</span><strong>Música y efectos de sonido</strong><small>Configura una pista de fondo y efectos generados localmente para el futuro MP4.</small></div>
+                <div><span class="mini-etiqueta">🎵 AUDIO</span><strong>Música y efectos de sonido</strong><small>Dale ritmo a tu historia con música y efectos sutiles.</small></div>
                 <span id="videoAIAudioEstado" class="video-ai-audio-chip">Pendiente</span>
             </div>
             <div class="video-ai-audio-opciones">
@@ -595,15 +595,15 @@
                 <label><span>Efectos</span><select id="videoAISFX"><option value="si" selected>Activados</option><option value="no">Desactivados</option></select></label>
             </div>
             <div class="video-ai-audio-acciones"><button type="button" id="videoAIAudioPreview" class="video-ai-generar-secundario">▶ Probar audio</button><button type="button" id="videoAIAudioDetener" class="video-ai-boton-secundario">■ Detener</button></div>
-            <p class="video-ai-audio-ayuda">El audio de prueba se genera con Web Audio API; no necesita descargar música externa.</p>
+            <p class="video-ai-audio-ayuda">Prueba la ambientación antes de generar tu versión final.</p>
         </div>
 
         <div class="video-ai-render-panel">
             <div class="video-ai-render-cabecera">
                 <div>
-                    <span class="mini-etiqueta">🎬 MP4 • FASE 6</span>
+                    <span class="mini-etiqueta">🎬 MP4</span>
                     <strong>Renderizador final</strong>
-                    <small>Genera un MP4 vertical 9:16 usando FFmpeg en tu PC.</small>
+                    <small>Tu proyecto toma forma en un MP4 listo para compartir.</small>
                 </div>
                 <span id="videoAIRenderEstado" class="video-ai-render-chip">Pendiente</span>
             </div>
@@ -611,8 +611,8 @@
                 <span>📱 1080 × 1920</span><span>🎞️ 30 FPS</span><span>🖼️ Escenas automáticas</span><span>💻 Local y gratuito</span>
             </div>
             <button type="button" id="videoAIRenderizar" class="video-ai-generar">🎬 Generar MP4</button>
-            <a id="videoAIDescargarMP4" class="video-ai-render-descarga" hidden download>⬇️ Descargar MP4</a>
-            <p id="videoAIRenderAyuda" class="video-ai-render-ayuda">Primero ejecuta <b>tools/render-server.py</b> con FFmpeg instalado.</p>
+            <div class="video-ai-render-acciones"><a id="videoAIDescargarMP4" class="video-ai-render-descarga" hidden download>⬇️ Descargar MP4</a><button type="button" id="videoAIAbrirEditor" class="video-ai-boton-secundario" hidden>✂️ Abrir en Editor IA</button></div>
+            <p id="videoAIRenderAyuda" class="video-ai-render-ayuda">Tu video se prepara localmente para mantener el proceso rápido y privado.</p>
         </div>
 
     <div class="video-ai-editor-integrado">
