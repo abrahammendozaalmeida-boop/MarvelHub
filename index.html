@@ -110,7 +110,7 @@
                 <div class="titulo-fila-home">
                     <div>
                         <h2><i data-lucide="clapperboard"></i> Películas destacadas</h2>
-                        <p>4 películas al inicio. Entra a "Ver más" para cargar el catálogo por bloques.</p>
+                        <p>Una selección de historias para descubrir.</p>
                     </div>
                     <button type="button" class="boton-secundario home-ver-mas" onclick="mostrarSeccion('marvel')">Ver más <i data-lucide="arrow-right"></i></button>
                 </div>
@@ -154,7 +154,7 @@
         <div class="titulo-seccion">
             <span class="mini-etiqueta">MARVEL</span>
             <h2><i data-lucide="library"></i> Catálogo Marvel</h2>
-            <p>Películas y series de Marvel</p>
+            <p>Explora historias, personajes y aventuras del universo Marvel.</p>
         </div>
 
         <div class="catalogo-command">
@@ -162,7 +162,7 @@
                 <div class="catalogo-command-copy">
                     <span class="mini-etiqueta">EXPLORAR</span>
                     <strong>Encuentra algo para ver</strong>
-                    <small>Filtra el catálogo o busca directamente en TMDB.</small>
+                    <small>Historias y personajes para descubrir en un solo lugar.</small>
                 </div>
                 <div class="catalogo-command-hint"><kbd>/</kbd><span>Buscar</span></div>
             </div>
@@ -196,7 +196,7 @@
                 <div>
                     <span class="mini-etiqueta">BÚSQUEDA GLOBAL</span>
                     <h3><i data-lucide="search"></i> Encuentra cualquier Marvel</h3>
-                    <p>Busca directamente en TMDB, incluso si todavía no aparece en tu catálogo.</p>
+                    <p>Una búsqueda más amplia para encontrar nuevas historias.</p>
                 </div>
             </div>
             <div class="busqueda-global-form">
@@ -268,14 +268,14 @@
         <div class="titulo-seccion video-ai-titulo">
             <span class="mini-etiqueta">ABRAHAM G4 • VIDEO AI</span>
             <h2><i data-lucide="wand-sparkles"></i> Generador automático de videos</h2>
-            <p>Escribe un tema y prepara un proyecto vertical listo para voz, recursos, subtítulos y renderizado.</p>
+            <p>Dale vida a tus ideas y crea historias listas para compartir.</p>
         </div>
 
         <div class="video-ai-hero">
             <div class="video-ai-formulario">
                 <div class="video-ai-badge"><i data-lucide="sparkles"></i> MOTOR GRATUITO • FASE 2</div>
                 <h3>Convierte una idea en un proyecto de video</h3>
-                <p>Primero construiremos el proyecto. Después conectaremos voz, imágenes, música y renderizado.</p>
+                <p>Un espacio creativo para transformar una idea en video.</p>
 
                 <label class="video-ai-label" for="videoAITema">¿Sobre qué quieres hacer el video?</label>
                 <textarea id="videoAITema" class="video-ai-textarea" maxlength="240" placeholder="Ej. 5 datos curiosos de Spider-Man"></textarea>
@@ -315,7 +315,7 @@
                         <div>
                             <span class="mini-etiqueta">🖼️ RECURSOS</span>
                             <strong>Visuales automáticos por escena</strong>
-                            <small>Busca imágenes Marvel desde TMDB y prepara cada escena para el futuro render.</small>
+                            <small>Recursos visuales para dar vida a cada escena.</small>
                         </div>
                         <span id="videoAIRecursosEstado" class="video-ai-voz-chip">No buscados</span>
                     </div>
@@ -323,7 +323,7 @@
                         <button id="videoAIBuscarRecursos" type="button" class="video-ai-generar-secundario"><i data-lucide="images"></i><span>Buscar recursos</span></button>
                         <button id="videoAICargarRecursosGuardados" type="button" class="video-ai-boton-secundario"><i data-lucide="refresh-cw"></i><span>Recargar</span></button>
                     </div>
-                    <p id="videoAIRecursosAyuda" class="video-ai-voz-ayuda">Se usarán pósters y fondos disponibles en TMDB cuando la clave esté configurada.</p>
+                    <p id="videoAIRecursosAyuda" class="video-ai-voz-ayuda">Visuales seleccionados para acompañar tu historia.</p>
                     <div id="videoAIRecursosGrid" class="video-ai-recursos-grid"></div>
                 </div>
 
@@ -333,7 +333,7 @@
                         <div>
                             <span class="mini-etiqueta">💬 SUBTÍTULOS • FASE 4</span>
                             <strong>Subtítulos automáticos sincronizados</strong>
-                            <small>Genera tiempos por escena y descarga el archivo SRT para usarlo en cualquier editor.</small>
+                            <small>Haz que cada momento se entienda de forma clara y dinámica.</small>
                         </div>
                         <span id="videoAISubtitulosEstado" class="video-ai-voz-chip">No generados</span>
                     </div>
@@ -854,14 +854,14 @@
             <div class="ajuste">
                 <span class="ajuste-icono">🔑</span>
                 <div class="ajuste-contenido">
-                    <strong>Conexión TMDB</strong>
-                    <p>Configura TMDB una sola vez. Catálogo y Video AI usarán la misma conexión.</p>
+                    <strong>Conexión al catálogo de contenido.</strong>
+                    <p>Catálogo y creación, unidos en una misma experiencia.</p>
                     <div class="ajuste-fila">
                         <input type="password" id="tmdbApiKeyAjustes" placeholder="API Key de TMDB" autocomplete="off">
                         <button id="guardarTMDBAjustes" type="button">💾 Guardar</button>
                         <button id="borrarTMDBAjustes" type="button">🗑️</button>
                     </div>
-                    <small id="estadoTMDBAjustes" class="ajuste-ayuda">TMDB se guarda solo en este navegador.</small>
+                    <small id="estadoTMDBAjustes" class="ajuste-ayuda">Tu conexión se mantiene en este dispositivo.</small>
                 </div>
             </div>
 
