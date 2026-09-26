@@ -440,12 +440,10 @@ function crearTarjetaMarvel(item, opciones) {
         verDetallesTMDB(datos.id, tipo);
     };
 
-    const botonVer = tarjeta.querySelector(".card-ver");
-    const botonDetalles = tarjeta.querySelector(".boton-detalles");
-    const botonFavorito = tarjeta.querySelector(".boton-favorito, .boton-quitar-favorito");
+    tarjeta.dataset.tmdbId = String(datos.id || "");
+    tarjeta.dataset.tmdbTipo = tipo;
 
-    if (botonVer) botonVer.addEventListener("click", abrirDetalles);
-    if (botonDetalles) botonDetalles.addEventListener("click", abrirDetalles);
+    const botonFavorito = tarjeta.querySelector(".boton-favorito, .boton-quitar-favorito");
 
     if (botonFavorito) {
         botonFavorito.addEventListener("click", function() {
@@ -805,15 +803,8 @@ function renderizarFavoritos(filtro) {
             verDetallesTMDB(item.id, item.tipo);
         };
 
-        tarjeta.querySelector(".card-ver").addEventListener(
-            "click",
-            abrirDetalles
-        );
-
-        tarjeta.querySelector(".boton-detalles").addEventListener(
-            "click",
-            abrirDetalles
-        );
+        tarjeta.dataset.tmdbId = String(item.id || "");
+        tarjeta.dataset.tmdbTipo = item.tipo || "movie";
 
         tarjeta.querySelector(".boton-quitar-favorito").addEventListener(
             "click",
@@ -1811,6 +1802,24 @@ function configurarModal() {
         if (event.target === modal) {
             cerrarDetalles();
         }
+    });
+
+    // Apertura robusta de detalles para tarjetas creadas dinámicamente.
+    document.addEventListener("click", function(event) {
+        const boton = event.target.closest(".card-ver, .boton-detalles");
+        if (!boton) return;
+
+        const tarjeta = boton.closest(".tarjeta-pelicula");
+        if (!tarjeta) return;
+
+        const id = tarjeta.dataset.tmdbId;
+        const tipo = tarjeta.dataset.tmdbTipo || "movie";
+
+        if (!id) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        verDetallesTMDB(id, tipo);
     });
 }
 
