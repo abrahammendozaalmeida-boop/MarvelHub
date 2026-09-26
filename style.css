@@ -4729,3 +4729,15 @@ body.tema-claro .video-ai-recurso{background:#fff;border-color:#ddd}
     .editor-ia-barra { align-items:flex-start; flex-direction:column; }
     .editor-ai-estado { align-self:flex-start; }
 }
+
+
+/* Pulido de Favoritos y Perfil */
+.favoritos-resumen, .perfil-panel, .perfil-info-grid, .cuenta-panel { position: relative; }
+.favoritos-resumen { gap: 18px; }
+.perfil-info-card button { margin-top: 10px; }
+.ajuste-contenido button { transition: transform .2s ease, opacity .2s ease; }
+.ajuste-contenido button:hover { transform: translateY(-1px); }
+@media (max-width: 700px) {
+  .favoritos-acciones { gap: 12px; }
+  .perfil-info-grid { grid-template-columns: 1fr; }
+}
