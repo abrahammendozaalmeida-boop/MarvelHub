@@ -4693,3 +4693,39 @@ body.tema-claro .video-ai-recurso{background:#fff;border-color:#ddd}
 .detalle-nota-reproduccion strong {
     color: rgba(255,255,255,.78);
 }
+
+/* Editor IA integrado */
+.editor-ia-barra {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin: 0 0 18px;
+    padding: 16px 18px;
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 16px;
+    background: rgba(255,255,255,.025);
+}
+.editor-ia-barra > div { display:flex; flex-direction:column; gap:5px; }
+.editor-ia-barra strong { font-size:1rem; }
+.editor-ia-barra small { color:rgba(255,255,255,.52); line-height:1.45; }
+.editor-ia-estado {
+    flex:0 0 auto;
+    padding:7px 10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.06);
+    color:rgba(255,255,255,.68);
+    font-size:.75rem;
+    white-space:nowrap;
+}
+.video-ai-render-acciones {
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    margin-top:12px;
+}
+@media (max-width:700px) {
+    .editor-ia-barra { align-items:flex-start; flex-direction:column; }
+    .editor-ai-estado { align-self:flex-start; }
+}
