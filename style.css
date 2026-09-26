@@ -4613,3 +4613,11 @@ body.tema-claro .video-ai-recurso{background:#fff;border-color:#ddd}
 .tmdb-dev-switch input{accent-color:#e62429}
 #tmdbDevEstado{font-size:10px;color:#9999a3}
 @media(max-width:700px){.tmdb-dev-panel{align-items:flex-start;flex-direction:column}.tmdb-dev-actions{width:100%;justify-content:space-between}}
+
+/* INICIO OPTIMIZADO — carga ligera */
+.home-peliculas-destacadas{margin-top:30px}
+.titulo-fila-home{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
+.home-ver-mas{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;min-height:40px;padding:0 13px}
+.home-ver-mas svg{width:15px;height:15px}
+#catalogoSentinela{height:1px;width:100%;pointer-events:none}
+@media(max-width:650px){.titulo-fila-home{align-items:flex-start;flex-direction:column}.home-ver-mas{width:100%;justify-content:center}}
