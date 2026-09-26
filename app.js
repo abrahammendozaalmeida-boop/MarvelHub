@@ -35,6 +35,73 @@ const coleccionPersonalMarvel = [
     ["THUNDERBOLTS*", 2025], ["THE FANTASTIC FOUR: FIRST STEPS", 2025]
 ];
 
+const enlacesReproduccionMarvel = [
+    "https://drive.google.com/drive/folders/1pOMPhnD9qL6Pswi9IoqlreCZSH4pwlKP?usp=sharing",
+    "https://drive.google.com/drive/folders/1sp-mS1_7JfdBfxdE2_pMcgmV4QFKieEe?usp=sharing",
+    "https://drive.google.com/drive/folders/1qusOOOwmjSsBf6LNaNHswMAEV935oqe1?usp=sharing",
+    "https://drive.google.com/file/d/1MzUqSxvF-A_ziILziwYLplFmgkToZkz7/view?usp=sharing",
+    "https://drive.google.com/file/d/1SCiR1f31LcT3qZrBOYpXUJY7tkPAOn9d/view?usp=sharing",
+    "https://drive.google.com/file/d/1dufg10UekYG84xqit_rqHsGVVEVyLYFe/view?usp=sharing",
+    "https://drive.google.com/drive/folders/11o53IM26mZKMLytjgjbd60dzASJITVDq?usp=sharing",
+    "https://drive.google.com/drive/folders/1Tdrt4o6D_9FP4HQzHTi9CloDuEgqP6p6?usp=sharing",
+    "https://drive.google.com/file/d/195YjQDthlvIAJJ391c2zXefv5cXNB0wv/view?usp=sharing",
+    "https://drive.google.com/drive/folders/1Z_g4SuklpUdwYtwlH-g4Kb-YPycg8hXb?usp=sharing",
+    "https://drive.google.com/file/d/10uIYHDxZO3_qZxuFZZTYddP2tHjy1TIx/view?usp=sharing",
+    "https://drive.google.com/drive/folders/13N3LONc4U9BDk-kyzPcEUKS_XiRAvpQF?usp=sharing",
+    "https://drive.google.com/drive/folders/1mDCtbYHnkjSfSwqVO58jdAIGKzrvVahA?usp=sharing",
+    "https://drive.google.com/drive/folders/1dS4Sb376rXPTtBtA_7KQ6l8yvBJuRy2C?usp=sharing",
+    "https://drive.google.com/drive/folders/1Ug10_vJCsmFjXDZ5N-N28r9ECu5zvRDp?usp=sharing",
+    "https://drive.google.com/drive/folders/1MXoZ6zm6PZalvkdKqEKgkJPE71EdWO5A?usp=sharing",
+    "https://drive.google.com/drive/folders/13juMKai9BPL33z5G3jnypqkqZttsqLlK?usp=sharing",
+    "https://drive.google.com/drive/folders/1UGd0xv5RNVTpUaR8NE0oMorXE2NdpGtn?usp=sharing",
+    "https://drive.google.com/open?id=1yhQfe6G_DeAC2I43iHVoz4KRgs_avL1M",
+    "https://drive.google.com/drive/folders/17drhfRdhOd_6NQWXAAvBifNIjICVklqh?usp=sharing",
+    "https://drive.google.com/drive/folders/1VBGyzGVNxDTf54KO0UHfzF_oYxzeHpZL?usp=sharing",
+    "https://drive.google.com/drive/folders/10OWkgkEAqPT9Ve5bhcL5HGLvVNc_Q3sN?usp=sharing",
+    "https://drive.google.com/drive/folders/1enW_9UL8TqAbUiIWPhqRo0GNaN7dENDv?usp=sharing",
+    "https://drive.google.com/drive/folders/1PrFOEjcoqEHagD3kP20djIO5DNN5Six7?usp=sharing",
+    "https://drive.google.com/drive/folders/1OwAXuYC9i53tg4KEb602N5pBpYMUJwnV?usp=sharing",
+    "https://drive.google.com/drive/folders/1eLJDrQmf-x59Vot5vSEeO4Cq6WdZteUp?usp=sharing",
+    "https://drive.google.com/drive/folders/1aGIHVxLX1hdjwKiKMFCVTPCbfaJVzLrd?usp=sharing",
+    "https://drive.google.com/drive/folders/18rq8xR66MiElq5CrJtfBDGmDAYWXc3QE?usp=sharing",
+    "https://drive.google.com/drive/folders/1jFj4n-Yz4rmhmOKeNgilYjErjTa3jEuL?usp=sharing",
+    "https://drive.google.com/drive/folders/1_XpgrZdkalrMkmn6u7QcsFQMgw_IR2Po?usp=sharing",
+    "https://drive.google.com/drive/folders/1kGlRtADp77wGBQ1OEviUoXUHTOJoBIUD?usp=sharing",
+    "https://drive.google.com/drive/folders/11cN9cY8yuVGpRAl4I82ShYMWbeU8XYUz?usp=sharing",
+    "https://drive.google.com/drive/folders/1eWrxPJ_wltVVG7KOOFEuME97DDHJ0G9w?usp=sharing",
+    "https://drive.google.com/drive/folders/1d_SL66Fq15csgmTc7dcUKf6T64tA38Yx?usp=sharing",
+    "https://drive.google.com/drive/folders/14lT8ITOH3QHkLXErcfOdFxGnRQeOy5mG?usp=sharing",
+    "https://drive.google.com/drive/folders/1HijPjsbwLff2CvWoo6WG3d_PwZN6gDll?usp=sharing",
+    "https://drive.google.com/drive/folders/1ZjA3Cn2Joy4oHEBXKVQAbHmfHIP7iTQB?usp=sharing",
+    "https://drive.google.com/drive/folders/1ZmYFPq5O5as9mI5i8rlUhtMzUWuMBHKe?usp=sharing",
+    "https://drive.google.com/drive/folders/1GizPQJmiAthbt51VKSbUsbntmxTMPQRs?usp=sharing",
+    "https://drive.google.com/drive/folders/1gL1BpwpyWXuDqGoVTFHW_4tuOFJ-Cvbe?usp=sharing",
+    "https://drive.google.com/drive/folders/17m5cgpHLUeiKhpgWvMc1JuCYqerdweMf?usp=sharing",
+    "https://drive.google.com/drive/folders/1MUVaUoSOxdohJ5MI6TBfJjiQdCUJDfU4?usp=sharing",
+    "https://drive.google.com/drive/folders/11xNuvpE1JGsTNueNYW4LH7z7j6nt1nZd?usp=sharing",
+    "https://drive.google.com/drive/folders/1uDdQdGeEQRpqs8wKv7S4siaxQc-RgRta?usp=sharing",
+    "https://drive.google.com/drive/folders/1db1U9aZ_op0ZFkG3OOaK2UVJG6D0_arB?usp=sharing",
+    "https://drive.google.com/drive/folders/1LOA48JOuLLc4Dfot8ZLYwu9XgpiRQl-g?usp=sharing",
+    "https://drive.google.com/drive/folders/11xIjbtCvU4sV-fxfI5q0WlYmo9yd4xrD?usp=sharing",
+    "https://drive.google.com/drive/folders/1UyJlAJSwDuelptyIZCYhnASn_5XRRkNP?usp=sharing",
+    "https://drive.google.com/drive/folders/17JAtMIw7LjaMzotzOhaJ-KJVmutQSVj8?usp=sharing",
+    "https://drive.google.com/drive/folders/1_AvwdItObNKHQSyZCElBOYoaa1V6W2et?usp=sharing",
+    "https://drive.google.com/drive/folders/1JLuSyzrs5FxDO6BVlWPnEfvm4eLnzLQN?usp=sharing",
+    "https://drive.google.com/drive/folders/1fQk4j7mGlVHi9pQAmezRdPLN4IuqVuLc?usp=sharing",
+    "https://drive.google.com/drive/folders/16ksOG0_KH_i3bQ4zJpWcslnN6FNNdNX7?usp=sharing",
+    "https://drive.google.com/drive/folders/1bmFDFUsoAyZtdbO47ARAT2xoNDwCWXqg?usp=sharing",
+    "https://drive.google.com/drive/folders/1dhSZC2iwdKnDD28RhBsH93HKC7pYX90N?usp=sharing",
+    "https://drive.google.com/drive/folders/1pe4FcmAA2gLhMnihXgMX-_8k5KVwoJ2F?usp=sharing",
+    "https://drive.google.com/drive/folders/1rgv7fXPmVfGQVgD-Oz8z2AzSyMihrU-1?usp=sharing",
+    "https://drive.google.com/drive/folders/12VxypxVOcuESSD9rWCBioS3Hb8995c__?usp=share_link",
+    "https://drive.google.com/drive/folders/17P0TIFVKHhjXmUd68DgW1dGOI6BGfmlj?usp=share_link",
+    "https://drive.google.com/drive/folders/1GHtlmaC-t04t6oPH6vAqcJzzM6wsC64X?usp=sharing",
+    "https://drive.google.com/drive/folders/144b_M7Np-oMNaQDIPVF0ymsxBFAATkik?usp=sharing",
+    "https://drive.google.com/drive/folders/1eGBvkCopyyCEhf6xr1fm9XsD87NcjfF9?usp=sharing",
+    "https://drive.google.com/drive/folders/1_3o6Z9Nkdm4CvvICNeW96Pw114FnwFY4?usp=sharing"
+];
+
+
 
 let instalacionPendiente = null;
 
@@ -1481,9 +1548,20 @@ function obtenerEnlaceReproduccionMarvel(datos) {
             String(datos.title || datos.name || "").trim().toLowerCase(),
             String(datos.original_title || datos.original_name || "").trim().toLowerCase()
         ].filter(Boolean);
+
         for (const clave of claves) {
-            if (typeof fuentes[clave] === "string" && /^https?:\\/\\//i.test(fuentes[clave])) {
+            if (typeof fuentes[clave] === "string" && /^https?:\/\//i.test(fuentes[clave])) {
                 return fuentes[clave];
+            }
+        }
+
+        if (datos.coleccionPersonal && datos.tituloColeccion) {
+            const indice = coleccionPersonalMarvel.findIndex(function(registro) {
+                return registro[0] === datos.tituloColeccion &&
+                    Number(registro[1]) === Number(datos.anioColeccion);
+            });
+            if (indice >= 0 && typeof enlacesReproduccionMarvel[indice] === "string") {
+                return enlacesReproduccionMarvel[indice];
             }
         }
     } catch (error) {
