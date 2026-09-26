@@ -1712,7 +1712,7 @@ async function verDetallesTMDB(id, tipo) {
             "</div>" +
             "<div class='detalle-acciones'>" +
             (obtenerEnlaceReproduccionMarvel(datos)
-                ? "<button id='detalleReproducir' type='button' class='boton-principal'><i data-lucide='play'></i><span>Reproducir película</span></button>"
+                ? "<button id='detalleReproducir' type='button' class='boton-principal'><i data-lucide='play'></i><span>Reproducir</span></button>"
                 : "") +
             "<button id='detalleFavorito' type='button' class='" +
             (esFavoritoMarvel(datos.id, tipo) ? "boton-quitar-favorito" : "boton-favorito") +
