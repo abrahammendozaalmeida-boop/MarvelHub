@@ -1090,21 +1090,21 @@ function obtenerMarvelLocalPorId(id) {
     }) || null;
 }
 
-function verDetallesLocalMarvel(id, tipo) {
+async function verDetallesLocalMarvel(id, tipo) {
     const modal = document.getElementById("modalMarvel");
     const contenido = document.getElementById("detalleMarvel");
     if (!modal || !contenido) return;
 
     const datos = obtenerMarvelLocalPorId(id);
     if (!datos) {
-        contenido.innerHTML = "<div class='detalle-error'><strong>No se encontró este título.</strong><p>La ficha local no está disponible.</p></div>";
+        contenido.innerHTML = "<div class='detalle-error'><strong>No se encontró este título.</strong></div>";
         modal.classList.add("activo");
         return;
     }
 
-    const titulo = datos.title || datos.name || datos.titulo || "Sin título";
-    const fecha = datos.release_date || datos.first_air_date || datos.fecha || "Sin fecha";
-    const anio = String(fecha).slice(0, 4);
+    const titulo = datos.title || "Sin título";
+    const anio = String(datos.anioColeccion || datos.release_date || "").slice(0, 4);
+    const enlace = obtenerEnlaceReproduccionMarvel(datos);
     const esFavorito = esFavoritoMarvel(datos.id, "movie");
 
     guardarVistoRecientemente(datos);
@@ -1115,59 +1115,94 @@ function verDetallesLocalMarvel(id, tipo) {
         "<div class='detalle-hero-contenido'>" +
         "<div class='detalle-poster detalle-poster-vacio'><span>MARVEL</span><strong>" + escaparHTML(titulo) + "</strong><small>" + escaparHTML(anio) + "</small></div>" +
         "<div class='detalle-principal'><span class='detalle-tipo'>🎬 PELÍCULA</span><h2>" + escaparHTML(titulo) + "</h2><div class='detalle-meta'><span>🎬 Película</span><span>📅 " + escaparHTML(anio) + "</span></div></div>" +
-        "<div class='detalle-acciones'>" +
-        "<button id='detalleReproducir' type='button' class='boton-principal'><i data-lucide='play'></i><span>Reproducir</span></button>" +
+        "</div></div>" +
+        "<div class='detalle-cuerpo'>" +
+        "<div class='detalle-seccion'><h3>📖 Sinopsis</h3><p id='detalleSinopsis' class='detalle-sinopsis'>Cargando sinopsis...</p></div>" +
+        "<div class='detalle-seccion'><h3>🎞️ Tráiler</h3><div id='detalleTrailer' class='detalle-trailer'><p class='detalle-vacio'>Cargando tráiler...</p></div></div>" +
+        "<div class='detalle-seccion detalle-reproducir-final'><h3>🎬 Ver película</h3><p class='detalle-vacio'>Cuando esté disponible, podrás abrir tu reproducción desde aquí.</p><button id='detalleReproducir' type='button' class='boton-principal'><i data-lucide='play'></i><span>Reproducir</span></button>" +
         "<button id='detalleFavorito' type='button' class='" + (esFavorito ? "boton-quitar-favorito" : "boton-favorito") + "'><i data-lucide='heart'></i><span>" + (esFavorito ? "Quitar de favoritos" : "Añadir a favoritos") + "</span></button>" +
-        "<button id='detalleCompartir' type='button' class='boton-secundario'><i data-lucide='share-2'></i><span>Compartir</span></button>" +
-        "</div></div></div>" +
-        "<div class='detalle-cuerpo'><div class='detalle-seccion'><h3>📖 Sinopsis</h3><p class='detalle-sinopsis'>Título de tu colección personal de Marvel.</p></div><div class='detalle-seccion'><h3>🎬 Colección</h3><p class='detalle-vacio'>" + escaparHTML(titulo) + " · " + escaparHTML(anio) + "</p></div></div>";
+        "<button id='detalleCompartir' type='button' class='boton-secundario'><i data-lucide='share-2'></i><span>Compartir</span></button></div>" +
+        "</div>";
 
     modal.classList.add("activo");
 
     const botonReproducir = document.getElementById("detalleReproducir");
-    if (botonReproducir) {
-        botonReproducir.addEventListener("click", function() {
-            const url = obtenerEnlaceReproduccionMarvel(datos);
-            if (url) {
-                window.open(url, "_blank", "noopener,noreferrer");
-                return;
-            }
+    botonReproducir.addEventListener("click", function() {
+        const url = obtenerEnlaceReproduccionMarvel(datos);
+        if (url) {
+            window.open(url, "_blank", "noopener,noreferrer");
+        } else {
             const span = botonReproducir.querySelector("span");
             if (span) span.textContent = "No disponible";
-            setTimeout(function() { if (span) span.textContent = "Reproducir"; }, 1600);
-        });
-    }
+            setTimeout(function(){ if(span) span.textContent = "Reproducir"; }, 1600);
+        }
+    });
 
     const botonFavorito = document.getElementById("detalleFavorito");
-    if (botonFavorito) {
-        botonFavorito.addEventListener("click", function() {
-            alternarFavorito(datos.id, "movie", datos);
-            const activo = esFavoritoMarvel(datos.id, "movie");
-            botonFavorito.className = activo ? "boton-quitar-favorito" : "boton-favorito";
-            botonFavorito.innerHTML = "<i data-lucide='heart'></i><span>" + (activo ? "Quitar de favoritos" : "Añadir a favoritos") + "</span>";
-            actualizarIconosLucide();
-        });
-    }
+    botonFavorito.addEventListener("click", function() {
+        alternarFavorito(datos.id, "movie", datos);
+        const activo = esFavoritoMarvel(datos.id, "movie");
+        botonFavorito.className = activo ? "boton-quitar-favorito" : "boton-favorito";
+        botonFavorito.innerHTML = "<i data-lucide='heart'></i><span>" + (activo ? "Quitar de favoritos" : "Añadir a favoritos") + "</span>";
+        actualizarIconosLucide();
+    });
 
-    const botonCompartir = document.getElementById("detalleCompartir");
-    if (botonCompartir) {
-        botonCompartir.addEventListener("click", async function() {
-            const texto = "Mira " + titulo + " en ABRAHAM G4 — MARVEL HUB";
-            try {
-                if (navigator.share) await navigator.share({title: titulo, text: texto});
-                else if (navigator.clipboard) {
-                    await navigator.clipboard.writeText(texto);
-                    const span = botonCompartir.querySelector("span");
-                    if (span) {
-                        span.textContent = "Copiado";
-                        setTimeout(function() { span.textContent = "Compartir"; }, 1400);
-                    }
-                }
-            } catch (error) {}
-        });
-    }
+    document.getElementById("detalleCompartir").addEventListener("click", async function() {
+        const texto = "Mira " + titulo + " en ABRAHAM G4 — MARVEL HUB";
+        try {
+            if (navigator.share) await navigator.share({title: titulo, text: texto});
+            else if (navigator.clipboard) await navigator.clipboard.writeText(texto);
+        } catch (error) {}
+    });
 
     actualizarIconosLucide();
+    await enriquecerDetalleLocal(datos);
+}
+
+async function enriquecerDetalleLocal(datos) {
+    const sinopsis = document.getElementById("detalleSinopsis");
+    const trailer = document.getElementById("detalleTrailer");
+    if (!sinopsis || !trailer) return;
+
+    const clave = localStorage.getItem("marvelHubTMDBApiKey") || "";
+    if (!clave || clave === "TU_CLAVE_API") {
+        sinopsis.textContent = datos.overview || "Sinopsis no disponible en el catálogo local.";
+        trailer.innerHTML = "<p class='detalle-vacio'>El tráiler se mostrará cuando la información ampliada esté disponible.</p>";
+        return;
+    }
+
+    try {
+        const consulta = await fetch(
+            TMDB_BASE_URL + "/search/movie?api_key=" + encodeURIComponent(clave) +
+            "&language=es-MX&query=" + encodeURIComponent(datos.tituloColeccion || datos.title) +
+            "&year=" + encodeURIComponent(datos.anioColeccion || "")
+        );
+        const buscados = await consulta.json();
+        const encontrado = buscados.results && buscados.results[0];
+        if (!encontrado) throw new Error("Sin coincidencia");
+
+        const detalleRespuesta = await fetch(
+            TMDB_BASE_URL + "/movie/" + encontrado.id +
+            "?api_key=" + encodeURIComponent(clave) +
+            "&language=es-MX&append_to_response=videos,credits"
+        );
+        const detalle = await detalleRespuesta.json();
+
+        sinopsis.textContent = detalle.overview || "Sinopsis no disponible.";
+        const video = obtenerTrailerTMDB(detalle);
+
+        if (video) {
+            trailer.innerHTML = "<div class='detalle-trailer-video'><iframe src='https://www.youtube.com/embed/" +
+                encodeURIComponent(video.key) +
+                "' title='Tráiler de " + escaparHTML(datos.title) +
+                "' loading='lazy' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe></div>";
+        } else {
+            trailer.innerHTML = "<p class='detalle-vacio'>Tráiler no disponible.</p>";
+        }
+    } catch (error) {
+        sinopsis.textContent = datos.overview || "Sinopsis no disponible en el catálogo local.";
+        trailer.innerHTML = "<p class='detalle-vacio'>Tráiler no disponible.</p>";
+    }
 }
 async function cargarMarvelTMDB() {
     if (MODO_LOCAL_MARVEL) {
