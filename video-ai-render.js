@@ -12,6 +12,7 @@ async function renderizarVideoAI() {
     const boton = document.getElementById("videoAIRenderizar");
     const ayuda = document.getElementById("videoAIRenderAyuda");
     const descarga = document.getElementById("videoAIDescargarMP4");
+    const abrirEditor = document.getElementById("videoAIAbrirEditor");
 
     if (!proyecto) {
         setRenderEstado("Crea un proyecto primero", "error");
@@ -43,6 +44,8 @@ async function renderizarVideoAI() {
             descarga.download = data.result.filename || "ABRAHAM_G4_MarvelHub.mp4";
             descarga.hidden = false;
         }
+        window.marvelHubUltimoVideoRender = url;
+        if (abrirEditor) abrirEditor.hidden = false;
 
         proyecto.render = {
             estado: "listo",
@@ -75,4 +78,9 @@ function base64ToBlob(base64, mime) {
 
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("videoAIRenderizar")?.addEventListener("click", renderizarVideoAI);
+    document.getElementById("videoAIAbrirEditor")?.addEventListener("click", () => {
+        if (window.marvelHubUltimoVideoRender && typeof window.cargarVideoEnEditorDesdeUrl === "function") {
+            window.cargarVideoEnEditorDesdeUrl(window.marvelHubUltimoVideoRender, "Video generado • Marvel Hub");
+        }
+    });
 });
