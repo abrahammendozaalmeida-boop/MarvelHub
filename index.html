@@ -722,7 +722,120 @@
                 <a href="https://open.spotify.com/search/Marvel%20soundtrack" target="_blank" rel="noopener noreferrer">🎧 Spotify</a>
             </div>
         </div>
-    </section>
+    
+
+        <div class="perfil-cuenta-integrada">
+
+        </div>
+</section>
+
+    <section id="perfil" class="seccion">
+        <div class="titulo-seccion">
+            <span class="mini-etiqueta">PERFIL Y CUENTA</span>
+            <h2><i data-lucide="user-round"></i> Mi perfil</h2>
+            <p>Tu identidad, actividad y cuenta están reunidas en un solo espacio.</p>
+        </div>
+
+        <div class="perfil-panel">
+            <div class="perfil-cabecera">
+                <div id="perfilAvatar" class="perfil-avatar" data-avatar="ironman" aria-label="Avatar del perfil"></div>
+                <div class="perfil-identidad">
+                    <span class="mini-etiqueta">PERFIL LOCAL</span>
+                    <h3 id="perfilNombre">ABRAHAM G4</h3>
+                    <p id="perfilEstado">Este perfil funciona solo en este dispositivo.</p>
+                </div>
+            </div>
+
+            <div class="perfil-formulario">
+                <label>
+                    Nombre visible
+                    <input type="text" id="perfilNombreInput" maxlength="30" placeholder="Ej. Abraham">
+                </label>
+
+                <div>
+                    <span class="perfil-label">Avatar</span>
+                    <div class="perfil-avatares" role="group" aria-label="Elegir avatar">
+                        <button type="button" class="perfil-avatar-opcion" data-avatar="ironman" aria-label="Iron Man"><span>🦾</span><small>Iron Man</small></button>
+                        <button type="button" class="perfil-avatar-opcion" data-avatar="capitan" aria-label="Capitán América"><span>🛡️</span><small>Capitán</small></button>
+                        <button type="button" class="perfil-avatar-opcion" data-avatar="thor" aria-label="Thor"><span>⚡</span><small>Thor</small></button>
+                        <button type="button" class="perfil-avatar-opcion" data-avatar="hulk" aria-label="Hulk"><span>💚</span><small>Hulk</small></button>
+                        <button type="button" class="perfil-avatar-opcion" data-avatar="spiderman" aria-label="Spider-Man"><span>🕷️</span><small>Spider-Man</small></button>
+                        <button type="button" class="perfil-avatar-opcion" data-avatar="hawkeye" aria-label="Hawkeye"><span>🏹</span><small>Hawkeye</small></button>
+                    </div>
+                </div>
+
+                <div class="perfil-acciones">
+                    <button id="guardarPerfil" type="button" class="boton-principal">💾 Guardar perfil</button>
+                    <button id="restablecerPerfil" type="button" class="boton-secundario">↺ Restablecer perfil</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="perfil-info-grid">
+            <div class="perfil-info-card">
+                <span>🔐</span>
+                <div>
+                    <strong>Modo local</strong>
+                    <p>No se guardan contraseñas ni credenciales en el navegador.</p>
+                </div>
+            </div>
+            <div class="perfil-info-card">
+                <span>☁️</span>
+                <div>
+                    <strong>Preparado para sincronización</strong>
+                    <p>Tu perfil, favoritos e historial pueden sincronizarse con tu cuenta de Marvel Hub.</p>
+                </div>
+            </div>
+            <div class="perfil-info-card">
+                <span>🆔</span>
+                <div>
+                    <strong>ID del perfil</strong>
+                    <code id="perfilId">Generando...</code>
+                </div>
+            </div>
+            <div class="perfil-info-card">
+                <span>📦</span>
+                <div>
+                    <strong>Datos del Hub</strong>
+                    <p id="perfilDatosResumen">Calculando...</p>
+                    <button id="exportarDatosPerfil" type="button">⬇️ Exportar mis datos</button>
+                </div>
+            </div>
+            <div class="perfil-info-card perfil-estadistica">
+                <span>❤️</span>
+                <div>
+                    <strong>Favoritos</strong>
+                    <b id="perfilStatFavoritos">0</b>
+                    <p>títulos guardados</p>
+                </div>
+            </div>
+            <div class="perfil-info-card perfil-estadistica">
+                <span>🕘</span>
+                <div>
+                    <strong>Historial</strong>
+                    <b id="perfilStatHistorial">0</b>
+                    <p>títulos consultados</p>
+                </div>
+            </div>
+            <div class="perfil-info-card perfil-estadistica">
+                <span>🎬</span>
+                <div>
+                    <strong>Películas</strong>
+                    <b id="perfilStatPeliculas">0</b>
+                    <p>en tu biblioteca</p>
+                </div>
+            </div>
+            <div class="perfil-info-card perfil-estadistica">
+                <span>📺</span>
+                <div>
+                    <strong>Series</strong>
+                    <b id="perfilStatSeries">0</b>
+                    <p>en tu biblioteca</p>
+                </div>
+            </div>
+        </div>
+
+        
 
     <section id="perfil" class="seccion">
         <div class="titulo-seccion">
