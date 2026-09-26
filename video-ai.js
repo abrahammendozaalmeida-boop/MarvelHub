@@ -392,12 +392,12 @@
             renderizarRecursos(recursos);
             setRecursosEstado(recursos.length + " recursos", "ok");
             const ayuda = document.getElementById("videoAIRecursosAyuda");
-            if (ayuda) ayuda.textContent = "Recursos encontrados en TMDB. Después los conectaremos al renderizador de escenas.";
+            if (ayuda) ayuda.textContent = "Recursos visuales listos para acompañar la historia.";
         } catch (error) {
             console.warn("Video AI: recursos no disponibles.", error);
             setRecursosEstado("No disponibles", "error");
             const ayuda = document.getElementById("videoAIRecursosAyuda");
-            if (ayuda) ayuda.textContent = "No se pudieron buscar recursos. Revisa que TMDB esté configurado y que tengas conexión.";
+            if (ayuda) ayuda.textContent = "No pudimos encontrar recursos para este tema.";
         } finally {
             if (boton) boton.disabled = false;
         }
