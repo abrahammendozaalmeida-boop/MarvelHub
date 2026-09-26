@@ -380,34 +380,59 @@
         }
         const boton = document.getElementById("videoAIBuscarRecursos");
         if (boton) boton.disabled = true;
-        setRecursosEstado("Buscando…", "activo");
+        setRecursosEstado("Buscando escenas…", "activo");
 
         try {
-            const termino = consultaRecurso(proyecto.tema);
-            const datos = await obtenerTMDBVideoAI("/search/multi?query=" + termino + "&include_adult=false&page=1");
-            const candidatos = (datos.results || []).filter(function(item) {
-                return (item.poster_path || item.backdrop_path) && item.media_type !== "person";
-            }).slice(0, Math.max(6, proyecto.escenas.length));
+            const escenas = Array.isArray(proyecto.escenas) ? proyecto.escenas : [];
+            const recursos = [];
+            const usados = new Set();
 
-            const recursos = candidatos.map(function(item, index) {
-                const usarFondo = Boolean(item.backdrop_path) && (index % 2 === 0);
-                return {
-                    id: item.id,
-                    titulo: item.title || item.name || proyecto.tema,
-                    tipo: usarFondo ? "backdrop" : "poster",
-                    url: recursoUrl(usarFondo ? item.backdrop_path : item.poster_path, usarFondo ? "backdrop" : "poster"),
-                    media_type: item.media_type || "movie"
-                };
-            });
+            for (let index = 0; index < escenas.length; index++) {
+                const escena = escenas[index] || {};
+                const consulta = String(escena.idea || escena.visual || escena.narracion || proyecto.tema)
+                    .replace(/[\n\r]+/g, " ").trim().slice(0, 120);
+                let candidatos = [];
+
+                try {
+                    const termino = encodeURIComponent(consulta);
+                    const datos = await obtenerTMDBVideoAI("/search/multi?query=" + termino + "&include_adult=false&page=1");
+                    candidatos = (datos.results || []).filter(function(item) {
+                        return (item.poster_path || item.backdrop_path) && item.media_type !== "person";
+                    });
+                } catch (error) {
+                    console.warn("Video AI: búsqueda visual de escena " + (index + 1) + " falló.", error);
+                }
+
+                const elegido = candidatos.find(function(item) {
+                    return !usados.has(String(item.id));
+                }) || candidatos[0];
+
+                if (elegido) {
+                    usados.add(String(elegido.id));
+                    const usarFondo = Boolean(elegido.backdrop_path);
+                    recursos.push({
+                        id: elegido.id,
+                        escena: index + 1,
+                        titulo: elegido.title || elegido.name || proyecto.tema,
+                        tipo: usarFondo ? "backdrop" : "poster",
+                        url: recursoUrl(usarFondo ? elegido.backdrop_path : elegido.poster_path, usarFondo ? "backdrop" : "poster"),
+                        media_type: elegido.media_type || "movie",
+                        consulta: consulta,
+                        visual: escena.idea || escena.visual || ""
+                    });
+                }
+            }
 
             proyecto.recursos = recursos;
-            proyecto.recursos_estado = "listos";
+            proyecto.recursos_estado = recursos.length ? "listos" : "sin_recursos";
             proyecto.recursos_generado_en = new Date().toISOString();
             localStorage.setItem("abrahamG4VideoProject", JSON.stringify(proyecto));
             renderizarRecursos(recursos);
-            setRecursosEstado(recursos.length + " recursos", "ok");
+            setRecursosEstado(recursos.length + " recursos • 1 por escena", recursos.length ? "ok" : "error");
             const ayuda = document.getElementById("videoAIRecursosAyuda");
-            if (ayuda) ayuda.textContent = "Recursos visuales listos para acompañar la historia.";
+            if (ayuda) ayuda.textContent = recursos.length
+                ? "Cada escena tiene un recurso visual elegido según su contenido."
+                : "No pudimos encontrar recursos visuales para este tema.";
         } catch (error) {
             console.warn("Video AI: recursos no disponibles.", error);
             setRecursosEstado("No disponibles", "error");
