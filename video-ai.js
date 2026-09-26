@@ -655,7 +655,8 @@
         });
     }
 
-    window.configurarVideoAI = configurarVideoAI;\n    window.obtenerProyectoGuardado = obtenerProyectoGuardado;
+    window.configurarVideoAI = configurarVideoAI;
+    window.obtenerProyectoGuardado = obtenerProyectoGuardado;
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", configurarVideoAI);
     } else {
