@@ -34,58 +34,73 @@
     function crearEscenas(tema, duracion, estilo) {
         const cantidad = duracion <= 30 ? 4 : duracion <= 45 ? 5 : duracion <= 60 ? 6 : 8;
         const personaje = detectarPersonaje(tema);
-        const plantillas = {
+        const sujeto = personaje !== "este personaje" ? personaje : capitalizar(tema);
+        const bloques = {
             curiosidades: [
-                "Abre con una pregunta que haga detener el scroll.",
-                "Presenta el primer dato y explica por qué es interesante.",
-                "Añade un segundo dato con un detalle visual fácil de reconocer.",
-                "Incluye un dato menos conocido para mantener la atención.",
-                "Cierra con el dato más sorprendente y una llamada a comentar."
+                "Hay un detalle de " + sujeto + " que suele pasar desapercibido.",
+                "La clave está en un pequeño detalle que cambia el contexto.",
+                "Este dato conecta directamente con una parte importante de la historia.",
+                "Y aquí viene el detalle que hace que todo tenga más sentido.",
+                "Si conocías este dato, ya tienes ventaja: ¿qué otro agregarías?"
             ],
             top: [
-                "Presenta el tema como un ranking rápido y directo.",
-                "Explica la primera posición con una razón concreta.",
-                "Sube el ritmo y presenta la siguiente posición.",
-                "Añade contexto breve para que el dato tenga sentido.",
-                "Cierra con la posición final y pregunta cuál elegiría la audiencia."
+                "Empezamos con una de las elecciones que más debate genera.",
+                "Subimos un puesto y aquí la razón importa más que el número.",
+                "La siguiente posición destaca por un detalle muy concreto.",
+                "Ya estamos cerca del final, y esta elección cambia el ritmo.",
+                "Llegamos al punto fuerte: ahora toca elegir tu favorita."
             ],
             historia: [
-                "Presenta el origen del personaje de forma breve.",
-                "Cuenta el momento que cambió su historia.",
-                "Muestra un conflicto importante del personaje.",
-                "Explica una evolución o cambio clave.",
-                "Termina conectando su historia con el presente."
+                "Para entender a " + sujeto + ", primero hay que volver al comienzo.",
+                "Después llegó el momento que cambió su camino.",
+                "A partir de ahí apareció un conflicto que lo puso todo a prueba.",
+                "Con el tiempo, " + sujeto + " dejó de ser el mismo personaje.",
+                "Y esa evolución explica por qué su historia sigue llamando la atención."
             ],
             teoria: [
-                "Presenta la teoría en una frase que genere curiosidad.",
-                "Explica la primera pista que la apoya.",
-                "Añade una segunda pista y su contexto.",
-                "Menciona qué parte de la teoría sigue sin confirmarse.",
-                "Cierra invitando a la audiencia a decidir qué piensa."
+                "La teoría empieza con una pista pequeña, pero bastante llamativa.",
+                "La segunda pista aparece cuando conectas dos momentos de la historia.",
+                "Hay otro detalle que hace que la teoría resulte todavía más interesante.",
+                "Pero hay una parte que sigue siendo una interpretación, no un hecho confirmado.",
+                "Por eso la pregunta queda abierta: ¿tú cómo interpretarías estas pistas?"
             ],
             noticias: [
-                "Resume la noticia en una frase clara.",
-                "Explica el dato principal y de dónde viene.",
-                "Añade el contexto necesario para entenderlo.",
-                "Separa los hechos de lo que todavía no está confirmado.",
-                "Cierra con lo que falta por conocerse."
+                "Primero, separemos lo confirmado de lo que todavía son rumores.",
+                "El dato principal es este, y su contexto ayuda a entenderlo.",
+                "Hasta aquí llegan los hechos que podemos presentar con seguridad.",
+                "Lo demás debe tomarse con cautela hasta que exista confirmación.",
+                "Y eso es lo que queda por conocer antes de sacar conclusiones."
             ]
         };
-        const base = plantillas[estilo] || plantillas.curiosidades;
+        const base = bloques[estilo] || bloques.curiosidades;
+        const conectores = ["Pero hay más.", "Y aquí se pone interesante.", "Ahora fíjate en esto.", "Lo curioso viene después.", "Ese detalle cambia la lectura."];
         const escenas = [];
+        const duracionBase = Math.floor(duracion / cantidad);
+        let restante = duracion;
         for (let i = 0; i < cantidad; i++) {
-            const textoBase = base[i % base.length];
+            const esUltima = i === cantidad - 1;
+            const segundos = esUltima ? restante : Math.max(4, duracionBase);
+            restante -= segundos;
+            let narracion;
+            if (i === 0) {
+                const hooks = {
+                    curiosidades: "¿Sabías que hay algo sobre " + sujeto + " que casi siempre se pasa por alto?",
+                    top: "Si hablamos de " + sujeto + ", este ranking se pone interesante desde el primer puesto.",
+                    historia: "La historia de " + sujeto + " tiene un punto de partida que vale la pena recordar.",
+                    teoria: "Hay una teoría sobre " + sujeto + " que gana fuerza cuando empiezas a conectar las pistas.",
+                    noticias: "Antes de hablar de " + sujeto + ", hay algo importante: distingamos hechos de rumores."
+                };
+                narracion = hooks[estilo] || hooks.curiosidades;
+            } else {
+                narracion = (i % 2 === 0 ? conectores[(i - 1) % conectores.length] + " " : "") + base[i % base.length];
+            }
             escenas.push({
                 numero: i + 1,
-                duracion: Math.max(4, Math.round(duracion / cantidad)),
-                narracion: i === 0
-                    ? "¿Sabías esto sobre " + personaje + "? " + textoBase
-                    : textoBase + " Tema: " + capitalizar(tema) + ".",
-                visual: "Recurso vertical relacionado con " + tema + ".",
-                subtitulo: i === 0
-                    ? "¿SABÍAS ESTO SOBRE " + personaje.toUpperCase() + "?"
-                    : "DATO " + (i + 1),
-                audio: i === 0 ? "Hook + música de entrada" : "Música de fondo + efecto sutil"
+                duracion: segundos,
+                narracion: narracion,
+                visual: "Plano vertical de " + sujeto + " relacionado con: " + base[i % base.length],
+                subtitulo: i === 0 ? narracion.replace(/[¿?]/g, "").slice(0, 58).toUpperCase() : base[i % base.length].replace(/[¿?]/g, "").slice(0, 58).toUpperCase(),
+                audio: i === 0 ? "Hook + entrada" : (i === cantidad - 1 ? "Cierre + golpe final" : "Fondo + transición")
             });
         }
         return escenas;
@@ -556,7 +571,7 @@
             setRecursosEstado("Buscando recursos", "activo");
             const subtitulosPreview = document.getElementById("videoAISubtitulosPreview");
             if (subtitulosPreview) subtitulosPreview.innerHTML = "";
-            if (descargarSRTBtn) descargarSRTBtn.hidden = true;
+            const srtButton = document.getElementById("videoAIDescargarSRT");\n            if (srtButton) srtButton.hidden = true;
             setSubtitulosEstado("Preparando", "activo");
             const audio = document.getElementById("videoAIAudio");
             const descarga = document.getElementById("videoAIVozDescargar");
