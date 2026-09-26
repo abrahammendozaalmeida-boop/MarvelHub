@@ -792,7 +792,7 @@ function renderizarFavoritos(filtro) {
             descripcion +
             "</p>" +
             "<div class='botones-card'>" +
-            "<button class='boton-detalles' type='button'>Ver detalles</button>" +
+            "" +
             "<button class='boton-quitar-favorito' type='button'>💔 Quitar</button>" +
             "</div>" +
             "</div>";
@@ -1093,14 +1093,11 @@ function obtenerMarvelLocalPorId(id) {
 function verDetallesLocalMarvel(id, tipo) {
     const modal = document.getElementById("modalMarvel");
     const contenido = document.getElementById("detalleMarvel");
-
     if (!modal || !contenido) return;
 
     const datos = obtenerMarvelLocalPorId(id);
-
     if (!datos) {
-        contenido.innerHTML =
-            "<div class='detalle-error'><strong>No se encontró este título.</strong><p>La ficha local no está disponible.</p></div>";
+        contenido.innerHTML = "<div class='detalle-error'><strong>No se encontró este título.</strong><p>La ficha local no está disponible.</p></div>";
         modal.classList.add("activo");
         return;
     }
@@ -1108,8 +1105,7 @@ function verDetallesLocalMarvel(id, tipo) {
     const titulo = datos.title || datos.name || datos.titulo || "Sin título";
     const fecha = datos.release_date || datos.first_air_date || datos.fecha || "Sin fecha";
     const anio = String(fecha).slice(0, 4);
-    const enlace = obtenerEnlaceReproduccionMarvel(datos);
-    const esFavorito = esFavoritoMarvel(datos.id, tipo || "movie");
+    const esFavorito = esFavoritoMarvel(datos.id, "movie");
 
     guardarVistoRecientemente(datos);
     renderizarHistorialInicio();
@@ -1117,32 +1113,14 @@ function verDetallesLocalMarvel(id, tipo) {
     contenido.innerHTML =
         "<div class='detalle-hero'>" +
         "<div class='detalle-hero-contenido'>" +
-        "<div class='detalle-poster detalle-poster-vacio'>🎬</div>" +
-        "<div class='detalle-principal'>" +
-        "<span class='detalle-tipo'>🎬 PELÍCULA</span>" +
-        "<h2>" + escaparHTML(titulo) + "</h2>" +
-        "<div class='detalle-meta'>" +
-        "<span>🎬 Película</span>" +
-        "<span>📅 " + escaparHTML(anio) + "</span>" +
-        "</div>" +
-        "</div>" +
+        "<div class='detalle-poster detalle-poster-vacio'><span>MARVEL</span><strong>" + escaparHTML(titulo) + "</strong><small>" + escaparHTML(anio) + "</small></div>" +
+        "<div class='detalle-principal'><span class='detalle-tipo'>🎬 PELÍCULA</span><h2>" + escaparHTML(titulo) + "</h2><div class='detalle-meta'><span>🎬 Película</span><span>📅 " + escaparHTML(anio) + "</span></div></div>" +
         "<div class='detalle-acciones'>" +
-        (enlace
-            ? "<button id='detalleReproducir' type='button' class='boton-principal'><i data-lucide='play'></i><span>Reproducir</span></button>"
-            : "") +
-        "<button id='detalleFavorito' type='button' class='" +
-        (esFavorito ? "boton-quitar-favorito" : "boton-favorito") +
-        "'><i data-lucide='heart'></i><span>" +
-        (esFavorito ? "Quitar de favoritos" : "Añadir a favoritos") +
-        "</span></button>" +
+        "<button id='detalleReproducir' type='button' class='boton-principal'><i data-lucide='play'></i><span>Reproducir</span></button>" +
+        "<button id='detalleFavorito' type='button' class='" + (esFavorito ? "boton-quitar-favorito" : "boton-favorito") + "'><i data-lucide='heart'></i><span>" + (esFavorito ? "Quitar de favoritos" : "Añadir a favoritos") + "</span></button>" +
         "<button id='detalleCompartir' type='button' class='boton-secundario'><i data-lucide='share-2'></i><span>Compartir</span></button>" +
-        "</div>" +
-        "</div>" +
-        "</div>" +
-        "<div class='detalle-cuerpo'>" +
-        "<div class='detalle-seccion'><h3>📖 Sinopsis</h3><p class='detalle-sinopsis'>La información ampliada de esta película se incorporará cuando el catálogo vuelva a conectarse.</p></div>" +
-        "<div class='detalle-seccion'><h3>🎬 Colección</h3><p class='detalle-vacio'>" + escaparHTML(titulo) + " · " + escaparHTML(anio) + "</p></div>" +
-        "</div>";
+        "</div></div></div>" +
+        "<div class='detalle-cuerpo'><div class='detalle-seccion'><h3>📖 Sinopsis</h3><p class='detalle-sinopsis'>Título de tu colección personal de Marvel.</p></div><div class='detalle-seccion'><h3>🎬 Colección</h3><p class='detalle-vacio'>" + escaparHTML(titulo) + " · " + escaparHTML(anio) + "</p></div></div>";
 
     modal.classList.add("activo");
 
@@ -1150,7 +1128,13 @@ function verDetallesLocalMarvel(id, tipo) {
     if (botonReproducir) {
         botonReproducir.addEventListener("click", function() {
             const url = obtenerEnlaceReproduccionMarvel(datos);
-            if (url) window.open(url, "_blank", "noopener,noreferrer");
+            if (url) {
+                window.open(url, "_blank", "noopener,noreferrer");
+                return;
+            }
+            const span = botonReproducir.querySelector("span");
+            if (span) span.textContent = "No disponible";
+            setTimeout(function() { if (span) span.textContent = "Reproducir"; }, 1600);
         });
     }
 
@@ -1160,10 +1144,7 @@ function verDetallesLocalMarvel(id, tipo) {
             alternarFavorito(datos.id, "movie", datos);
             const activo = esFavoritoMarvel(datos.id, "movie");
             botonFavorito.className = activo ? "boton-quitar-favorito" : "boton-favorito";
-            botonFavorito.innerHTML =
-                "<i data-lucide='heart'></i><span>" +
-                (activo ? "Quitar de favoritos" : "Añadir a favoritos") +
-                "</span>";
+            botonFavorito.innerHTML = "<i data-lucide='heart'></i><span>" + (activo ? "Quitar de favoritos" : "Añadir a favoritos") + "</span>";
             actualizarIconosLucide();
         });
     }
@@ -1173,9 +1154,8 @@ function verDetallesLocalMarvel(id, tipo) {
         botonCompartir.addEventListener("click", async function() {
             const texto = "Mira " + titulo + " en ABRAHAM G4 — MARVEL HUB";
             try {
-                if (navigator.share) {
-                    await navigator.share({title: titulo, text: texto});
-                } else if (navigator.clipboard) {
+                if (navigator.share) await navigator.share({title: titulo, text: texto});
+                else if (navigator.clipboard) {
                     await navigator.clipboard.writeText(texto);
                     const span = botonCompartir.querySelector("span");
                     if (span) {
@@ -1189,7 +1169,6 @@ function verDetallesLocalMarvel(id, tipo) {
 
     actualizarIconosLucide();
 }
-
 async function cargarMarvelTMDB() {
     if (MODO_LOCAL_MARVEL) {
         cargarCatalogoLocalMarvel();
@@ -1445,7 +1424,7 @@ function renderizarResultadosBusquedaGlobal(resultados) {
     cabecera.className = "resultados-global-cabecera";
     cabecera.innerHTML =
         "<div>" +
-        "<span class='mini-etiqueta'>RESULTADOS TMDB</span>" +
+        "<span class='mini-etiqueta'>RESULTADOS</span>" +
         "<strong>Encontramos " + resultados.length + " coincidencias</strong>" +
         "</div>" +
         "<span class='resultados-global-fuente'><i data-lucide='database'></i> TMDB</span>";
