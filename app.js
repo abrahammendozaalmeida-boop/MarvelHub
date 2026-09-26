@@ -2897,6 +2897,7 @@ function restablecerPreferencias() {
 
     actualizarIconosLucide();
     cargarTema();
+    configurarTMDBAjustes();
     cargarNombre();
 
     const widgetRecomendacion = document.getElementById("widgetRecomendacion");
@@ -3776,6 +3777,49 @@ function configurarCargaInfinitaCatalogo() {
         ultimaCarga = ahora;
         cargarMasMarvel();
     }, { passive: true });
+}
+
+function configurarTMDBAjustes() {
+    const input = document.getElementById("tmdbApiKeyAjustes");
+    const guardar = document.getElementById("guardarTMDBAjustes");
+    const borrar = document.getElementById("borrarTMDBAjustes");
+    const estado = document.getElementById("estadoTMDBAjustes");
+
+    function pintarEstado() {
+        const clave = localStorage.getItem("marvelHubTMDBApiKey") || "";
+        if (input) input.value = clave;
+        if (estado) estado.textContent = clave
+            ? "✅ TMDB conectado. Catálogo y Video AI comparten esta conexión."
+            : "TMDB no configurado en este navegador.";
+    }
+
+    if (guardar) guardar.addEventListener("click", async function() {
+        const clave = (input ? input.value : "").trim();
+        if (!clave) {
+            if (estado) estado.textContent = "Pega una API Key de TMDB.";
+            return;
+        }
+        guardar.disabled = true;
+        if (estado) estado.textContent = "Comprobando TMDB…";
+        try {
+            const respuesta = await fetch("https://api.themoviedb.org/3/configuration?api_key=" + encodeURIComponent(clave));
+            if (!respuesta.ok) throw new Error("TMDB " + respuesta.status);
+            localStorage.setItem("marvelHubTMDBApiKey", clave);
+            pintarEstado();
+            cargarMarvelTMDB();
+        } catch (error) {
+            if (estado) estado.textContent = "❌ No se pudo conectar. Revisa la API Key.";
+        } finally {
+            guardar.disabled = false;
+        }
+    });
+
+    if (borrar) borrar.addEventListener("click", function() {
+        localStorage.removeItem("marvelHubTMDBApiKey");
+        pintarEstado();
+    });
+
+    pintarEstado();
 }
 
 function inicializarMarvelHub() {
