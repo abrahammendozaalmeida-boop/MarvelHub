@@ -427,7 +427,6 @@ function crearTarjetaMarvel(item, opciones) {
         escaparHTML(descripcion) +
         "</p>" +
         "<div class='botones-card'>" +
-        "<button class='boton-detalles' type='button'><i data-lucide='info'></i><span>Detalles</span></button>" +
         "<button class='" +
         (esFavorito ? "boton-quitar-favorito" : "boton-favorito") +
         "' type='button'><i data-lucide='heart'></i><span>" +
@@ -442,6 +441,16 @@ function crearTarjetaMarvel(item, opciones) {
 
     tarjeta.dataset.tmdbId = String(datos.id || "");
     tarjeta.dataset.tmdbTipo = tipo;
+
+    const botonDetallesHover = tarjeta.querySelector(".card-ver");
+
+    if (botonDetallesHover) {
+        botonDetallesHover.addEventListener("click", function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            verDetallesTMDB(datos.id, tipo);
+        });
+    }
 
     const botonFavorito = tarjeta.querySelector(".boton-favorito, .boton-quitar-favorito");
 
@@ -799,12 +808,17 @@ function renderizarFavoritos(filtro) {
             "</div>" +
             "</div>";
 
-        const abrirDetalles = function() {
-            verDetallesTMDB(item.id, item.tipo);
-        };
-
         tarjeta.dataset.tmdbId = String(item.id || "");
         tarjeta.dataset.tmdbTipo = item.tipo || "movie";
+
+        const botonDetallesHover = tarjeta.querySelector(".card-ver");
+        if (botonDetallesHover) {
+            botonDetallesHover.addEventListener("click", function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                verDetallesTMDB(item.id, item.tipo);
+            });
+        }
 
         tarjeta.querySelector(".boton-quitar-favorito").addEventListener(
             "click",
