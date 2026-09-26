@@ -1555,14 +1555,27 @@ function obtenerEnlaceReproduccionMarvel(datos) {
             }
         }
 
-        if (datos.coleccionPersonal && datos.tituloColeccion) {
-            const indice = coleccionPersonalMarvel.findIndex(function(registro) {
-                return registro[0] === datos.tituloColeccion &&
-                    Number(registro[1]) === Number(datos.anioColeccion);
-            });
-            if (indice >= 0 && typeof enlacesReproduccionMarvel[indice] === "string") {
-                return enlacesReproduccionMarvel[indice];
-            }
+        const tituloDatos = String(
+            datos.tituloColeccion ||
+            datos.title ||
+            datos.name ||
+            datos.original_title ||
+            datos.original_name ||
+            ""
+        ).trim().toLowerCase();
+
+        const anioDatos = Number(
+            datos.anioColeccion ||
+            String(datos.release_date || datos.first_air_date || "").slice(0, 4)
+        );
+
+        const indice = coleccionPersonalMarvel.findIndex(function(registro) {
+            return String(registro[0] || "").trim().toLowerCase() === tituloDatos &&
+                Number(registro[1]) === anioDatos;
+        });
+
+        if (indice >= 0 && typeof enlacesReproduccionMarvel[indice] === "string") {
+            return enlacesReproduccionMarvel[indice];
         }
     } catch (error) {
         console.warn("No se pudo leer la fuente de reproducción.", error);
