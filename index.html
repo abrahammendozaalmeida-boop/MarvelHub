@@ -69,13 +69,13 @@
             </div>
             <div class="inicio-quick-stats">
                 <button type="button" onclick="mostrarSeccion('favoritos')"><i data-lucide="heart"></i><span><b id="homeStatFavoritos">0</b><small>Favoritos</small></span></button>
-                <button type="button" onclick="mostrarSeccion('marvel')"><i data-lucide="layout-grid"></i><span><b id="homeStatCatalogo">TMDB</b><small>Catálogo</small></span></button>
+                <button type="button" onclick="mostrarSeccion('marvel')"><i data-lucide="layout-grid"></i><span><b id="homeStatCatalogo">64</b><small>Títulos</small></span></button>
                 <button type="button" onclick="mostrarSeccion('perfil')"><i data-lucide="user-round"></i><span><b id="homeStatPerfil">Perfil</b><small>Mi cuenta</small></span></button>
             </div>
         </div>
 
         <div class="inicio-estado-barra" aria-label="Estado de Marvel Hub">
-            <div class="inicio-estado-item"><span class="inicio-estado-icono"><i data-lucide="database"></i></span><span><strong>TMDB conectado</strong><small>Catálogo en vivo</small></span></div>
+            <div class="inicio-estado-item"><span class="inicio-estado-icono"><i data-lucide="film"></i></span><span><strong>Colección Marvel</strong><small>Tu catálogo personal</small></span></div>
             <div class="inicio-estado-item"><span class="inicio-estado-icono"><i data-lucide="cloud"></i></span><span><strong>Nube activa</strong><small>Tu cuenta sincronizada</small></span></div>
             <div class="inicio-estado-item"><span class="inicio-estado-icono"><i data-lucide="smartphone"></i></span><span><strong>Instalable</strong><small>Experiencia tipo app</small></span></div>
         </div>
@@ -912,20 +912,6 @@
                         <button onclick="guardarNombre()">💾 Guardar</button>
                     </div>
                     <small id="estadoNombre" class="ajuste-ayuda">Tu nombre se guarda solo en este dispositivo.</small>
-                </div>
-            </div>
-
-            <div class="ajuste">
-                <span class="ajuste-icono">🔑</span>
-                <div class="ajuste-contenido">
-                    <strong>Conexión al catálogo de contenido.</strong>
-                    <p>Catálogo y creación, unidos en una misma experiencia.</p>
-                    <div class="ajuste-fila">
-                        <input type="password" id="tmdbApiKeyAjustes" placeholder="API Key de TMDB" autocomplete="off">
-                        <button id="guardarTMDBAjustes" type="button">💾 Guardar</button>
-                        <button id="borrarTMDBAjustes" type="button">🗑️</button>
-                    </div>
-                    <small id="estadoTMDBAjustes" class="ajuste-ayuda">Tu conexión se mantiene en este dispositivo.</small>
                 </div>
             </div>
 
