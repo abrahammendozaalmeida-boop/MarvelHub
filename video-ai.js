@@ -585,57 +585,6 @@
         const cargarRecursosBtn = document.getElementById("videoAICargarRecursosGuardados");
         const generarSubtitulosBtn = document.getElementById("videoAIGenerarSubtitulos");
         const descargarSRTBtn = document.getElementById("videoAIDescargarSRT");
-        const tmdbInput = document.getElementById("videoAITMDBApiKey");
-        const tmdbGuardarBtn = document.getElementById("videoAITMDBGuardar");
-        const tmdbBorrarBtn = document.getElementById("videoAITMDBBorrar");
-        const tmdbEstado = document.getElementById("videoAITMDBEstado");
-
-        if (!boton || !tema) return;
-
-        function actualizarTMDBConfigUI() {
-            const clave = localStorage.getItem("marvelHubTMDBApiKey") || "";
-            if (tmdbInput) tmdbInput.value = clave;
-            if (tmdbEstado) {
-                tmdbEstado.textContent = clave
-                    ? "TMDB configurado en este navegador. Ya puedes buscar imágenes."
-                    : "TMDB no configurado en este navegador.";
-            }
-        }
-
-        if (tmdbGuardarBtn) tmdbGuardarBtn.addEventListener("click", async function() {
-            const clave = limpiarTexto(tmdbInput ? tmdbInput.value : "");
-            if (!clave) {
-                if (tmdbEstado) tmdbEstado.textContent = "Pega una API Key de TMDB primero.";
-                return;
-            }
-            tmdbGuardarBtn.disabled = true;
-            if (tmdbEstado) tmdbEstado.textContent = "Comprobando conexión con TMDB…";
-            try {
-                const url = "https://api.themoviedb.org/3/configuration?api_key=" + encodeURIComponent(clave);
-                const respuesta = await fetch(url);
-                if (!respuesta.ok) {
-                    throw new Error("TMDB respondió " + respuesta.status);
-                }
-                localStorage.setItem("marvelHubTMDBApiKey", clave);
-                actualizarTMDBConfigUI();
-                if (tmdbEstado) tmdbEstado.textContent = "✅ TMDB conectado correctamente. Ya puedes buscar imágenes.";
-                setRecursosEstado("Listo para buscar", "ok");
-            } catch (error) {
-                console.warn("Video AI: clave TMDB no válida o sin conexión.", error);
-                if (tmdbEstado) tmdbEstado.textContent = "❌ No se pudo conectar. Revisa la API Key de TMDB.";
-            } finally {
-                tmdbGuardarBtn.disabled = false;
-            }
-        });
-
-        if (tmdbBorrarBtn) tmdbBorrarBtn.addEventListener("click", function() {
-            localStorage.removeItem("marvelHubTMDBApiKey");
-            actualizarTMDBConfigUI();
-            setRecursosEstado("No buscados", "");
-        });
-
-        actualizarTMDBConfigUI();
-
         boton.addEventListener("click", generarProyecto);
         tema.addEventListener("keydown", function(event) {
             if ((event.ctrlKey || event.metaKey) && event.key === "Enter") generarProyecto();
