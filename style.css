@@ -4667,3 +4667,16 @@ body.tema-claro .video-ai-recurso{background:#fff;border-color:#ddd}
 .detalle-reproducir-final .boton-secundario {
     margin: 6px 8px 0 0;
 }
+
+
+/* Nota discreta de reproducción */
+.detalle-nota-reproduccion {
+    margin: 10px 0 0;
+    padding: 10px 12px;
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 10px;
+    background: rgba(255,255,255,.025);
+    color: rgba(255,255,255,.58);
+    font-size: .82rem;
+    line-height: 1.5;
+}
