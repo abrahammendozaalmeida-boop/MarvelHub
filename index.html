@@ -34,7 +34,6 @@
         <button class="nav-boton" data-seccion="favoritos" onclick="mostrarSeccion('favoritos')"><i data-lucide="heart"></i><span>Favoritos</span></button>
         <button class="nav-boton" data-seccion="perfil" onclick="mostrarSeccion('perfil')"><i data-lucide="user-round"></i><span>Perfil</span></button>
         <button class="nav-boton" data-seccion="cuenta" onclick="mostrarSeccion('cuenta')"><i data-lucide="lock-keyhole"></i><span>Cuenta</span></button>
-        <button class="nav-boton" data-seccion="editor" onclick="mostrarSeccion('editor')"><i data-lucide="scissors"></i><span>Editor</span></button>
         <button class="nav-boton" data-seccion="video-ai" onclick="mostrarSeccion('video-ai')"><i data-lucide="wand-sparkles"></i><span>Video AI</span></button>
         <button class="nav-boton" data-seccion="widgets" onclick="mostrarSeccion('widgets')"><i data-lucide="layout-grid"></i><span>Widgets</span></button>
         <button class="nav-boton" data-seccion="ajustes" onclick="mostrarSeccion('ajustes')"><i data-lucide="settings"></i><span>Ajustes</span></button>
@@ -139,11 +138,11 @@
                 <b>›</b>
             </div>
 
-            <div class="atajo-card" onclick="mostrarSeccion('editor')">
-                <span class="atajo-icono"><i data-lucide="clapperboard"></i></span>
+            <div class="atajo-card" onclick="mostrarSeccion('video-ai')">
+                <span class="atajo-icono"><i data-lucide="wand-sparkles"></i></span>
                 <div>
-                    <strong>Editor de video</strong>
-                    <p>Crea y ajusta tus videos</p>
+                    <strong>Video AI</strong>
+                    <p>Crea y edita tus videos</p>
                 </div>
                 <b>›</b>
             </div>
@@ -445,27 +444,11 @@
             <p id="videoAIRenderAyuda" class="video-ai-render-ayuda">Primero ejecuta <b>tools/render-server.py</b> con FFmpeg instalado.</p>
         </div>
 
-        <div id="videoAIResultado" class="video-ai-resultado" hidden>
-            <div class="video-ai-resultado-cabecera">
-                <div>
-                    <span class="mini-etiqueta">PROYECTO GENERADO</span>
-                    <h3 id="videoAITituloResultado">Tu video</h3>
-                    <p id="videoAIResumenResultado"></p>
-                </div>
-                <div class="video-ai-acciones">
-                    <button id="videoAIDescargarGuion" type="button"><i data-lucide="download"></i><span>Guardar proyecto</span></button>
-                    <button id="videoAILimpiar" type="button"><i data-lucide="rotate-ccw"></i><span>Nuevo</span></button>
-                </div>
-            </div>
-            <div id="videoAIEscenas" class="video-ai-escenas"></div>
-        </div>
-    </section>
-
-    <section id="editor" class="seccion">
+    <div class="video-ai-editor-integrado">
         <div class="titulo-seccion">
-            <span class="mini-etiqueta">CREADOR</span>
-            <h2><i data-lucide="clapperboard"></i> Editor de video</h2>
-            <p>Recorta, ajusta el audio, cambia la velocidad y prepara el formato de tu video.</p>
+            <span class="mini-etiqueta">EDITOR IA • EDICIÓN</span>
+            <h3><i data-lucide="scissors"></i> Editor de video</h3>
+            <p>Perfecciona tu proyecto con ajustes de edición, audio, velocidad, filtros y formato.</p>
         </div>
 
         <div class="editor-subir">
@@ -571,7 +554,25 @@
             <strong>💡 Editor local</strong>
             <p>Tu video se procesa en tu navegador. Esta versión prepara y previsualiza los ajustes sin subir el archivo a ningún servidor.</p>
         </div>
+    </div>
+
+        <div id="videoAIResultado" class="video-ai-resultado" hidden>
+            <div class="video-ai-resultado-cabecera">
+                <div>
+                    <span class="mini-etiqueta">PROYECTO GENERADO</span>
+                    <h3 id="videoAITituloResultado">Tu video</h3>
+                    <p id="videoAIResumenResultado"></p>
+                </div>
+                <div class="video-ai-acciones">
+                    <button id="videoAIDescargarGuion" type="button"><i data-lucide="download"></i><span>Guardar proyecto</span></button>
+                    <button id="videoAILimpiar" type="button"><i data-lucide="rotate-ccw"></i><span>Nuevo</span></button>
+                </div>
+            </div>
+            <div id="videoAIEscenas" class="video-ai-escenas"></div>
+        </div>
     </section>
+
+
 
     <section id="widgets" class="seccion">
         <div class="titulo-seccion">
