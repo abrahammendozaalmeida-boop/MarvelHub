@@ -845,20 +845,20 @@
         <div class="titulo-seccion">
             <span class="mini-etiqueta">APP</span>
             <h2><i data-lucide="settings"></i> Ajustes</h2>
-            <p>Personaliza tu Marvel Hub y conserva tus preferencias.</p>
+            <p>Haz que Marvel Hub se sienta a tu manera.</p>
         </div>
 
         <div class="ajustes-grid">
             <div class="ajuste ajuste-principal">
                 <span class="ajuste-icono">👤</span>
                 <div class="ajuste-contenido">
-                    <strong>Perfil</strong>
+                    <strong>Tu nombre</strong>
                     <label for="nombre">Nombre que aparecerá en Inicio</label>
                     <div class="ajuste-fila">
                         <input type="text" id="nombre" placeholder="Escribe tu nombre" maxlength="30">
                         <button onclick="guardarNombre()">💾 Guardar</button>
                     </div>
-                    <small id="estadoNombre" class="ajuste-ayuda">Tu nombre se guarda solo en este dispositivo.</small>
+                    <small id="estadoNombre" class="ajuste-ayuda">Tu nombre se guarda en tu experiencia de Marvel Hub.</small>
                 </div>
             </div>
 
@@ -866,7 +866,7 @@
                 <span class="ajuste-icono">🌗</span>
                 <div class="ajuste-contenido">
                     <strong>Apariencia</strong>
-                    <p>Alterna entre el tema oscuro y claro.</p>
+                    <p>Elige cómo quieres ver Marvel Hub.</p>
                     <button id="botonTema" onclick="cambiarTema()">🌗 Cambiar tema</button>
                 </div>
             </div>
@@ -874,9 +874,18 @@
             <div class="ajuste">
                 <span class="ajuste-icono">🧩</span>
                 <div class="ajuste-contenido">
-                    <strong>Widgets</strong>
-                    <p>Configura qué elementos aparecen en tu Inicio.</p>
+                    <strong>Inicio</strong>
+                    <p>Personaliza los elementos que aparecen en tu Inicio.</p>
                     <button onclick="mostrarSeccion('widgets')">🧩 Configurar widgets</button>
+                </div>
+            </div>
+
+            <div class="ajuste">
+                <span class="ajuste-icono">👤</span>
+                <div class="ajuste-contenido">
+                    <strong>Cuenta y perfil</strong>
+                    <p>Tu perfil, sesión y biblioteca están reunidos en un solo espacio.</p>
+                    <button type="button" onclick="mostrarSeccion('perfil')">👤 Ver mi perfil</button>
                 </div>
             </div>
 
@@ -884,7 +893,7 @@
                 <span class="ajuste-icono">❤️</span>
                 <div class="ajuste-contenido">
                     <strong>Favoritos</strong>
-                    <p id="ajusteFavoritosResumen">Cargando favoritos...</p>
+                    <p id="ajusteFavoritosResumen">Tu biblioteca personal de Marvel.</p>
                     <button onclick="mostrarSeccion('favoritos')">❤️ Ver mi lista</button>
                 </div>
             </div>
@@ -892,10 +901,10 @@
             <div class="ajuste">
                 <span class="ajuste-icono">📲</span>
                 <div class="ajuste-contenido">
-                    <strong>Aplicación</strong>
-                    <p>Instala Marvel Hub como una app cuando tu navegador lo permita.</p>
+                    <strong>Marvel Hub</strong>
+                    <p>Lleva tu experiencia contigo como una aplicación.</p>
                     <button id="botonInstalarAjustes" type="button">📲 Instalar Marvel Hub</button>
-                    <small id="estadoPWA" class="ajuste-ayuda">Comprobando instalación...</small>
+                    <small id="estadoPWA" class="ajuste-ayuda">Preparando opciones de instalación...</small>
                 </div>
             </div>
 
@@ -903,7 +912,7 @@
                 <span class="ajuste-icono">🧹</span>
                 <div class="ajuste-contenido">
                     <strong>Restablecer preferencias</strong>
-                    <p>Elimina nombre, tema y preferencias de widgets guardadas localmente.</p>
+                    <p>Vuelve a la configuración inicial de nombre, tema e inicio.</p>
                     <button id="restablecerPreferencias" type="button" class="boton-peligro">🧹 Restablecer</button>
                 </div>
             </div>
