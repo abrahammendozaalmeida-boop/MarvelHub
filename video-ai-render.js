@@ -13,6 +13,7 @@ async function renderizarVideoAI() {
     const ayuda = document.getElementById("videoAIRenderAyuda");
     const descarga = document.getElementById("videoAIDescargarMP4");
     const abrirEditor = document.getElementById("videoAIAbrirEditor");
+    const editorEstado = document.getElementById("editorIAEstado");
 
     if (!proyecto) {
         setRenderEstado("Crea un proyecto primero", "error");
@@ -20,6 +21,7 @@ async function renderizarVideoAI() {
     }
 
     if (boton) boton.disabled = true;
+    if (editorEstado) editorEstado.textContent = "Preparando...";
     setRenderEstado("Renderizando...", "ok");
     if (ayuda) ayuda.textContent = "Preparando escenas y enviándolas al renderizador local...";
 
@@ -46,6 +48,7 @@ async function renderizarVideoAI() {
         }
         window.marvelHubUltimoVideoRender = url;
         if (abrirEditor) abrirEditor.hidden = false;
+        if (editorEstado) editorEstado.textContent = "Video generado";
 
         proyecto.render = {
             estado: "listo",
@@ -60,7 +63,8 @@ async function renderizarVideoAI() {
     } catch (error) {
         console.error(error);
         setRenderEstado("Error", "error");
-        if (ayuda) ayuda.textContent = error.message + " Revisa que FFmpeg esté instalado y que tools/render-server.py esté ejecutándose.";
+        if (ayuda) ayuda.textContent = "No se pudo completar el render. Vuelve a intentarlo cuando el generador esté disponible.";
+        if (editorEstado) editorEstado.textContent = "Listo para reintentar";
     } finally {
         if (boton) {
             boton.disabled = false;
