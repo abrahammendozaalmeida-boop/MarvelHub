@@ -2376,7 +2376,7 @@ function actualizarCuentaUI(usuario) {
     if (!estado || !formularios || !usuarioPanel) return;
 
     if (!supabaseClient) {
-        estado.textContent = "⚙️ Falta configurar Supabase. La cuenta real está preparada, pero aún no está conectada.";
+        estado.textContent = "Tu biblioteca está disponible en este dispositivo.";
         formularios.hidden = false;
         usuarioPanel.hidden = true;
         return;
@@ -2393,7 +2393,7 @@ function actualizarCuentaUI(usuario) {
         const perfil = obtenerPerfilLocal();
         if (avatar) avatar.textContent = perfil.avatar || "ironman";
     } else {
-        estado.textContent = "Inicia sesión o crea una cuenta para preparar la sincronización.";
+        estado.textContent = "Inicia sesión o crea una cuenta para mantener tu biblioteca sincronizada.";
         formularios.hidden = false;
         usuarioPanel.hidden = true;
     }
