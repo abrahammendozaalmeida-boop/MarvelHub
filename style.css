@@ -3626,7 +3626,7 @@ body.tema-claro .busqueda-global-form input::placeholder{color:#8b8b94}
     border-radius:7px;
     background:rgba(255,255,255,.045);
     color:#aaaab4;
-    font:700 11px/1 inherit;
+    font:700 11px/1 Arial, Helvetica, sans-serif;
 }
 .catalogo-command-tools{
     display:grid;
@@ -4727,7 +4727,7 @@ body.tema-claro .video-ai-recurso{background:#fff;border-color:#ddd}
 }
 @media (max-width:700px) {
     .editor-ia-barra { align-items:flex-start; flex-direction:column; }
-    .editor-ai-estado { align-self:flex-start; }
+    .editor-ia-estado { align-self:flex-start; }
 }
 
 
