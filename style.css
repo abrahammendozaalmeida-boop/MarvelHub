@@ -4671,6 +4671,9 @@ body.tema-claro .video-ai-recurso{background:#fff;border-color:#ddd}
 
 /* Nota discreta de reproducción */
 .detalle-nota-reproduccion {
+    display: flex !important;
+    align-items: flex-start;
+    gap: 9px;
     margin: 10px 0 0;
     padding: 10px 12px;
     border: 1px solid rgba(255,255,255,.07);
@@ -4679,4 +4682,14 @@ body.tema-claro .video-ai-recurso{background:#fff;border-color:#ddd}
     color: rgba(255,255,255,.58);
     font-size: .82rem;
     line-height: 1.5;
+}
+.detalle-nota-reproduccion span {
+    flex: 0 0 auto;
+    opacity: .8;
+}
+.detalle-nota-reproduccion p {
+    margin: 0;
+}
+.detalle-nota-reproduccion strong {
+    color: rgba(255,255,255,.78);
 }
