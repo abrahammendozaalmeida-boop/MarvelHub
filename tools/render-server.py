@@ -179,18 +179,18 @@ def render(project):
             next_input += 1
 
         if audio_inputs:
-            if len(audio_inputs) == 1:
-                audio_filter = audio_inputs[0] + "aresample=44100,volume=1.0[aout]"
-            else:
-                voice_part = audio_inputs[0]
-                other_parts = audio_inputs[1:]
-                if other_parts:
-                    mix_inputs = voice_part + "".join(other_parts)
-                    audio_filter = mix_inputs + f"amix=inputs={len(audio_inputs)}:duration=longest:dropout_transition=2,aresample=44100[aout]"
-                else:
-                    audio_filter = voice_part + "aresample=44100[aout]"
+            # Mantiene el audio sincronizado con la duración real del video.
+            duration = max(1.0, float(project.get("duracion", 45)))
+            prepared = []
+            for i, source in enumerate(audio_inputs):
+                label = f"[aud{i}]"
+                prepared.append(
+                    source + f"aresample=44100,apad,atrim=duration={duration},asetpts=N/SR/TB{label}"
+                )
+            mixed = "".join(f"[aud{i}]" for i in range(len(audio_inputs)))
+            audio_filter = ";".join(prepared) + ";" + mixed + f"amix=inputs={len(audio_inputs)}:duration=first:dropout_transition=0,aresample=44100,atrim=duration={duration}[aout]"
             cmd += ["-filter_complex", f"[0:v]{vf}[vout];{audio_filter}", "-map", "[vout]", "-map", "[aout]"]
-            cmd += ["-c:a", "aac", "-b:a", "192k"]
+            cmd += ["-c:a", "aac", "-b:a", "192k", "-t", str(duration)]
         else:
             cmd += ["-vf", vf, "-an"]
 
