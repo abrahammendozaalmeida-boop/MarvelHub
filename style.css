@@ -4602,3 +4602,14 @@ body.tema-claro .video-ai-recurso{background:#fff;border-color:#ddd}
 .video-ai-tmdb-form input:focus {
     border-color: #e62429;
 }
+
+/* TMDB DEV — panel local de pruebas */
+.tmdb-dev-panel{max-width:1100px;margin:14px auto 18px;padding:15px 17px;display:flex;justify-content:space-between;gap:15px;align-items:center;border:1px dashed rgba(230,36,41,.45);border-radius:14px;background:rgba(230,36,41,.045)}
+.tmdb-dev-panel>div:first-child{display:flex;flex-direction:column;gap:4px}
+.tmdb-dev-panel strong{font-size:13px}
+.tmdb-dev-panel small{color:#858590;line-height:1.4}
+.tmdb-dev-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tmdb-dev-switch{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;cursor:pointer}
+.tmdb-dev-switch input{accent-color:#e62429}
+#tmdbDevEstado{font-size:10px;color:#9999a3}
+@media(max-width:700px){.tmdb-dev-panel{align-items:flex-start;flex-direction:column}.tmdb-dev-actions{width:100%;justify-content:space-between}}
