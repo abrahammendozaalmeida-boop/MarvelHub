@@ -6,11 +6,11 @@
     <title>ABRAHAM G4 — MARVEL HUB</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="video-ai-audio.css">
-    <link rel="stylesheet" href="video-ai-render.css">
+    <link rel="stylesheet" href="video-ai-render.css">\n    <link rel="stylesheet" href="abraham-ai.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="supabase-config.js"></script>
-    <script src="video-ai.js"></script>
+    <script src="video-ai.js"></script>\n    <script src="abraham-ai.js"></script>
     <script src="video-ai-audio.js"></script>
     <script src="video-ai-render.js"></script>
     <meta name="theme-color" content="#0b0b0f">
@@ -439,6 +439,25 @@
             <span class="mini-etiqueta">ABRAHAM G4 • VIDEO AI</span>
             <h2><i data-lucide="wand-sparkles"></i> Generador automático de videos</h2>
             <p>Dale vida a tus ideas y crea historias listas para compartir.</p>
+        </div>
+
+        <div class="abraham-ai-panel" id="abrahamAI">
+            <div class="abraham-ai-head">
+                <div class="abraham-ai-brand">
+                    <div class="abraham-ai-orb"><i data-lucide="brain-circuit"></i></div>
+                    <div><span class="mini-etiqueta">ABRAHAM AI</span><h3>Tu asistente creativo</h3><p>Convierte ideas en guiones, escenas y conceptos listos para producir.</p></div>
+                </div>
+                <span id="abrahamAIStatus" class="abraham-ai-status">Listo</span>
+            </div>
+            <div id="abrahamAIChat" class="abraham-ai-chat" aria-live="polite"></div>
+            <div class="abraham-ai-quick">
+                <button type="button" data-ai-prompt="Crea un video de 30 segundos con un hook fuerte sobre un dato poco conocido de Spider-Man.">🕷️ Dato de Spider-Man</button>
+                <button type="button" data-ai-prompt="Dame una idea de video Marvel con estilo épico y misterioso para TikTok.">⚡ Idea épica</button>
+                <button type="button" data-ai-prompt="Mejora mi estructura para que tenga un hook fuerte, ritmo y un cierre que invite a comentar.">🚀 Mejorar estructura</button>
+            </div>
+            <div class="abraham-ai-compose"><textarea id="abrahamAIInput" maxlength="1200" placeholder="Escribe qué quieres crear o cambiar…"></textarea><button id="abrahamAISend" class="abraham-ai-send" type="button"><i data-lucide="send"></i> Enviar</button></div>
+            <div class="abraham-ai-tools"><small>Asistente creativo de Marvel Hub · IA local opcional</small><button id="abrahamAIClear" class="abraham-ai-clear" type="button">Limpiar conversación</button></div>
+            <div class="abraham-ai-features"><div class="abraham-ai-feature"><strong>🧠 Guion</strong><small>Hooks y narración natural</small></div><div class="abraham-ai-feature"><strong>🎬 Escenas</strong><small>Ideas visuales por momento</small></div><div class="abraham-ai-feature"><strong>💬 Subtítulos</strong><small>Texto corto para pantalla</small></div><div class="abraham-ai-feature"><strong>✨ Dirección</strong><small>Ritmo y estilo del video</small></div></div>
         </div>
 
         <div class="video-ai-hero">
