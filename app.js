@@ -1489,47 +1489,18 @@ async function buscarMarvelGlobal() {
     const input = document.getElementById("busquedaGlobalMarvel");
     const estado = document.getElementById("estadoBusquedaGlobal");
     const contenedor = document.getElementById("resultadosBusquedaGlobal");
-
     if (!input || !estado || !contenedor) return;
-
-    const consulta = input.value.trim();
-
+    const consulta = input.value.trim().toLowerCase();
     if (!consulta) {
         estado.textContent = "Escribe un título, personaje o palabra para buscar.";
         contenedor.innerHTML = "";
         return;
     }
-
-    estado.textContent = "⏳ Buscando en TMDB...";
-    contenedor.innerHTML = "";
-
-    try {
-        const datos = await obtenerTMDB(
-            "/search/multi?query=" +
-            encodeURIComponent(consulta) +
-            "&include_adult=false&language=es-MX&page=1"
-        );
-
-        const resultados = (datos.results || [])
-            .filter(function(item) {
-                return item.media_type === "movie" ||
-                    item.media_type === "tv" ||
-                    item.media_type === "person";
-            })
-            .slice(0, 20);
-
-        estado.textContent =
-            resultados.length +
-            (resultados.length === 1
-                ? " resultado encontrado."
-                : " resultados encontrados.");
-
-        renderizarResultadosBusquedaGlobal(resultados);
-    } catch (error) {
-        console.error("Error en búsqueda global:", error);
-        estado.textContent = "No se pudo realizar la búsqueda. Revisa tu conexión o clave de TMDB.";
-        contenedor.innerHTML = "";
-    }
+    const resultados = peliculasTMDB.filter(function(item) {
+        return String(item.title || item.name || "").toLowerCase().includes(consulta);
+    }).slice(0, 20);
+    estado.textContent = resultados.length + (resultados.length === 1 ? " resultado encontrado." : " resultados encontrados.");
+    renderizarResultadosBusquedaGlobal(resultados);
 }
 
 function configurarBusquedaGlobal() {
@@ -1893,140 +1864,31 @@ function mostrarRecomendacion(item) {
 }
 
 async function recomendacionTMDB() {
-    try {
-        if (!TMDB_API_KEY || TMDB_API_KEY === "TU_CLAVE_API") {
-            recomendacionLocalFallback();
-            return;
-        }
-
-        const datos = await obtenerTMDB(
-            "/discover/movie?sort_by=popularity.desc&include_adult=false&with_companies=420&page=1"
-        );
-
-        if (!datos.results || datos.results.length === 0) {
-            recomendacionLocalFallback();
-            return;
-        }
-
-        const fecha = new Date();
-        const indice =
-            (fecha.getDate() +
-            fecha.getMonth() +
-            fecha.getFullYear()) %
-            datos.results.length;
-
-        mostrarRecomendacion(datos.results[indice]);
-    } catch (error) {
-        console.error("Error recomendación:", error);
-        recomendacionLocalFallback();
-    }
+    const lista = peliculasTMDB.filter(function(item) { return item && item.tipo === "movie"; });
+    if (!lista.length) { recomendacionLocalFallback(); return; }
+    mostrarRecomendacion(lista[(new Date().getDate() + new Date().getMonth()) % lista.length]);
 }
 
 async function nuevaRecomendacion() {
-    try {
-        if (!TMDB_API_KEY || TMDB_API_KEY === "TU_CLAVE_API") {
-            recomendacionLocalFallback();
-            return;
-        }
-
-        const datos = await obtenerTMDB(
-            "/discover/movie?sort_by=popularity.desc&include_adult=false&with_companies=420&page=1"
-        );
-
-        if (!datos.results || datos.results.length === 0) return;
-
-        const indice = Math.floor(
-            Math.random() * datos.results.length
-        );
-
-        mostrarRecomendacion(datos.results[indice]);
-    } catch (error) {
-        console.error("Error nueva recomendación:", error);
-    }
+    const lista = peliculasTMDB.filter(function(item) { return item && item.tipo === "movie"; });
+    if (!lista.length) { recomendacionLocalFallback(); return; }
+    mostrarRecomendacion(lista[Math.floor(Math.random() * lista.length)]);
 }
 
 async function cargarProximosEstrenos() {
-    const contenedor =
-        document.getElementById("proximosEstrenos");
-
+    const contenedor = document.getElementById("proximosEstrenos");
     if (!contenedor) return;
-
-    if (!TMDB_API_KEY || TMDB_API_KEY === "TU_CLAVE_API") {
-        contenedor.innerHTML =
-            "<p>Configura tu clave de TMDB para mostrar próximos estrenos.</p>";
+    const lista = peliculasTMDB.filter(function(item) { return item && item.release_date; }).slice(-10).reverse();
+    contenedor.innerHTML = "";
+    if (!lista.length) {
+        contenedor.innerHTML = "<p>No hay próximos estrenos disponibles.</p>";
         return;
     }
-
-    const ahora = new Date();
-    const hoy =
-        ahora.getFullYear() +
-        "-" +
-        String(ahora.getMonth() + 1).padStart(2, "0") +
-        "-" +
-        String(ahora.getDate()).padStart(2, "0");
-
-    try {
-        const datos = await obtenerTMDB(
-            "/discover/movie?sort_by=primary_release_date.asc&include_adult=false&with_companies=420&primary_release_date.gte=" +
-            hoy +
-            "&region=MX&page=1"
-        );
-
-        contenedor.innerHTML = "";
-
-        if (!datos.results || datos.results.length === 0) {
-            contenedor.innerHTML =
-                "<p>No hay próximos estrenos disponibles.</p>";
-            return;
-        }
-
-        datos.results.slice(0, 10).forEach(function(item) {
-            const tarjeta = document.createElement("article");
-            tarjeta.className = "tarjeta-pelicula";
-
-            const titulo = item.title || "Sin título";
-            const fecha = item.release_date || "Sin fecha";
-            const descripcion =
-                item.overview ||
-                "Sin descripción disponible.";
-
-            tarjeta.innerHTML =
-                crearPoster(
-                    item.poster_path
-                        ? TMDB_IMAGE_URL + item.poster_path
-                        : "",
-                    titulo,
-                    ""
-                ) +
-                "<div class='card-content'>" +
-                "<h3>" +
-                titulo +
-                "</h3>" +
-                "<p class='tipo-contenido'>🎬 Marvel Studios</p>" +
-                "<p>📅 " +
-                fecha +
-                "</p>" +
-                "<p class='descripcion-pelicula'>" +
-                descripcion +
-                "</p>" +
-                "<div class='botones-card'>" +
-                "<button class='boton-detalles-estreno'>Ver detalles</button>" +
-                "</div>" +
-                "</div>";
-
-            tarjeta.querySelector(".boton-detalles-estreno")
-                .addEventListener("click", function() {
-                    verDetallesTMDB(item.id, "movie");
-                });
-
-            contenedor.appendChild(tarjeta);
-        });
-    } catch (error) {
-        console.error("Error próximos estrenos:", error);
-        contenedor.innerHTML =
-            "<p>No se pudieron cargar los próximos estrenos.</p>";
-    }
+    lista.forEach(function(item) { contenedor.appendChild(crearTarjetaMarvel(item)); });
 }
+
+
+const SUPABASE_URL
 
 
 const SUPABASE_URL = window.MARVEL_HUB_SUPABASE_URL || "";
@@ -3098,7 +2960,6 @@ function restablecerPreferencias() {
 
     actualizarIconosLucide();
     cargarTema();
-    configurarTMDBAjustes();
     cargarNombre();
 
     const widgetRecomendacion = document.getElementById("widgetRecomendacion");
