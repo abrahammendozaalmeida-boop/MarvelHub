@@ -1473,7 +1473,26 @@ function crearRepartoDetalles(datos) {
     return html;
 }
 
-async async function verDetallesTMDB(id, tipo) {
+function obtenerEnlaceReproduccionMarvel(datos) {
+    try {
+        const fuentes = JSON.parse(localStorage.getItem("marvelHubFuentesReproduccion") || "{}");
+        const claves = [
+            String(datos.id || ""),
+            String(datos.title || datos.name || "").trim().toLowerCase(),
+            String(datos.original_title || datos.original_name || "").trim().toLowerCase()
+        ].filter(Boolean);
+        for (const clave of claves) {
+            if (typeof fuentes[clave] === "string" && /^https?:\\/\\//i.test(fuentes[clave])) {
+                return fuentes[clave];
+            }
+        }
+    } catch (error) {
+        console.warn("No se pudo leer la fuente de reproducción.", error);
+    }
+    return "";
+}
+
+async function verDetallesTMDB(id, tipo) {
     const modal = document.getElementById("modalMarvel");
     const contenido = document.getElementById("detalleMarvel");
 
@@ -1596,6 +1615,9 @@ async async function verDetallesTMDB(id, tipo) {
             "<p class='detalle-generos'>🏷️ " + generos + "</p>" +
             "</div>" +
             "<div class='detalle-acciones'>" +
+            (obtenerEnlaceReproduccionMarvel(datos)
+                ? "<button id='detalleReproducir' type='button' class='boton-principal'><i data-lucide='play'></i><span>Reproducir película</span></button>"
+                : "") +
             "<button id='detalleFavorito' type='button' class='" +
             (esFavoritoMarvel(datos.id, tipo) ? "boton-quitar-favorito" : "boton-favorito") +
             "'><i data-lucide='heart'></i><span>" +
@@ -1614,6 +1636,14 @@ async async function verDetallesTMDB(id, tipo) {
             trailer +
             "</div>";
         
+        const botonReproducirDetalle = document.getElementById("detalleReproducir");
+        if (botonReproducirDetalle) {
+            botonReproducirDetalle.addEventListener("click", function() {
+                const enlace = obtenerEnlaceReproduccionMarvel(datos);
+                if (enlace) window.open(enlace, "_blank", "noopener,noreferrer");
+            });
+        }
+
         const botonFavoritoDetalle = document.getElementById("detalleFavorito");
         if (botonFavoritoDetalle) {
             botonFavoritoDetalle.addEventListener("click", function() {
