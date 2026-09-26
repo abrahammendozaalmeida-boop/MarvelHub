@@ -1473,7 +1473,7 @@ function crearRepartoDetalles(datos) {
     return html;
 }
 
-async function verDetallesTMDB(id, tipo) {
+async async function verDetallesTMDB(id, tipo) {
     const modal = document.getElementById("modalMarvel");
     const contenido = document.getElementById("detalleMarvel");
 
