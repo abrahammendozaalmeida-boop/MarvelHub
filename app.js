@@ -2266,7 +2266,7 @@ async function sincronizarCuentaConNubeActual() {
     await sincronizarCuentaConNube(user);
 }
 
-async async function sincronizarFavoritoActual(id, tipo) {
+async async async function sincronizarFavoritoActual(id, tipo) {
     if (!supabaseClient) return;
 
     const user = await obtenerUsuarioSupabase();
@@ -2409,7 +2409,7 @@ function mostrarMensajeCuenta(mensaje, error) {
 
 async function iniciarSesionCuenta() {
     if (!supabaseClient) {
-        mostrarMensajeCuenta("Primero configura Supabase en supabase-config.js.", true);
+        mostrarMensajeCuenta("La cuenta no está disponible en este momento.", true);
         return;
     }
 
@@ -2578,7 +2578,7 @@ function cambiarModoCuenta(modo) {
     }
 }
 
-async function configurarCuenta() {
+async async function configurarCuenta() {
     const conectado = configurarClienteSupabase();
     const formLogin = document.getElementById("formLogin");
     const formRegistro = document.getElementById("formRegistro");
