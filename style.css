@@ -4621,3 +4621,26 @@ body.tema-claro .video-ai-recurso{background:#fff;border-color:#ddd}
 .home-ver-mas svg{width:15px;height:15px}
 #catalogoSentinela{height:1px;width:100%;pointer-events:none}
 @media(max-width:650px){.titulo-fila-home{align-items:flex-start;flex-direction:column}.home-ver-mas{width:100%;justify-content:center}}
+
+
+/* Perfil y Cuenta integrados */
+.perfil-cuenta-integrada {
+    margin-top: 28px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255,255,255,.08);
+}
+.perfil-cuenta-integrada .cuenta-panel {
+    margin-top: 0;
+}
+.perfil-cuenta-integrada .cuenta-nota {
+    margin-top: 14px;
+}
+.perfil-cuenta-integrada .cuenta-hero {
+    background: linear-gradient(135deg, rgba(255,255,255,.045), rgba(255,255,255,.018));
+}
+@media (max-width: 700px) {
+    .perfil-cuenta-integrada {
+        margin-top: 22px;
+        padding-top: 22px;
+    }
+}
