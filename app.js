@@ -114,7 +114,7 @@ function normalizarTituloReproduccionMarvel(titulo) {
 
 const fuentesReproduccionPorTituloMarvel = {
     "deadpool|2016": "https://drive.google.com/drive/folders/1pOMPhnD9qL6Pswi9IoqlreCZSH4pwlKP?usp=sharing",
-    "spider man brand new day|2026": "https://drive.google.com/drive/folders/1sp-mS1_7JfdBfxdE2_pMcgmV4QFKieEe?usp=sharing",
+    "spider man brand new day|2026": "https://drive.google.com/drive/folders/1tajXf_UgZXJirFf6bZX9LBUBESKNT2lr",
     "deadpool 2|2018": "https://drive.google.com/drive/folders/1qusOOOwmjSsBf6LNaNHswMAEV935oqe1?usp=sharing",
     "deadpool and wolverine|2024": "https://drive.google.com/file/d/1MzUqSxvF-A_ziILziwYLplFmgkToZkz7/view?usp=sharing",
     "spider man|2002": "https://drive.google.com/file/d/1SCiR1f31LcT3qZrBOYpXUJY7tkPAOn9d/view?usp=sharing",
