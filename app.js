@@ -1132,8 +1132,10 @@ function crearCatalogoLocalMarvel(tipo) {
 }
 
 function cargarCatalogoLocalMarvel() {
+    // Solo se muestran las 65 películas que tienen enlaces proporcionados.
+    // Las 25 series del catálogo antiguo quedan fuera hasta recibir sus enlaces.
     peliculasTMDB = crearCatalogoLocalMarvel("movie");
-    seriesTMDB = crearCatalogoLocalMarvel("tv");
+    seriesTMDB = [];
     window.coleccionPersonalMarvel = peliculasTMDB.slice();
 
     paginaPeliculasTMDB = 1;
