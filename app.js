@@ -37,6 +37,34 @@ const coleccionPersonalMarvel = [
     ["THUNDERBOLTS*", 2025], ["THE FANTASTIC FOUR: FIRST STEPS", 2025]
 ];
 
+const coleccionSeriesMarvel = [
+    ["AGENTS OF S.H.I.E.L.D.", 2013],
+    ["AGENT CARTER", 2015],
+    ["DAREDEVIL", 2015],
+    ["JESSICA JONES", 2015],
+    ["LUKE CAGE", 2016],
+    ["IRON FIST", 2017],
+    ["THE DEFENDERS", 2017],
+    ["THE PUNISHER", 2017],
+    ["RUNAWAYS", 2017],
+    ["CLOAK & DAGGER", 2018],
+    ["WANDAVISION", 2021],
+    ["THE FALCON AND THE WINTER SOLDIER", 2021],
+    ["LOKI", 2021],
+    ["WHAT IF...?", 2021],
+    ["HAWKEYE", 2021],
+    ["MOON KNIGHT", 2022],
+    ["MS. MARVEL", 2022],
+    ["SHE-HULK: ATTORNEY AT LAW", 2022],
+    ["I AM GROOT", 2022],
+    ["SECRET INVASION", 2023],
+    ["ECHO", 2024],
+    ["X-MEN '97", 2024],
+    ["AGATHA ALL ALONG", 2024],
+    ["YOUR FRIENDLY NEIGHBORHOOD SPIDER-MAN", 2025],
+    ["IRONHEART", 2025]
+];
+
 // Fuentes asociadas por título normalizado y año, no por posición de la película.
 // Así, reordenar el catálogo no cambia el enlace que corresponde a cada título.
 function normalizarTituloReproduccionMarvel(titulo) {
@@ -1035,17 +1063,23 @@ async function cargarColeccionPersonalMarvel() {
     return resultados;
 }
 
-function crearCatalogoLocalMarvel() {
-    return coleccionPersonalMarvel.map(function(registro, indice) {
+function crearCatalogoLocalMarvel(tipo) {
+    const esSerie = tipo === "tv";
+    const coleccion = esSerie ? coleccionSeriesMarvel : coleccionPersonalMarvel;
+
+    return coleccion.map(function(registro, indice) {
+        const anio = String(registro[1]) + "-01-01";
         return {
-            id: "marvel-local-" + indice,
-            tipo: "movie",
+            id: (esSerie ? "marvel-serie-local-" : "marvel-local-") + indice,
+            tipo: esSerie ? "tv" : "movie",
             title: registro[0],
+            name: esSerie ? registro[0] : undefined,
             original_title: registro[0],
-            release_date: String(registro[1]) + "-01-01",
+            release_date: esSerie ? undefined : anio,
+            first_air_date: esSerie ? anio : undefined,
             overview: "Título de la colección de Marvel Hub.",
             vote_average: 0,
-            popularity: coleccionPersonalMarvel.length - indice,
+            popularity: coleccion.length - indice,
             poster_path: "",
             backdrop_path: "",
             tituloColeccion: registro[0],
@@ -1056,8 +1090,8 @@ function crearCatalogoLocalMarvel() {
 }
 
 function cargarCatalogoLocalMarvel() {
-    peliculasTMDB = crearCatalogoLocalMarvel();
-    seriesTMDB = [];
+    peliculasTMDB = crearCatalogoLocalMarvel("movie");
+    seriesTMDB = crearCatalogoLocalMarvel("tv");
     window.coleccionPersonalMarvel = peliculasTMDB.slice();
 
     paginaPeliculasTMDB = 1;
@@ -1077,6 +1111,8 @@ function obtenerMarvelLocalPorId(id) {
     const textoId = String(id || "");
     return peliculasTMDB.find(function(item) {
         return String(item.id) === textoId;
+    }) || seriesTMDB.find(function(item) {
+        return String(item.id) === textoId;
     }) || favoritosMarvel.find(function(item) {
         return String(item.id) === textoId;
     }) || null;
@@ -1094,24 +1130,31 @@ async function verDetallesLocalMarvel(id, tipo) {
         return;
     }
 
-    const titulo = datos.title || "Sin título";
-    const anio = String(datos.anioColeccion || datos.release_date || "").slice(0, 4);
-    const enlace = obtenerEnlaceReproduccionMarvel(datos);
-    const esFavorito = esFavoritoMarvel(datos.id, "movie");
+    const tipoContenido = datos.tipo || tipo || "movie";
+    const esSerie = tipoContenido === "tv";
+    const etiquetaTipo = esSerie ? "SERIE" : "PELÍCULA";
+    const titulo = datos.title || datos.name || "Sin título";
+    const anio = String(datos.anioColeccion || datos.release_date || datos.first_air_date || "").slice(0, 4);
+    const enlace = esSerie ? "" : obtenerEnlaceReproduccionMarvel(datos);
+    const esFavorito = esFavoritoMarvel(datos.id, tipoContenido);
 
     guardarVistoRecientemente(datos);
     renderizarHistorialInicio();
 
+    const bloqueReproduccion = esSerie
+        ? "<div class='detalle-seccion detalle-reproducir-final'><h3>📺 Disponibilidad</h3><p class='detalle-vacio'>Esta ficha pertenece a una serie. Los enlaces de reproducción se añadirán cuando estén disponibles.</p>"
+        : "<div class='detalle-seccion detalle-reproducir-final'><h3>🎬 Ver película</h3><p class='detalle-vacio'>Cuando esté disponible, podrás abrir tu reproducción desde aquí.</p><button id='detalleReproducir' type='button' class='boton-principal'><i data-lucide='play'></i><span>Reproducir</span></button><div class='detalle-nota-reproduccion' role='note'><span>🎬</span><p>Al seleccionar <strong>Reproducir</strong>, serás dirigido a Google Drive para ver la película de forma gratuita. Una vez allí, haz doble clic en el ícono de la película para comenzar a disfrutarla.</p></div>";
+
     contenido.innerHTML =
         "<div class='detalle-hero'>" +
         "<div class='detalle-hero-contenido'>" +
-        "<div class='detalle-poster detalle-poster-vacio'><span>MARVEL</span><strong>" + escaparHTML(titulo) + "</strong><small>" + escaparHTML(anio) + "</small></div>" +
-        "<div class='detalle-principal'><span class='detalle-tipo'>🎬 PELÍCULA</span><h2>" + escaparHTML(titulo) + "</h2><div class='detalle-meta'><span>🎬 Película</span><span>📅 " + escaparHTML(anio) + "</span></div></div>" +
+        "<div class='detalle-poster detalle-poster-vacio'><span>MARVEL HUB</span><strong>" + escaparHTML(titulo) + "</strong><small>" + escaparHTML(anio) + "</small></div>" +
+        "<div class='detalle-principal'><span class='detalle-tipo'>" + (esSerie ? "📺 " : "🎬 ") + etiquetaTipo + "</span><h2>" + escaparHTML(titulo) + "</h2><div class='detalle-meta'><span>" + (esSerie ? "📺 Serie" : "🎬 Película") + "</span><span>📅 " + escaparHTML(anio) + "</span></div></div>" +
         "</div></div>" +
         "<div class='detalle-cuerpo'>" +
         "<div class='detalle-seccion'><h3>📖 Sinopsis</h3><p id='detalleSinopsis' class='detalle-sinopsis'>Cargando sinopsis...</p></div>" +
         "<div class='detalle-seccion'><h3>🎞️ Tráiler</h3><div id='detalleTrailer' class='detalle-trailer'><p class='detalle-vacio'>Cargando tráiler...</p></div></div>" +
-        "<div class='detalle-seccion detalle-reproducir-final'><h3>🎬 Ver película</h3><p class='detalle-vacio'>Cuando esté disponible, podrás abrir tu reproducción desde aquí.</p><button id='detalleReproducir' type='button' class='boton-principal'><i data-lucide='play'></i><span>Reproducir</span></button><div class='detalle-nota-reproduccion' role='note'><span>🎬</span><p>Al seleccionar <strong>Reproducir</strong>, serás dirigido a Google Drive para ver la película de forma gratuita. Una vez allí, haz doble clic en el ícono de la película para comenzar a disfrutarla.</p></div>" +
+        bloqueReproduccion +
         "<button id='detalleFavorito' type='button' class='" + (esFavorito ? "boton-quitar-favorito" : "boton-favorito") + "'><i data-lucide='heart'></i><span>" + (esFavorito ? "Quitar de favoritos" : "Añadir a favoritos") + "</span></button>" +
         "<button id='detalleCompartir' type='button' class='boton-secundario'><i data-lucide='share-2'></i><span>Compartir</span></button></div>" +
         "</div>";
@@ -1121,21 +1164,23 @@ async function verDetallesLocalMarvel(id, tipo) {
     const botonReproducir = document.getElementById("detalleReproducir");
     const notaReproduccion = contenido.querySelector(".detalle-nota-reproduccion");
     if (notaReproduccion) notaReproduccion.style.display = "flex";
-    botonReproducir.addEventListener("click", function() {
-        const url = obtenerEnlaceReproduccionMarvel(datos);
-        if (url) {
-            window.open(url, "_blank", "noopener,noreferrer");
-        } else {
-            const span = botonReproducir.querySelector("span");
-            if (span) span.textContent = "No disponible";
-            setTimeout(function(){ if(span) span.textContent = "Reproducir"; }, 1600);
-        }
-    });
+    if (botonReproducir) {
+        botonReproducir.addEventListener("click", function() {
+            const url = obtenerEnlaceReproduccionMarvel(datos);
+            if (url) {
+                window.open(url, "_blank", "noopener,noreferrer");
+            } else {
+                const span = botonReproducir.querySelector("span");
+                if (span) span.textContent = "No disponible";
+                setTimeout(function(){ if(span) span.textContent = "Reproducir"; }, 1600);
+            }
+        });
+    }
 
     const botonFavorito = document.getElementById("detalleFavorito");
     botonFavorito.addEventListener("click", function() {
-        alternarFavorito(datos.id, "movie", datos);
-        const activo = esFavoritoMarvel(datos.id, "movie");
+        alternarFavorito(datos.id, tipoContenido, datos);
+        const activo = esFavoritoMarvel(datos.id, tipoContenido);
         botonFavorito.className = activo ? "boton-quitar-favorito" : "boton-favorito";
         botonFavorito.innerHTML = "<i data-lucide='heart'></i><span>" + (activo ? "Quitar de favoritos" : "Añadir a favoritos") + "</span>";
         actualizarIconosLucide();
@@ -1165,18 +1210,24 @@ async function enriquecerDetalleLocal(datos) {
         return;
     }
 
+    const esSerie = datos.tipo === "tv";
+    const titulo = datos.tituloColeccion || datos.title || datos.name || "";
+    const anio = datos.anioColeccion || "";
+
     try {
+        const rutaBusqueda = esSerie ? "/search/tv" : "/search/movie";
+        const parametrosAnio = anio && !esSerie ? "&year=" + encodeURIComponent(anio) : "";
         const consulta = await fetch(
-            TMDB_BASE_URL + "/search/movie?api_key=" + encodeURIComponent(clave) +
-            "&language=es-MX&query=" + encodeURIComponent(datos.tituloColeccion || datos.title) +
-            "&year=" + encodeURIComponent(datos.anioColeccion || "")
+            TMDB_BASE_URL + rutaBusqueda + "?api_key=" + encodeURIComponent(clave) +
+            "&language=es-MX&query=" + encodeURIComponent(titulo) + parametrosAnio
         );
         const buscados = await consulta.json();
         const encontrado = buscados.results && buscados.results[0];
         if (!encontrado) throw new Error("Sin coincidencia");
 
+        const rutaDetalle = esSerie ? "/tv/" : "/movie/";
         const detalleRespuesta = await fetch(
-            TMDB_BASE_URL + "/movie/" + encontrado.id +
+            TMDB_BASE_URL + rutaDetalle + encontrado.id +
             "?api_key=" + encodeURIComponent(clave) +
             "&language=es-MX&append_to_response=videos,credits"
         );
