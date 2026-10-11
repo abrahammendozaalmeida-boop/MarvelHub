@@ -1569,20 +1569,7 @@ async function buscarMarvelGlobal() {
 }
 
 function configurarBusquedaGlobal() {
-    const input = document.getElementById("busquedaGlobalMarvel");
-    const boton = document.getElementById("botonBusquedaGlobal");
-
-    if (boton) {
-        boton.addEventListener("click", buscarMarvelGlobal);
-    }
-
-    if (input) {
-        input.addEventListener("keydown", function(event) {
-            if (event.key === "Enter") {
-                buscarMarvelGlobal();
-            }
-        });
-    }
+    const input = document.getElementById("buscador");
 
     document.addEventListener("keydown", function(event) {
         const activo = document.activeElement;
@@ -1595,24 +1582,19 @@ function configurarBusquedaGlobal() {
                 activo.isContentEditable
             );
 
-        if (event.key === "/" && !escribiendo) {
+        if (event.key === "/" && !escribiendo && input) {
             event.preventDefault();
-
-            if (input) {
-                input.focus();
-                input.select();
-            }
+            input.focus();
+            input.select();
         }
 
         if (event.key === "Escape" && activo === input) {
             input.value = "";
             input.blur();
-
-            const estado = document.getElementById("estadoBusquedaGlobal");
-            const contenedor = document.getElementById("resultadosBusquedaGlobal");
-
-            if (estado) estado.textContent = "";
-            if (contenedor) contenedor.innerHTML = "";
+            const lista = tipoActual === "peliculas"
+                ? peliculasTMDB
+                : seriesTMDB;
+            renderizarCatalogo(lista);
         }
     });
 }
