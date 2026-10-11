@@ -163,21 +163,6 @@ main { padding-top: clamp(20px, 3vw, 36px); padding-bottom: 48px; }
   background: transparent;
   box-shadow: none;
 }
-.busqueda-global {
-  padding: clamp(16px, 2.2vw, 22px);
-  margin-top: 18px;
-}
-.busqueda-global h3 { line-height: 1.3; }
-.busqueda-global p { max-width: 60ch; line-height: 1.55; }
-.busqueda-global-form input {
-  min-height: 46px;
-  border-radius: 11px;
-}
-.busqueda-global-form button {
-  min-height: 46px;
-  border-radius: 11px;
-  font-weight: 700;
-}
 .catalogo-info {
   display: flex;
   align-items: center;
