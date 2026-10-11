@@ -1489,86 +1489,7 @@ function activarBuscador() {
     }
 }
 
-function renderizarResultadosBusquedaGlobal(resultados) {
-    const contenedor = document.getElementById("resultadosBusquedaGlobal");
-    if (!contenedor) return;
-
-    contenedor.innerHTML = "";
-
-    if (!resultados || resultados.length === 0) {
-        contenedor.innerHTML =
-            "<div class='busqueda-vacia-global'>" +
-            "<i data-lucide='search-x'></i>" +
-            "<strong>No encontramos resultados</strong>" +
-            "<span>Prueba con otro título, personaje o palabra clave.</span>" +
-            "</div>";
-        actualizarIconosLucide();
-        return;
-    }
-
-    const cabecera = document.createElement("div");
-    cabecera.className = "resultados-global-cabecera";
-    cabecera.innerHTML =
-        "<div>" +
-        "<span class='mini-etiqueta'>RESULTADOS</span>" +
-        "<strong>Encontramos " + resultados.length + " coincidencias</strong>" +
-        "</div>" +
-        "<span class='resultados-global-fuente'><i data-lucide='database'></i> TMDB</span>";
-    contenedor.appendChild(cabecera);
-
-    const rejilla = document.createElement("div");
-    rejilla.className = "resultados-global-grid";
-
-    resultados.forEach(function(item) {
-        if (item.media_type === "person") {
-            const tarjeta = document.createElement("article");
-            tarjeta.className = "tarjeta-pelicula resultado-persona";
-            tarjeta.innerHTML =
-                "<div class='card-media'>" +
-                crearPoster(
-                    item.profile_path
-                        ? TMDB_IMAGE_URL + item.profile_path
-                        : "",
-                    escaparHTML(item.name || "Sin nombre"),
-                    ""
-                ) +
-                "<span class='card-badge'>Persona</span>" +
-                "</div>" +
-                "<div class='card-content'>" +
-                "<h3>" + escaparHTML(item.name || "Sin nombre") + "</h3>" +
-                "<p class='descripcion-pelicula'>Persona relacionada encontrada en TMDB.</p>" +
-                "</div>";
-            rejilla.appendChild(tarjeta);
-            return;
-        }
-
-        item.tipo = item.media_type === "tv" ? "tv" : "movie";
-        rejilla.appendChild(crearTarjetaMarvel(item));
-    });
-
-    contenedor.appendChild(rejilla);
-    actualizarIconosLucide();
-}
-
-async function buscarMarvelGlobal() {
-    const input = document.getElementById("busquedaGlobalMarvel");
-    const estado = document.getElementById("estadoBusquedaGlobal");
-    const contenedor = document.getElementById("resultadosBusquedaGlobal");
-    if (!input || !estado || !contenedor) return;
-    const consulta = input.value.trim().toLowerCase();
-    if (!consulta) {
-        estado.textContent = "Escribe un título, personaje o palabra para buscar.";
-        contenedor.innerHTML = "";
-        return;
-    }
-    const resultados = peliculasTMDB.filter(function(item) {
-        return String(item.title || item.name || "").toLowerCase().includes(consulta);
-    }).slice(0, 20);
-    estado.textContent = resultados.length + (resultados.length === 1 ? " resultado encontrado." : " resultados encontrados.");
-    renderizarResultadosBusquedaGlobal(resultados);
-}
-
-function configurarBusquedaGlobal() {
+function configurarAtajosBuscador() {
     const input = document.getElementById("buscador");
 
     document.addEventListener("keydown", function(event) {
@@ -3949,7 +3870,7 @@ function inicializarMarvelHub() {
     configurarCuenta();
     activarBuscador();
     configurarCargaInfinitaCatalogo();
-    configurarBusquedaGlobal();
+    configurarAtajosBuscador();
 
     const botonRestablecer = document.getElementById("restablecerPreferencias");
     if (botonRestablecer) {
