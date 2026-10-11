@@ -1105,9 +1105,10 @@ function cargarCatalogoLocalMarvel() {
     actualizarInicioPersonalizado();
     actualizarWidgetResumen();
     actualizarBotonCargarMas();
+    actualizarDashboardInicio();
 }
 
-function obtenerMarvelLocalPorId(id) {
+function obtenerMarvelLocalPorId {
     const textoId = String(id || "");
     return peliculasTMDB.find(function(item) {
         return String(item.id) === textoId;
