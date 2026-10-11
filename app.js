@@ -1149,8 +1149,8 @@ async function verDetallesLocalMarvel(id, tipo) {
     contenido.innerHTML =
         "<div class='detalle-hero'>" +
         "<div class='detalle-hero-contenido'>" +
-        "<div class='detalle-poster detalle-poster-vacio'><span>MARVEL HUB</span><strong>" + escaparHTML(titulo) + "</strong><small>" + escaparHTML(anio) + "</small></div>" +
-        "<div class='detalle-principal'><span class='detalle-tipo'>" + (esSerie ? "📺 " : "🎬 ") + etiquetaTipo + "</span><h2>" + escaparHTML(titulo) + "</h2><div class='detalle-meta'><span>" + (esSerie ? "📺 Serie" : "🎬 Película") + "</span><span>📅 " + escaparHTML(anio) + "</span></div></div>" +
+        "<div id='detallePosterDinamico' class='detalle-poster detalle-poster-vacio'><span>MARVEL HUB</span><strong>" + escaparHTML(titulo) + "</strong><small>" + escaparHTML(anio) + "</small></div>" +
+        "<div class='detalle-principal'><span class='detalle-tipo'>" + (esSerie ? "📺 " : "🎬 ") + etiquetaTipo + "</span><h2>" + escaparHTML(titulo) + "</h2><div class='detalle-meta'><span>" + (esSerie ? "📺 Serie" : "🎬 Película") + "</span><span>📅 " + escaparHTML(anio) + "</span></div><div id='detalleInfoExtra' class='detalle-info-extra'></div></div>" +
         "</div></div>" +
         "<div class='detalle-cuerpo'>" +
         "<div class='detalle-seccion'><h3>📖 Sinopsis</h3><p id='detalleSinopsis' class='detalle-sinopsis'>Cargando sinopsis...</p></div>" +
@@ -1202,19 +1202,56 @@ async function verDetallesLocalMarvel(id, tipo) {
 async function enriquecerDetalleLocal(datos) {
     const sinopsis = document.getElementById("detalleSinopsis");
     const trailer = document.getElementById("detalleTrailer");
+    const poster = document.getElementById("detallePosterDinamico");
+    const infoExtra = document.getElementById("detalleInfoExtra");
     if (!sinopsis || !trailer) return;
 
+    const mostrarInfo = function(detalle) {
+        if (poster && detalle.poster_path) {
+            poster.className = "detalle-poster detalle-poster-imagen";
+            poster.innerHTML = "<img src='https://image.tmdb.org/t/p/w500" +
+                escaparHTML(detalle.poster_path) + "' alt='Póster de " +
+                escaparHTML(datos.title || datos.name || "Marvel") + "' loading='lazy'>";
+        }
+        const puntuacion = Number(detalle.vote_average || datos.vote_average || 0);
+        const generos = Array.isArray(detalle.genres)
+            ? detalle.genres.map(function(genero) { return escaparHTML(genero.name); }).join(" · ")
+            : "";
+        const duracion = detalle.runtime
+            ? detalle.runtime + " min"
+            : (detalle.episode_run_time && detalle.episode_run_time.length
+                ? detalle.episode_run_time[0] + " min por episodio" : "");
+        if (infoExtra) {
+            const elementos = [];
+            if (puntuacion > 0) elementos.push("<span class='detalle-chip detalle-chip-rating'>★ " + puntuacion.toFixed(1) + "/10</span>");
+            if (duracion) elementos.push("<span class='detalle-chip'>" + escaparHTML(duracion) + "</span>");
+            if (generos) elementos.push("<span class='detalle-generos'>" + generos + "</span>");
+            infoExtra.innerHTML = elementos.join("");
+        }
+        const fecha = detalle.release_date || detalle.first_air_date || "";
+        const meta = document.querySelector("#detalleMarvel .detalle-meta");
+        if (meta && fecha) {
+            const fechaEl = meta.querySelector("span:last-child");
+            if (fechaEl) fechaEl.textContent = "📅 " + fecha.slice(0, 4);
+        }
+        const fondo = document.querySelector("#detalleMarvel .detalle-hero");
+        if (fondo && detalle.backdrop_path) {
+            fondo.style.setProperty("--detalle-fondo", "url('https://image.tmdb.org/t/p/w1280" + detalle.backdrop_path + "')");
+            fondo.classList.add("detalle-hero-con-fondo");
+        }
+    };
+
+    mostrarInfo(datos);
     const clave = localStorage.getItem("marvelHubTMDBApiKey") || "";
     if (!clave || clave === "TU_CLAVE_API") {
-        sinopsis.textContent = datos.overview || "Sinopsis no disponible en el catálogo local.";
-        trailer.innerHTML = "<p class='detalle-vacio'>El tráiler se mostrará cuando la información ampliada esté disponible.</p>";
+        sinopsis.textContent = datos.overview || "Añade tu clave de TMDB en Ajustes para consultar la sinopsis ampliada, la puntuación y el tráiler.";
+        trailer.innerHTML = "<p class='detalle-vacio'>El tráiler y los datos ampliados aparecerán cuando TMDB esté configurado.</p>";
         return;
     }
 
-    const esSerie = datos.tipo === "tv";
+    const esSerie = (datos.tipo || "") === "tv";
     const titulo = datos.tituloColeccion || datos.title || datos.name || "";
     const anio = datos.anioColeccion || "";
-
     try {
         const rutaBusqueda = esSerie ? "/search/tv" : "/search/movie";
         const parametrosAnio = anio && !esSerie ? "&year=" + encodeURIComponent(anio) : "";
@@ -1222,32 +1259,33 @@ async function enriquecerDetalleLocal(datos) {
             TMDB_BASE_URL + rutaBusqueda + "?api_key=" + encodeURIComponent(clave) +
             "&language=es-MX&query=" + encodeURIComponent(titulo) + parametrosAnio
         );
+        if (!consulta.ok) throw new Error("Falló la búsqueda TMDB");
         const buscados = await consulta.json();
         const encontrado = buscados.results && buscados.results[0];
         if (!encontrado) throw new Error("Sin coincidencia");
-
         const rutaDetalle = esSerie ? "/tv/" : "/movie/";
         const detalleRespuesta = await fetch(
             TMDB_BASE_URL + rutaDetalle + encontrado.id +
             "?api_key=" + encodeURIComponent(clave) +
             "&language=es-MX&append_to_response=videos,credits"
         );
+        if (!detalleRespuesta.ok) throw new Error("Falló la ficha TMDB");
         const detalle = await detalleRespuesta.json();
-
-        sinopsis.textContent = detalle.overview || "Sinopsis no disponible.";
+        mostrarInfo(detalle);
+        sinopsis.textContent = detalle.overview || datos.overview || "Sinopsis no disponible.";
         const video = obtenerTrailerTMDB(detalle);
-
         if (video) {
             trailer.innerHTML = "<div class='detalle-trailer-video'><iframe src='https://www.youtube.com/embed/" +
                 encodeURIComponent(video.key) +
-                "' title='Tráiler de " + escaparHTML(datos.title) +
+                "' title='Tráiler de " + escaparHTML(datos.title || datos.name || titulo) +
                 "' loading='lazy' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe></div>";
         } else {
-            trailer.innerHTML = "<p class='detalle-vacio'>Tráiler no disponible.</p>";
+            trailer.innerHTML = "<p class='detalle-vacio'>Tráiler no disponible para este título.</p>";
         }
     } catch (error) {
+        console.warn("No se pudieron ampliar los detalles con TMDB:", error);
         sinopsis.textContent = datos.overview || "Sinopsis no disponible en el catálogo local.";
-        trailer.innerHTML = "<p class='detalle-vacio'>Tráiler no disponible.</p>";
+        trailer.innerHTML = "<p class='detalle-vacio'>No se pudo cargar el tráiler. Comprueba tu clave de TMDB o inténtalo más tarde.</p>";
     }
 }
 async function cargarMarvelTMDB() {
