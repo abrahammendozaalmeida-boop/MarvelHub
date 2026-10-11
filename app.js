@@ -659,7 +659,7 @@ function renderizarCatalogo(lista) {
         return;
     }
 
-    const limiteInicial = hayBusqueda ? listaOrdenada.length : Math.min(12, listaOrdenada.length);
+    const limiteInicial = (hayBusqueda || MODO_LOCAL_MARVEL) ? listaOrdenada.length : Math.min(12, listaOrdenada.length);
     listaOrdenada.slice(0, limiteInicial).forEach(function(item) {
         catalogo.appendChild(crearTarjetaMarvel(item));
     });
