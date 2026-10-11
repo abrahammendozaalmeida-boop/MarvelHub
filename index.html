@@ -34,11 +34,9 @@
 
     <nav>
         <button class="nav-boton activo-nav" data-seccion="inicio" onclick="mostrarSeccion('inicio')"><i data-lucide="house"></i><span>Inicio</span></button>
-        <button class="nav-boton" data-seccion="marvel" onclick="mostrarSeccion('marvel')"><i data-lucide="compass"></i><span>Marvel</span></button>
-        <button class="nav-boton" data-seccion="favoritos" onclick="mostrarSeccion('favoritos')"><i data-lucide="heart"></i><span>Favoritos</span></button>
+        <button class="nav-boton" data-seccion="marvel" onclick="mostrarSeccion('marvel')"><i data-lucide="compass"></i><span>Explorar</span></button>
+        <button class="nav-boton" data-seccion="favoritos" onclick="mostrarSeccion('favoritos')"><i data-lucide="heart"></i><span>Mi lista</span></button>
         <button class="nav-boton" data-seccion="perfil" onclick="mostrarSeccion('perfil')"><i data-lucide="user-round"></i><span>Perfil</span></button>
-        <button class="nav-boton" data-seccion="video-ai" onclick="mostrarSeccion('video-ai')"><i data-lucide="wand-sparkles"></i><span>Video AI</span></button>
-        <button class="nav-boton" data-seccion="widgets" onclick="mostrarSeccion('widgets')"><i data-lucide="layout-grid"></i><span>Widgets</span></button>
         <button class="nav-boton" data-seccion="ajustes" onclick="mostrarSeccion('ajustes')"><i data-lucide="settings"></i><span>Ajustes</span></button>
         <button id="botonInstalar" class="boton-instalar" hidden><i data-lucide="download"></i><span>Instalar</span></button>
     </nav>
@@ -135,17 +133,8 @@
             <div class="atajo-card" onclick="mostrarSeccion('favoritos')">
                 <span class="atajo-icono"><i data-lucide="heart"></i></span>
                 <div>
-                    <strong>Mis favoritos</strong>
-                    <p>Tu lista personal</p>
-                </div>
-                <b>›</b>
-            </div>
-
-            <div class="atajo-card" onclick="mostrarSeccion('video-ai')">
-                <span class="atajo-icono"><i data-lucide="wand-sparkles"></i></span>
-                <div>
-                    <strong>Video AI</strong>
-                    <p>Crea y edita tus videos</p>
+                    <strong>Mi lista</strong>
+                    <p>Películas y series que guardaste</p>
                 </div>
                 <b>›</b>
             </div>
