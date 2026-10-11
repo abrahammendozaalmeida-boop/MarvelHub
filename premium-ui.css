@@ -118,3 +118,140 @@ main { padding-top: clamp(20px, 3vw, 36px); padding-bottom: 48px; }
     transition-duration: .01ms !important;
   }
 }
+
+/* Catálogo: jerarquía visual clara y búsqueda fácil */
+.catalogo-command {
+  padding: clamp(16px, 2.4vw, 26px);
+  background: linear-gradient(145deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
+}
+.catalogo-command-copy strong {
+  display: block;
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  letter-spacing: -.025em;
+}
+.catalogo-command-copy small {
+  display: block;
+  max-width: 58ch;
+  margin-top: 5px;
+  color: var(--mh-text-muted);
+  line-height: 1.55;
+}
+.catalogo-controles { gap: 8px; }
+.catalogo-controles .filtro {
+  min-height: 44px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-weight: 650;
+}
+.catalogo-controles .filtro.activo-filtro {
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), 0 4px 14px rgba(230,36,41,.12);
+}
+.catalogo-busqueda { gap: 10px; }
+.catalogo-search-box, .catalogo-sort-box {
+  min-height: 46px;
+  border: 1px solid var(--mh-border);
+  border-radius: 11px;
+  background: rgba(255,255,255,.035);
+}
+.catalogo-search-box:focus-within, .catalogo-sort-box:focus-within {
+  border-color: rgba(255,105,110,.8);
+  box-shadow: 0 0 0 3px rgba(230,36,41,.12);
+}
+.catalogo-search-box input, .catalogo-sort-box select {
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.busqueda-global {
+  padding: clamp(16px, 2.2vw, 22px);
+  margin-top: 18px;
+}
+.busqueda-global h3 { line-height: 1.3; }
+.busqueda-global p { max-width: 60ch; line-height: 1.55; }
+.busqueda-global-form input {
+  min-height: 46px;
+  border-radius: 11px;
+}
+.busqueda-global-form button {
+  min-height: 46px;
+  border-radius: 11px;
+  font-weight: 700;
+}
+.catalogo-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 22px 0 14px;
+  color: var(--mh-text-muted);
+  font-size: .92rem;
+}
+.tarjeta-pelicula .card-media {
+  isolation: isolate;
+  background: linear-gradient(145deg, #20202a, #111116);
+}
+.tarjeta-pelicula .card-badge {
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-size: .72rem;
+  font-weight: 750;
+  letter-spacing: .025em;
+  backdrop-filter: blur(8px);
+}
+.tarjeta-pelicula .card-rating {
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-variant-numeric: tabular-nums;
+}
+.tarjeta-pelicula .card-content {
+  padding: 13px 14px 15px;
+}
+.tarjeta-pelicula .card-content h3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  min-height: 2.7em;
+  margin-bottom: 8px;
+}
+.tarjeta-pelicula .card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  color: var(--mh-text-muted);
+  font-size: .8rem;
+}
+.tarjeta-pelicula .puntuacion {
+  margin: 8px 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.tarjeta-pelicula .descripcion-pelicula {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  line-height: 1.55;
+}
+.tarjeta-pelicula .botones-card button {
+  min-height: 42px;
+  border-radius: 9px;
+}
+#catalogo > p, #resultadosBusquedaGlobal > p {
+  padding: 24px;
+  border: 1px dashed var(--mh-border);
+  border-radius: 12px;
+  color: var(--mh-text-muted);
+  text-align: center;
+}
+@media (max-width: 700px) {
+  .catalogo-command { padding: 15px; }
+  .catalogo-controles .filtro { flex: 1; justify-content: center; }
+  .catalogo-info { align-items: flex-start; font-size: .85rem; }
+  .tarjeta-pelicula .card-content { padding: 11px; }
+}
+
