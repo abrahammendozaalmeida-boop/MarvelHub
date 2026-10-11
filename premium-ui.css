@@ -1,0 +1,120 @@
+/* MARVEL HUB — capa visual premium y accesible
+   Esta capa solo mejora presentación; no sustituye estilos ni lógica existentes. */
+:root {
+  --mh-bg: #0b0b0f;
+  --mh-surface: #14141a;
+  --mh-surface-raised: #1b1b23;
+  --mh-border: rgba(255,255,255,.09);
+  --mh-text-muted: #b7b7c2;
+  --mh-accent: #e62429;
+  --mh-radius: 16px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--mh-bg);
+  color: #f7f7fa;
+  line-height: 1.55;
+  text-rendering: optimizeLegibility;
+}
+::selection { background: rgba(230,36,41,.32); color: #fff; }
+
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid #ff6b70;
+  outline-offset: 3px;
+}
+button, input, select, textarea { touch-action: manipulation; }
+button { min-height: 42px; }
+input, select, textarea {
+  border-radius: 10px;
+}
+input::placeholder, textarea::placeholder { color: #92929f; opacity: 1; }
+
+header {
+  background: rgba(15,15,21,.96);
+  border-bottom: 1px solid rgba(230,36,41,.65);
+  box-shadow: 0 8px 28px rgba(0,0,0,.16);
+  backdrop-filter: blur(16px);
+}
+.logo h1 { letter-spacing: .045em; }
+.logo span { letter-spacing: .08em; }
+nav .nav-boton {
+  min-height: 42px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: #c9c9d2;
+  transition: background-color .18s ease, border-color .18s ease, color .18s ease;
+}
+nav .nav-boton:hover {
+  background: rgba(255,255,255,.06);
+  border-color: var(--mh-border);
+  color: #fff;
+  transform: none;
+}
+nav .nav-boton.activo-nav {
+  color: #fff;
+  background: rgba(230,36,41,.13);
+  border-color: rgba(230,36,41,.32);
+}
+nav .nav-boton.activo-nav svg { color: #ff696e; }
+
+main { padding-top: clamp(20px, 3vw, 36px); padding-bottom: 48px; }
+.seccion > h2, .titulo-seccion, .titulo-home {
+  letter-spacing: -.025em;
+  line-height: 1.2;
+}
+.inicio-portada {
+  border-radius: 22px;
+  overflow: hidden;
+}
+.portada-contenido > p { max-width: 58ch; line-height: 1.7; }
+.portada-botones button, .boton-principal, .boton-secundario {
+  min-height: 46px;
+  border-radius: 11px;
+}
+.boton-principal {
+  box-shadow: 0 5px 16px rgba(230,36,41,.15);
+}
+.boton-principal:hover { box-shadow: 0 8px 22px rgba(230,36,41,.23); }
+
+.inicio-quick-panel, .recomendacion, .catalogo-command,
+.busqueda-global, .favoritos-resumen, .perfil-panel, .cuenta-panel,
+.widget, .ajuste, .video-ai-formulario, .video-ai-flujo,
+.video-ai-resultado, .editor-panel, .editor-preview-panel {
+  border-color: var(--mh-border);
+  border-radius: var(--mh-radius);
+  box-shadow: 0 10px 28px rgba(0,0,0,.12);
+}
+.tarjeta-pelicula {
+  border-radius: 13px;
+  overflow: hidden;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.tarjeta-pelicula:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(0,0,0,.25);
+}
+.card-content h3 { line-height: 1.35; }
+.catalogo-busqueda input, .catalogo-busqueda select,
+.catalogo-controles input, .catalogo-controles select {
+  min-height: 44px;
+}
+.modal-contenido { border-radius: 18px; }
+
+@media (max-width: 700px) {
+  header { backdrop-filter: none; }
+  main { padding-top: 18px; padding-bottom: 36px; }
+  .inicio-portada { border-radius: 16px; }
+  .tarjeta-pelicula:hover { transform: none; box-shadow: none; }
+  nav .nav-boton { min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
