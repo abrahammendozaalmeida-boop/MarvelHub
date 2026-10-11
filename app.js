@@ -109,7 +109,7 @@ const fuentesReproduccionPorTituloMarvel = {
     "guardians of the galaxy vol 3|2023": "https://drive.google.com/drive/folders/1GHtlmaC-t04t6oPH6vAqcJzzM6wsC64X?usp=sharing",
     "the marvels|2023": "https://drive.google.com/drive/folders/144b_M7Np-oMNaQDIPVF0ymsxBFAATkik?usp=sharing",
     "captain america brave new world|2025": "https://drive.google.com/drive/folders/1eGBvkCopyyCEhf6xr1fm9XsD87NcjfF9?usp=sharing",
-    "thunderbolts|2025": "https://drive.google.com/drive/folders/1_3o6Z9Nkdm4CvvICNeW96Pw114FnwFY4?usp=sharing"
+    "the fantastic four first steps|2025": "https://drive.google.com/drive/folders/1_3o6Z9Nkdm4CvvICNeW96Pw114FnwFY4"
 };
 
 
