@@ -1,4 +1,4 @@
-const CACHE_NAME = "abraham-g4-marvel-hub-v61";
+const CACHE_NAME = "abraham-g4-marvel-hub-v62";
 const ARCHIVOS = [
     "./",
     "./index.html",
