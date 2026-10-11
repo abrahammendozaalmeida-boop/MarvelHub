@@ -1683,6 +1683,22 @@ function crearRepartoDetalles(datos) {
 
 function obtenerEnlaceReproduccionMarvel(datos) {
     try {
+        // Primero se consulta la asociación fija por título y año.
+        // Así, una asignación antigua guardada en el navegador no puede
+        // hacer que una película abra el enlace de otra.
+        const titulo = datos.tituloColeccion || datos.title || datos.name ||
+            datos.original_title || datos.original_name || "";
+        const anio = Number(datos.anioColeccion ||
+            String(datos.release_date || datos.first_air_date || "").slice(0, 4));
+        const claveEstable = normalizarTituloReproduccionMarvel(titulo) + "|" + anio;
+        const enlaceCatalogo = fuentesReproduccionPorTituloMarvel[claveEstable];
+
+        if (typeof enlaceCatalogo === "string" && /^https?:\/\//i.test(enlaceCatalogo)) {
+            return enlaceCatalogo;
+        }
+
+        // Las asignaciones locales solo se usan como alternativa cuando
+        // el título/año no tiene una asociación definida en el catálogo.
         const fuentesLocales = JSON.parse(localStorage.getItem("marvelHubFuentesReproduccion") || "{}");
         const clavesLocales = [
             String(datos.id || ""),
@@ -1690,20 +1706,13 @@ function obtenerEnlaceReproduccionMarvel(datos) {
             String(datos.original_title || datos.original_name || "").trim().toLowerCase()
         ].filter(Boolean);
 
-        // Las asignaciones personalizadas guardadas por el usuario tienen prioridad.
         for (const clave of clavesLocales) {
             if (typeof fuentesLocales[clave] === "string" && /^https?:\/\//i.test(fuentesLocales[clave])) {
                 return fuentesLocales[clave];
             }
         }
 
-        const titulo = datos.tituloColeccion || datos.title || datos.name ||
-            datos.original_title || datos.original_name || "";
-        const anio = Number(datos.anioColeccion ||
-            String(datos.release_date || datos.first_air_date || "").slice(0, 4));
-        const claveEstable = normalizarTituloReproduccionMarvel(titulo) + "|" + anio;
-        const enlace = fuentesReproduccionPorTituloMarvel[claveEstable];
-        return typeof enlace === "string" && /^https?:\/\//i.test(enlace) ? enlace : "";
+        return "";
     } catch (error) {
         console.warn("No se pudo leer la fuente de reproducción.", error);
         return "";
