@@ -3,6 +3,7 @@ const ARCHIVOS = [
     "./",
     "./index.html",
     "./style.css",
+    "./mobile-responsive.css",
     "./app.js",
     "./video-ai.js","./abraham-ai.js","./abraham-ai.css","./video-ai-audio.js","./video-ai-render.js","./video-ai-audio.css","./video-ai-render.css",
     "./manifest.json",
