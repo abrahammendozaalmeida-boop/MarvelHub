@@ -1,0 +1,350 @@
+/* Ajustes responsive globales — ABRAHAM G4 MARVEL HUB */
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+img, video, iframe, canvas, svg {
+  max-width: 100%;
+}
+input, select, textarea, button {
+  font: inherit;
+}
+input, select, textarea {
+  min-width: 0;
+  max-width: 100%;
+}
+button, a, input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+.catalogo, .catalogo-busqueda, .catalogo-command,
+.catalogo-command-top, .catalogo-command-tools,
+.resultados-global-grid, .widgets-panel, .ajustes-grid,
+.perfil-info-grid, .video-ai-hero, .editor-layout {
+  min-width: 0;
+}
+.tarjeta-pelicula, .card-content, .card-overlay,
+.catalogo-command-copy, .catalogo-command-tools > *,
+.video-ai-formulario, .video-ai-flujo, .video-ai-resultado {
+  min-width: 0;
+}
+.tarjeta-pelicula img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+.modal-marvel, .modal-contenido {
+  box-sizing: border-box;
+}
+@media (max-width: 900px) {
+  main {
+    width: 100%;
+    padding-left: clamp(14px, 3vw, 24px);
+    padding-right: clamp(14px, 3vw, 24px);
+  }
+  .catalogo {
+    grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr));
+    gap: 16px;
+  }
+  .catalogo-busqueda {
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+  }
+  .catalogo-command-tools, .catalogo-command-top {
+    flex-wrap: wrap;
+  }
+  .catalogo-command-tools > *, .catalogo-controles {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .editor-layout, .video-ai-hero, .widgets-panel, .ajustes-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ajuste-principal {
+    grid-column: auto;
+  }
+}
+@media (max-width: 600px) {
+  body {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  }
+  header {
+    gap: 10px;
+    padding: max(9px, env(safe-area-inset-top)) 12px 10px;
+  }
+  .logo {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 9px;
+    min-width: 0;
+  }
+  .logo h1 {
+    font-size: clamp(16px, 4.8vw, 20px);
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .logo span {
+    font-size: 10px;
+  }
+  /* La navegación permanece accesible sin tapar media pantalla. */
+  nav {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 5px;
+    left: 8px;
+    right: 8px;
+    bottom: max(7px, env(safe-area-inset-bottom));
+    padding: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  nav::-webkit-scrollbar {
+    display: none;
+  }
+  nav button, nav .nav-boton {
+    flex: 0 0 64px;
+    width: 64px;
+    min-width: 64px;
+    min-height: 48px;
+    padding: 6px 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    font-size: 10px;
+    line-height: 1.1;
+    white-space: normal;
+  }
+  nav .nav-boton svg, nav .nav-boton i {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 auto;
+  }
+  nav .nav-boton.activo-nav::after {
+    left: 30%;
+    right: 30%;
+    bottom: 2px;
+  }
+  main {
+    padding: 14px 12px 24px;
+  }
+  .seccion {
+    min-width: 0;
+    min-height: 0;
+  }
+  .titulo-seccion {
+    margin-bottom: 18px;
+  }
+  .titulo-seccion h2, .hero h2 {
+    font-size: clamp(21px, 6vw, 27px);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+  .titulo-seccion p {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .catalogo {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .tarjeta-pelicula {
+    min-width: 0;
+    border-radius: 10px;
+  }
+  .tarjeta-pelicula > img {
+    height: clamp(145px, 53vw, 230px);
+    object-fit: cover;
+  }
+  .card-content {
+    padding: 9px;
+    gap: 7px;
+  }
+  .card-content h3 {
+    font-size: 13px;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+  .card-content p, .descripcion-pelicula {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  .botones-card {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .botones-card button, .botones-card a {
+    width: 100%;
+    min-width: 0;
+    min-height: 38px;
+    padding: 9px 7px;
+    font-size: 11px;
+    overflow-wrap: anywhere;
+  }
+  .catalogo-horizontal {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 42vw);
+    grid-template-columns: none;
+    overflow-x: auto;
+    max-width: 100%;
+    padding-bottom: 8px;
+  }
+  .catalogo-horizontal .tarjeta-pelicula {
+    width: auto;
+    min-width: 0;
+    height: auto;
+  }
+  .catalogo-horizontal .tarjeta-pelicula > img {
+    height: clamp(180px, 58vw, 250px);
+  }
+  .inicio-portada {
+    margin-left: -12px;
+    margin-right: -12px;
+    width: calc(100% + 24px);
+    min-height: 340px;
+    padding: 28px 18px;
+  }
+  .portada-contenido h2 {
+    font-size: clamp(30px, 9vw, 39px);
+    line-height: 1.05;
+    overflow-wrap: anywhere;
+  }
+  .portada-contenido > p {
+    font-size: 14px;
+  }
+  .portada-botones, .recomendacion-acciones {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .portada-botones button, .recomendacion-acciones button {
+    width: 100%;
+    min-height: 44px;
+  }
+  .inicio-estado-barra {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .recomendacion {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 18px 12px;
+    gap: 14px;
+  }
+  .recomendacion-info, .recomendacion p, .recomendacion h3 {
+    max-width: 100%;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .catalogo-command, .busqueda-global, .video-ai-formulario,
+  .video-ai-flujo, .video-ai-resultado, .editor-panel,
+  .editor-preview-panel, .modal-contenido {
+    padding: 14px;
+  }
+  .catalogo-command-top, .catalogo-command-tools,
+  .catalogo-controles, .catalogo-info,
+  .favoritos-acciones, .favoritos-resumen,
+  .video-ai-recursos-cabecera, .video-ai-subtitulos-cabecera,
+  .video-ai-voz-cabecera, .video-ai-audio-cabecera,
+  .video-ai-render-cabecera, .video-ai-resultado-cabecera {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .catalogo-busqueda {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .catalogo-busqueda input, .catalogo-busqueda select,
+  .catalogo-controles input, .catalogo-controles select,
+  .ajuste input, .ajuste select, .ajuste textarea {
+    width: 100%;
+    min-height: 42px;
+  }
+  .resultados-global-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .video-ai-recursos-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .video-ai-opciones, .video-ai-subtitulos-opciones,
+  .video-ai-voz-opciones, .video-ai-audio-opciones {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .video-ai-recursos-acciones, .video-ai-subtitulos-acciones,
+  .video-ai-voz-acciones, .video-ai-audio-acciones,
+  .video-ai-render-acciones, .video-ai-acciones {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .video-ai-recursos-acciones button, .video-ai-subtitulos-acciones button,
+  .video-ai-voz-acciones button, .video-ai-audio-acciones button,
+  .video-ai-render-acciones button, .video-ai-acciones button,
+  .video-ai-recursos-acciones a, .video-ai-subtitulos-acciones a,
+  .video-ai-voz-acciones a, .video-ai-render-acciones a {
+    width: 100%;
+    max-width: 100%;
+    min-height: 42px;
+  }
+  .editor-preview-panel .video-container,
+  .editor-preview-panel #videoPreview,
+  #videoPreview, .video-container {
+    width: 100%;
+    max-width: 100%;
+  }
+  .modal-marvel {
+    padding: 7px;
+    align-items: flex-start;
+  }
+  .modal-marvel .modal-contenido,
+  .modal-contenido {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - 14px);
+    padding: 14px;
+    border-radius: 16px;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  input, select, textarea, button {
+    font-size: 16px;
+  }
+  footer {
+    padding-bottom: 12px;
+  }
+}
+@media (max-width: 380px) {
+  main {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+  .catalogo {
+    gap: 8px;
+  }
+  .card-content {
+    padding: 7px;
+  }
+  .card-content h3 {
+    font-size: 12px;
+  }
+  .inicio-portada {
+    margin-left: -9px;
+    margin-right: -9px;
+    width: calc(100% + 18px);
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .catalogo-horizontal {
+    grid-auto-columns: 48vw;
+  }
+}
