@@ -1,9 +1,10 @@
-const CACHE_NAME = "abraham-g4-marvel-hub-v63";
+const CACHE_NAME = "abraham-g4-marvel-hub-v64";
 const ARCHIVOS = [
     "./",
     "./index.html",
     "./style.css",
     "./mobile-responsive.css",
+    "./premium-ui.css",
     "./app.js",
     "./video-ai.js","./abraham-ai.js","./abraham-ai.css","./video-ai-audio.js","./video-ai-render.js","./video-ai-audio.css","./video-ai-render.css",
     "./manifest.json",
