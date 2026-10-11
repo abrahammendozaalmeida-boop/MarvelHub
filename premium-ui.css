@@ -346,3 +346,117 @@ body.tema-claro .filtro-favoritos:not(.activo-filtro):hover {
   .favoritos-orden select { width: 100%; min-width: 0; }
   .boton-vaciar-favoritos { grid-column: 1 / -1; }
 }
+
+
+/* Perfil y ajustes: jerarquía más clara, sin alterar su funcionalidad */
+.perfil-panel,
+.cuenta-panel {
+  background: linear-gradient(145deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
+}
+.perfil-cabecera {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--mh-border);
+}
+.perfil-identidad h3 {
+  overflow-wrap: anywhere;
+  letter-spacing: -.025em;
+}
+.perfil-identidad p {
+  max-width: 56ch;
+  line-height: 1.6;
+}
+.perfil-formulario > label {
+  color: var(--mh-text-muted);
+  font-weight: 600;
+}
+.perfil-avatares {
+  gap: 10px;
+}
+.perfil-avatar-opcion {
+  width: 76px;
+  height: 72px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: 12px;
+  transition: border-color .18s ease, background-color .18s ease, transform .18s ease;
+}
+.perfil-avatar-opcion span { font-size: 23px; line-height: 1.2; }
+.perfil-avatar-opcion small { font-size: .68rem; color: var(--mh-text-muted); }
+.perfil-avatar-opcion.activo-perfil-avatar {
+  background: rgba(230,36,41,.12);
+  border-color: rgba(255,105,110,.9);
+}
+.perfil-info-card {
+  min-width: 0;
+  box-shadow: 0 8px 22px rgba(0,0,0,.08);
+  transition: border-color .18s ease, transform .18s ease;
+}
+.perfil-info-card:hover {
+  border-color: rgba(255,255,255,.2);
+}
+.perfil-info-card.perfil-estadistica {
+  align-items: center;
+  min-height: 108px;
+}
+.perfil-estadistica b {
+  display: block;
+  margin: 1px 0 2px;
+  font-size: 1.55rem;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+.perfil-estadistica p { margin: 0; }
+.perfil-cuenta-integrada {
+  max-width: 1050px;
+  margin-top: 34px;
+}
+.perfil-cuenta-integrada > .titulo-seccion {
+  margin-bottom: 16px;
+}
+.cuenta-panel {
+  box-sizing: border-box;
+  max-width: none;
+}
+.cuenta-formulario input {
+  min-height: 46px;
+}
+.cuenta-modos .cuenta-modo {
+  min-height: 44px;
+}
+.ajustes-grid .ajuste {
+  border-color: var(--mh-border);
+  border-radius: var(--mh-radius);
+  background: linear-gradient(145deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
+  box-shadow: 0 8px 22px rgba(0,0,0,.08);
+  transition: border-color .18s ease, transform .18s ease;
+}
+.ajustes-grid .ajuste:hover {
+  border-color: rgba(255,255,255,.2);
+}
+.ajuste-icono {
+  border: 1px solid rgba(255,255,255,.07);
+}
+.ajuste-contenido button {
+  min-height: 42px;
+  border-radius: 10px;
+}
+body.tema-claro .perfil-cabecera {
+  border-bottom-color: rgba(0,0,0,.1);
+}
+body.tema-claro .perfil-info-card {
+  box-shadow: 0 8px 20px rgba(0,0,0,.035);
+}
+body.tema-claro .ajustes-grid .ajuste {
+  background: linear-gradient(145deg, #fff, #fafafa);
+  box-shadow: 0 8px 20px rgba(0,0,0,.035);
+}
+@media (max-width: 700px) {
+  .perfil-cabecera { gap: 13px; padding-bottom: 16px; }
+  .perfil-avatar-opcion { flex: 1 1 74px; max-width: 100px; }
+  .perfil-info-card { padding: 14px; }
+  .perfil-cuenta-integrada { margin-top: 26px; }
+  .ajustes-grid .ajuste { min-height: 0; }
+}
