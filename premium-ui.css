@@ -262,19 +262,6 @@ main { padding-top: clamp(20px, 3vw, 36px); padding-bottom: 48px; }
 .favoritos-resumen > div:first-child small {
   line-height: 1.5;
 }
-.biblioteca-buscador {
-  min-width: 0;
-  margin: 0;
-}
-.biblioteca-buscador label {
-  letter-spacing: 0;
-  font-size: .85rem;
-  color: var(--mh-text-muted);
-}
-.biblioteca-buscador input {
-  min-height: 46px;
-  font: inherit;
-}
 .favoritos-acciones {
   grid-column: 1 / -1;
   display: flex;
