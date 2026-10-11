@@ -138,15 +138,15 @@
         <div class="titulo-seccion">
             <span class="mini-etiqueta">MARVEL</span>
             <h2><i data-lucide="library"></i> Catálogo Marvel</h2>
-            <p>Explora historias, personajes y aventuras del universo Marvel.</p>
+            <p>Encuentra tu próxima película o serie, consulta sus detalles y guarda tus favoritas.</p>
         </div>
 
         <div class="catalogo-command">
             <div class="catalogo-command-top">
                 <div class="catalogo-command-copy">
                     <span class="mini-etiqueta">EXPLORAR</span>
-                    <strong>Encuentra algo para ver</strong>
-                    <small>Historias y personajes para descubrir en un solo lugar.</small>
+                    <strong>¿Qué te gustaría ver?</strong>
+                    <small>Elige películas o series, busca por título y ordena los resultados.</small>
                 </div>
                 <div class="catalogo-command-hint"><kbd>/</kbd><span>Buscar</span></div>
             </div>
@@ -158,9 +158,9 @@
                 </div>
 
                 <div class="catalogo-busqueda">
-                    <label class="catalogo-search-box" for="buscador">
+                    <label class="catalogo-search-box" for="buscador" aria-label="Buscar películas o series por título">
                         <i data-lucide="search"></i>
-                        <input type="search" id="buscador" placeholder="Buscar en tu catálogo..." autocomplete="off">
+                        <input type="search" id="buscador" placeholder="Escribe un título, por ejemplo Spider-Man" autocomplete="off" aria-label="Buscar en el catálogo cargado">
                         <kbd>/</kbd>
                     </label>
                     <label class="catalogo-sort-box" for="ordenCatalogo">
@@ -178,13 +178,13 @@
             <div class="busqueda-global">
             <div class="busqueda-global-cabecera">
                 <div>
-                    <span class="mini-etiqueta">BÚSQUEDA GLOBAL</span>
-                    <h3><i data-lucide="search"></i> Encuentra cualquier Marvel</h3>
-                    <p>Una búsqueda más amplia para encontrar nuevas historias.</p>
+                    <span class="mini-etiqueta">¿NO ENCUENTRAS LO QUE BUSCAS?</span>
+                    <h3><i data-lucide="search"></i> Buscar en todo Marvel</h3>
+                    <p>Busca también títulos que todavía no aparecen en la lista de arriba.</p>
                 </div>
             </div>
             <div class="busqueda-global-form">
-                <input type="search" id="busquedaGlobalMarvel" placeholder="Ej. Spider-Man, Loki, Deadpool..." maxlength="80" autocomplete="off">
+                <input type="search" id="busquedaGlobalMarvel" placeholder="Ej. Spider-Man, Loki o Deadpool" maxlength="80" autocomplete="off" aria-label="Buscar un título en todo Marvel">
                 <button id="botonBusquedaGlobal" type="button"><i data-lucide="search"></i><span>Buscar</span></button>
             </div>
             <div id="estadoBusquedaGlobal" class="busqueda-global-estado" aria-live="polite"></div>
@@ -193,7 +193,7 @@
         <div id="resultadosBusquedaGlobal" class="catalogo"></div>
 
         <div class="catalogo-info">
-            <span id="contadorCatalogo">Cargando contenido...</span>
+            <span id="contadorCatalogo" aria-live="polite">Cargando contenido...</span>
             <button id="limpiarBusqueda" type="button" hidden>✕ Limpiar</button>
         </div>
 
