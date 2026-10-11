@@ -704,25 +704,8 @@ function renderizarFavoritos(filtro) {
 
     const filtroActual = filtro || "todos";
 
-    const buscador = document.getElementById("buscadorFavoritos");
-    const textoBusqueda = buscador
-        ? buscador.value.trim().toLowerCase()
-        : "";
-
     const listaBase = favoritosMarvel.filter(function(item) {
-        const coincideTipo =
-            filtroActual === "todos" || item.tipo === filtroActual;
-
-        if (!coincideTipo) return false;
-        if (!textoBusqueda) return true;
-
-        const titulo = (item.titulo || "").toLowerCase();
-        const descripcion = (item.overview || "").toLowerCase();
-
-        return (
-            titulo.includes(textoBusqueda) ||
-            descripcion.includes(textoBusqueda)
-        );
+        return filtroActual === "todos" || item.tipo === filtroActual;
     });
 
     const lista = obtenerFavoritosOrdenados(listaBase);
@@ -874,8 +857,6 @@ function configurarModoDevTMDB() {
 function configurarFavoritos() {
     const botones = document.querySelectorAll("[data-filtro-favoritos]");
     const orden = document.getElementById("ordenFavoritos");
-    const buscador = document.getElementById("buscadorFavoritos");
-
     botones.forEach(function(boton) {
         boton.addEventListener("click", function() {
             window.filtroFavoritosActual = this.dataset.filtroFavoritos;
@@ -895,11 +876,6 @@ function configurarFavoritos() {
         });
     }
 
-    if (buscador) {
-        buscador.addEventListener("input", function() {
-            renderizarFavoritos(window.filtroFavoritosActual || "todos");
-        });
-    }
 }
 
 let paginaPeliculasTMDB = 1;
