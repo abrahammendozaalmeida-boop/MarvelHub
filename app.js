@@ -262,6 +262,7 @@ function renderizarHistorialInicio() {
     if (!contenedor) return;
 
     const historial = obtenerHistorialMarvel();
+    actualizarDashboardInicio();
 
     contenedor.innerHTML = "";
 
@@ -1246,6 +1247,7 @@ async function cargarMarvelTMDB() {
         actualizarInicioPersonalizado();
         actualizarWidgetResumen();
         actualizarBotonCargarMas();
+        actualizarDashboardInicio();
     } catch (error) {
         console.error("Error cargando Marvel:", error);
         catalogo.innerHTML = "<p>No se pudo cargar el catálogo.</p>";
@@ -1291,6 +1293,7 @@ async function cargarMasMarvel() {
         renderizarFilasInicio();
         renderizarPersonalizadoInicio();
         actualizarWidgetResumen();
+        actualizarDashboardInicio();
     } catch (error) {
         console.error("Error cargando más Marvel:", error);
     } finally {
@@ -1322,12 +1325,43 @@ function renderizarFilaInicio(id, lista, cantidad) {
     });
 }
 
+function actualizarDashboardInicio() {
+    const statFavoritos = document.getElementById("homeStatFavoritos");
+    const statCatalogo = document.getElementById("homeStatCatalogo");
+    const statPerfil = document.getElementById("homeStatPerfil");
+    const totalCatalogo = peliculasTMDB.length + seriesTMDB.length;
+
+    if (statFavoritos) {
+        statFavoritos.textContent = String(favoritosMarvel.length);
+    }
+
+    if (statCatalogo) {
+        statCatalogo.textContent = String(totalCatalogo);
+    }
+
+    if (statPerfil) {
+        let nombre = "";
+        try {
+            const perfil = JSON.parse(localStorage.getItem(PERFIL_LOCAL_KEY) || "null");
+            nombre = perfil && typeof perfil.nombre === "string"
+                ? perfil.nombre.trim()
+                : "";
+        } catch (error) {
+            nombre = "";
+        }
+
+        statPerfil.textContent = nombre
+            ? nombre.length > 12 ? nombre.slice(0, 11) + "…" : nombre
+            : "Perfil";
+    }
+}
+
 function renderizarFilaFavoritosInicio() {
     const contenedor = document.getElementById("homeFavoritos");
     const stat = document.getElementById("homeStatFavoritos");
 
     if (!contenedor) return;
-    if (stat) stat.textContent = String(obtenerFavoritosMarvel().length);
+    actualizarDashboardInicio();
 
     contenedor.innerHTML = "";
 
