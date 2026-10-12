@@ -1790,6 +1790,19 @@ function crearRepartoDetalles(datos) {
 }
 
 function obtenerEnlaceReproduccionMarvel(datos) {
+    if (!datos) return "";
+
+    // En el catálogo local, el ID conserva la posición original del título.
+    // Esto evita que títulos duplicados, caché o normalización intercambien enlaces.
+    const idLocal = String(datos.id || "").match(/^marvel-local-(\d+)$/);
+    if (idLocal) {
+        const indiceLocal = Number(idLocal[1]);
+        return indiceLocal >= 0 && indiceLocal < enlacesReproduccionMarvel.length
+            ? enlacesReproduccionMarvel[indiceLocal]
+            : "";
+    }
+
+    // Respaldo para fichas antiguas: resolver por título normalizado y año.
     const titulo = datos.tituloColeccion || datos.title || datos.name ||
         datos.original_title || datos.original_name || "";
     const anio = Number(datos.anioColeccion ||
@@ -1800,8 +1813,6 @@ function obtenerEnlaceReproduccionMarvel(datos) {
             Number(registro[1]) === anio;
     });
 
-    // Se usa exclusivamente el enlace de la misma posición del catálogo.
-    // No se reutilizan asociaciones antiguas guardadas en el navegador.
     return indice >= 0 && indice < enlacesReproduccionMarvel.length
         ? enlacesReproduccionMarvel[indice]
         : "";
