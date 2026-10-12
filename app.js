@@ -1146,12 +1146,11 @@ function crearCatalogoLocalMarvel(tipo) {
     });
 }
 
-function cargarCatalogoLocalMarvel() {
+async function cargarCatalogoLocalMarvel() {
     // Mostrar únicamente las 65 películas asociadas a los 65 enlaces nuevos.
     // No agregar las 25 series antiguas ni resultados generales de TMDB.
     peliculasTMDB = crearCatalogoLocalMarvel("movie");
     seriesTMDB = [];
-    localStorage.removeItem("marvelHubCatalogoSeries");
     window.cantidadPeliculasConEnlaceMarvel = Math.min(
         coleccionPersonalMarvel.length,
         enlacesReproduccionMarvel.length
@@ -1170,6 +1169,51 @@ function cargarCatalogoLocalMarvel() {
     actualizarWidgetResumen();
     actualizarBotonCargarMas();
     actualizarDashboardInicio();
+
+    // Completar portadas y sinopsis desde TMDB sin añadir títulos al catálogo.
+    // Si no hay clave configurada, se conservan los metadatos que estén en caché.
+    if (TMDB_API_KEY && TMDB_API_KEY !== "TU_CLAVE_API") {
+        const cacheActualizada = [];
+        for (let inicio = 0; inicio < peliculasTMDB.length; inicio += 5) {
+            const grupo = peliculasTMDB.slice(inicio, inicio + 5);
+            const resultados = await Promise.all(grupo.map(async function(pelicula) {
+                try {
+                    const respuesta = await obtenerTMDB(
+                        "/search/movie?query=" + encodeURIComponent(pelicula.tituloColeccion) +
+                        "&year=" + encodeURIComponent(pelicula.anioColeccion)
+                    );
+                    const coincidencias = respuesta.results || [];
+                    const exacta = coincidencias.find(function(item) {
+                        return String(item.release_date || "").startsWith(String(pelicula.anioColeccion));
+                    }) || coincidencias[0];
+                    if (exacta) {
+                        pelicula.poster_path = exacta.poster_path || pelicula.poster_path || "";
+                        pelicula.backdrop_path = exacta.backdrop_path || pelicula.backdrop_path || "";
+                        pelicula.overview = exacta.overview || pelicula.overview;
+                        pelicula.vote_average = exacta.vote_average || pelicula.vote_average || 0;
+                        cacheActualizada.push(Object.assign({}, exacta, {
+                            tituloColeccion: pelicula.tituloColeccion,
+                            anioColeccion: pelicula.anioColeccion
+                        }));
+                    }
+                } catch (error) {
+                    console.warn("No se pudo cargar la portada de " + pelicula.tituloColeccion, error);
+                }
+                return pelicula;
+            }));
+            // Mantener el catálogo exacto; solo se actualizan los metadatos de sus tarjetas.
+            peliculasTMDB = peliculasTMDB.map(function(item) {
+                return resultados.find(function(resultado) { return resultado.id === item.id; }) || item;
+            });
+        }
+        if (cacheActualizada.length) {
+            try { localStorage.setItem("marvelHubColeccionTMDB", JSON.stringify(cacheActualizada)); } catch (error) {}
+        }
+        renderizarFilasInicio();
+        renderizarPersonalizadoInicio();
+        actualizarInicioPersonalizado();
+        mostrarTipoMarvel("peliculas");
+    }
 }
 
 function obtenerMarvelLocalPorId(id) {
