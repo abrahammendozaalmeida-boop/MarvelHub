@@ -1106,24 +1106,39 @@ async function cargarColeccionPersonalMarvel() {
 }
 
 function crearCatalogoLocalMarvel(tipo) {
-    const esSerie = tipo === "tv";
-    const coleccion = esSerie ? coleccionSeriesMarvel : coleccionPersonalMarvel;
+    // El catálogo público queda limitado a las 65 películas con enlace.
+    // Si existe caché de TMDB, se reutilizan sus pósteres y sinopsis por título/año.
+    const coleccion = tipo === "tv" ? [] : coleccionPersonalMarvel;
+    let cacheTMDB = [];
+
+    try {
+        const cache = JSON.parse(localStorage.getItem("marvelHubColeccionTMDB") || "[]");
+        if (Array.isArray(cache)) cacheTMDB = cache;
+    } catch (error) {}
 
     return coleccion.map(function(registro, indice) {
-        const anio = String(registro[1]) + "-01-01";
+        const anio = String(registro[1]);
+        const tituloNormalizado = normalizarTituloReproduccionMarvel(registro[0]);
+        const enriquecido = cacheTMDB.find(function(item) {
+            const tituloCache = normalizarTituloReproduccionMarvel(
+                item.tituloColeccion || item.original_title || item.title || ""
+            );
+            const anioCache = String(item.anioColeccion ||
+                String(item.release_date || "").slice(0, 4));
+            return tituloCache === tituloNormalizado && anioCache === anio;
+        }) || {};
+
         return {
-            id: (esSerie ? "marvel-serie-local-" : "marvel-local-") + indice,
-            tipo: esSerie ? "tv" : "movie",
+            id: "marvel-local-" + indice,
+            tipo: "movie",
             title: registro[0],
-            name: esSerie ? registro[0] : undefined,
             original_title: registro[0],
-            release_date: esSerie ? undefined : anio,
-            first_air_date: esSerie ? anio : undefined,
-            overview: "Título de la colección de Marvel Hub.",
-            vote_average: 0,
-            popularity: coleccion.length - indice,
-            poster_path: "",
-            backdrop_path: "",
+            release_date: anio + "-01-01",
+            overview: enriquecido.overview || "Título de la colección de Marvel Hub.",
+            vote_average: enriquecido.vote_average || 0,
+            popularity: enriquecido.popularity || coleccion.length - indice,
+            poster_path: enriquecido.poster_path || "",
+            backdrop_path: enriquecido.backdrop_path || "",
             tituloColeccion: registro[0],
             anioColeccion: registro[1],
             coleccionPersonal: true
@@ -1132,10 +1147,15 @@ function crearCatalogoLocalMarvel(tipo) {
 }
 
 function cargarCatalogoLocalMarvel() {
-    // Solo se muestran las 65 películas que tienen enlaces proporcionados.
-    // Las 25 series del catálogo antiguo quedan fuera hasta recibir sus enlaces.
+    // Mostrar únicamente las 65 películas asociadas a los 65 enlaces nuevos.
+    // No agregar las 25 series antiguas ni resultados generales de TMDB.
     peliculasTMDB = crearCatalogoLocalMarvel("movie");
     seriesTMDB = [];
+    localStorage.removeItem("marvelHubCatalogoSeries");
+    window.cantidadPeliculasConEnlaceMarvel = Math.min(
+        coleccionPersonalMarvel.length,
+        enlacesReproduccionMarvel.length
+    );
     window.coleccionPersonalMarvel = peliculasTMDB.slice();
 
     paginaPeliculasTMDB = 1;
