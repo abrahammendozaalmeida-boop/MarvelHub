@@ -506,7 +506,13 @@ function crearTarjetaMarvel(item, opciones) {
         "</div>";
 
     const abrirDetalles = function() {
-        verDetallesTMDB(datos.id, tipo);
+        // Las fichas de la colección personal deben abrirse siempre con su ID local,
+        // para que la reproducción use el enlace que ocupa esa misma posición.
+        if (String(datos.id || "").startsWith("marvel-local-")) {
+            verDetallesLocalMarvel(datos.id, tipo);
+        } else {
+            verDetallesTMDB(datos.id, tipo);
+        }
     };
 
     tarjeta.dataset.tmdbId = String(datos.id || "");
@@ -518,7 +524,7 @@ function crearTarjetaMarvel(item, opciones) {
         botonDetallesHover.addEventListener("click", function(event) {
             event.preventDefault();
             event.stopPropagation();
-            verDetallesTMDB(datos.id, tipo);
+            abrirDetalles();
         });
     }
 
